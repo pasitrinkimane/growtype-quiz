@@ -1,0 +1,31 @@
+.b-quiz-timer {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 15px;
+
+  &:before{
+    content: "";
+    height: 2px;
+    width: 250px;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    position: absolute;
+    background: #3c3c3c;
+  }
+
+  .e-time-wrapper {
+    min-width: 160px;
+  }
+
+  .e-time {
+    font-size: 48px;
+    font-weight: bold;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+}

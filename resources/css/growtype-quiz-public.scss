@@ -1,0 +1,57 @@
+@import "../../../../themes/growtype/resources/styles/common/variables";
+@import "../../../../themes/growtype/resources/styles/common/mixins";
+@import "components/progress-bar";
+@import "components/timer";
+
+@import "partials/question-types/open";
+@import "partials/question-types/radio";
+
+.single-quiz {
+  background: #1B2A3F;
+
+  .b-quiz {
+    display: block;
+    position: relative;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 60px 80px;
+    margin-top: 40px;
+
+    &.show-correct-answers {
+      .b-quiz-question-answer.is-active[data-cor] {
+        color: $color-error;
+      }
+
+      .b-quiz-question-answer[data-cor="1"] {
+        color: $color-success !important;
+
+        .e-radio {
+          border: 7px solid #00B9D2;
+        }
+      }
+    }
+  }
+
+  .b-quiz-question {
+    display: none;
+
+    &.first-question {
+      display: block;
+    }
+  }
+
+  .b-quiz-footer {
+    margin-top: 30px;
+  }
+
+  .b-quiz-footer {
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+

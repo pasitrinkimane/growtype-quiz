@@ -1,0 +1,9 @@
+.b-quiz-question {
+  &[data-type="open"] {
+    .e-explanation {
+      text-align: right;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+  }
+}
