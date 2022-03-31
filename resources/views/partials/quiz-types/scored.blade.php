@@ -27,7 +27,10 @@
             $index = 0;
         @endphp
         @foreach ($quiz_data['questions'] as $question)
-            @if(!$question['disabled'])
+            @php
+            $disabled = $question['disabled'] ?? false;
+            @endphp
+            @if(!$disabled)
                 <div class="b-quiz-question {!! $index === 0 ? 'first-question is-active' : '' !!}"
                      data-key="{!! $question['key'] !!}"
                      data-type="{!! $question['question_type'] !!}"
@@ -48,23 +51,12 @@
         @endforeach
 
         <div class="b-quiz-footer">
-            <button class="btn btn-secondary btn-back"><span class="dashicons dashicons-arrow-left-alt2"></span> Atgal
+            <button class="btn btn-secondary btn-go-back"><span class="dashicons dashicons-arrow-left-alt2"></span> Atgal
             </button>
-            <button class="btn btn-primary btn-next">
+            <button class="btn btn-primary btn-go-next">
                 <span class="e-label" data-label="Kitas klausimas">Kitas klausimas</span>
                 <span class="dashicons dashicons-arrow-right-alt2"></span>
             </button>
         </div>
     </div>
 </div>
-
-@push('footerScripts')
-    <script>
-        $('.b-quiz-question-answers .b-quiz-question-answer').click(function () {
-            $(this).closest('.b-quiz-question-answers').find('.b-quiz-question-answer').removeClass('is-active');
-            if (!$(this).hasClass('is-active')) {
-                $(this).addClass('is-active');
-            }
-        });
-    </script>
-@endpush

@@ -4,7 +4,7 @@ import {validateQuestion} from './../actions/validation/validateQuestion.js';
 import {collectQuizData} from "../actions/crud/collectQuizData";
 
 export function nextQuestionTrigger() {
-    $('.b-quiz .btn-next').click(function () {
+    $('.b-quiz .btn-go-next').click(function () {
         event.preventDefault();
 
         let currentQuestion = $('.b-quiz-question.is-active');

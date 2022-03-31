@@ -18,9 +18,10 @@ if (!current_user_can('manage_options')) {
 
 @section('content')
     <section class="s-intro">
-        {!! get_the_content() !!}
+        <div class="container">
+            {!! get_the_content() !!}
+        </div>
     </section>
-
     <section class="s-quiz">
         <div class="container">
             <?= include_quiz_view('partials.quiz-types.scored', ['quiz_data' => $quiz_data]) ?>

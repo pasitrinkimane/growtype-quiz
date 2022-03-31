@@ -24,7 +24,7 @@ export function showNextQuestion() {
         /**
          * Reset next btn label
          */
-        $('.b-quiz-footer .btn-next .e-label').text($('.b-quiz-footer .btn-next .e-label').attr('data-label'));
+        $('.b-quiz-footer .btn-go-next .e-label').text($('.b-quiz-footer .btn-next .e-label').attr('data-label'));
 
         if (nextQuestion.length > 0) {
             updateProgressCounter();
@@ -32,7 +32,7 @@ export function showNextQuestion() {
             nextQuestion.addClass('is-active').fadeIn(300).promise().done(function () {
                 $('.b-quiz-footer .btn').attr('disabled', false);
                 if (window.quizCurrentQuestionNr === window.quizQuestionsAmount && window.quizLastQuestionNextLabel.length > 0) {
-                    $(this).closest('.b-quiz').find('.b-quiz-footer .btn-next .e-label').text(window.quizLastQuestionNextLabel);
+                    $(this).closest('.b-quiz').find('.b-quiz-footer .btn-go-next .e-label').text(window.quizLastQuestionNextLabel);
                 }
             });
             window.scrollTo(0, 0);

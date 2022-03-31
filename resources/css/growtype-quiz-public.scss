@@ -7,7 +7,13 @@
 @import "partials/question-types/radio";
 
 .single-quiz {
-  background: #1B2A3F;
+  .dashicons-arrow-left-alt2:before {
+    color: #98be64;
+  }
+
+  .dashicons-arrow-right-alt2:before {
+    color: white;
+  }
 
   .b-quiz {
     display: block;
@@ -16,7 +22,15 @@
     background-color: #fff;
     border-radius: 10px;
     padding: 60px 80px;
-    margin-top: 40px;
+    border: 1px solid grey;
+
+    .b-quiz-header {
+      padding-bottom: 20px;
+      display: flex;
+      .b-quiz-question-nr{
+        margin-left: auto;
+      }
+    }
 
     &.show-correct-answers {
       .b-quiz-question-answer.is-active[data-cor] {
@@ -46,6 +60,9 @@
   }
 
   .b-quiz-footer {
+    display: flex;
+    justify-content: space-between;
+
     .btn {
       display: flex;
       align-items: center;

@@ -259,9 +259,13 @@ class Growtype_Quiz_Loader
      */
     public static function page_template_loader($template)
     {
-        $signup_page = get_page_by_path('results');
+        $results_page = get_page_by_path('results');
 
-        if ($signup_page->ID === get_the_ID()) {
+        if (empty($results_page)) {
+            return $template;
+        }
+
+        if ($results_page->ID === get_the_ID()) {
             $default_file = 'page-results.blade.php';
             $template = plugin_dir_path(dirname(__FILE__)) . 'resources/views/' . $default_file;
         }
@@ -429,7 +433,8 @@ class Growtype_Quiz_Loader
         $quiz_data['questions'] = get_field('questions', $quiz_id);
 
         $quiz_data['questions_available'] = array_filter($quiz_data['questions'], function ($question) {
-            return $question['question_type'] !== 'info' && $question['question_type'] !== 'success' && !$question['disabled'];
+            $disabled = $question['disabled'] ?? false;
+            return $question['question_type'] !== 'info' && $question['question_type'] !== 'success' && !$disabled;
         });
 
         $quiz_data['questions_available_amount'] = count($quiz_data['questions_available']);
