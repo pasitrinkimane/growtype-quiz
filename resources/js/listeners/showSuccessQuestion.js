@@ -9,6 +9,6 @@ document.addEventListener('showSuccessQuestion', showSuccessQuestion)
 function showSuccessQuestion() {
     hideProgressIndicators();
     $('.b-quiz-question').hide().promise().done(function (){
-        $('.b-quiz-question[data-key="success"]').fadeIn();
+        $('.b-quiz-question[data-type="success"]').fadeIn();
     });
 }

@@ -33,16 +33,17 @@ if (!current_user_can('manage_options')) {
 @endsection
 
 @push('footerScripts')
+    <?php $trans_finish = __("Finish", "growtype-quiz") ?>
     <script>
         let quizInTestMode = @json($quiz_data['is_test_mode']);
         let quizSaveAnswers = @json($quiz_data['save_answers'] === false ? false : true);
         let showCorrectAnswersInitially = @json($quiz_data['show_correct_answers_initially'] === false ? false : true);
         let quizId = @json($post->ID);
         window.quizCurrentFunnel = 'a';
-        window.quizQuestionsAmount = $('.b-quiz-question:not(.b-quiz-question[data-key="success"])').length;
+        window.quizQuestionsAmount = $('.b-quiz-question:not(.b-quiz-question[data-type="success"])').length;
         window.quizCurrentQuestionNr = 1;
         window.quizQuestionsKeysAlreadyVisited = [];
         window.quizQuestionsFunnelsAlreadyVisited = [];
-        window.quizLastQuestionNextLabel = @json(__("Finish", "growtype-registration"));
+        window.quizLastQuestionNextLabel = @json($trans_finish);
     </script>
 @endpush
