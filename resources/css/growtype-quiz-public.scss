@@ -63,6 +63,8 @@
     display: flex;
     justify-content: space-between;
     margin-top: 30px;
+    gap: 15px;
+    flex-wrap: wrap;
     @include bp-phone-xl() {
       flex-direction: column;
       justify-content: initial;

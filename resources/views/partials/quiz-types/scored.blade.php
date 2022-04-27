@@ -50,7 +50,7 @@
             @endphp
         @endforeach
 
-        <div class="b-quiz-footer d-md-grid gap-2 d-md-flex">
+        <div class="b-quiz-footer">
             <button class="btn btn-secondary btn-go-back"><span class="dashicons dashicons-arrow-left-alt2"></span> Atgal
             </button>
             <button class="btn btn-primary btn-go-next">

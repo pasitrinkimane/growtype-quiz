@@ -38,12 +38,9 @@ export function showNextQuestion() {
             window.scrollTo(0, 0);
         }
 
-        if (nextQuestion.length === 0 || nextQuestion.attr('data-key') === 'success') {
+        if (nextQuestion.length === 0 || nextQuestion.attr('data-type') === 'success') {
             hideProgressIndicators();
             document.dispatchEvent(saveQuizDataEvent());
-        }
-
-        if (nextQuestion.attr('data-key') === 'success') {
             evaluateQuizData();
         }
     });
