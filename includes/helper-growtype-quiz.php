@@ -122,13 +122,13 @@ if (!function_exists('growtype_quiz_get_current_user_quiz_id')) {
     {
         $signup_data = Growtype_Form_Signup::get_signup_data(get_current_user_id());
 
-        $quiz = get_page_by_path('quiz');
+        $quiz = get_page_by_path('default');
         $quiz_id = !empty($quiz) ? $quiz->ID : '';
 
         if (!empty($signup_data) && isset($signup_data['group']['value'])) {
             $group = $signup_data['group']['value'];
 
-            $quiz = get_page_by_path('quiz_' . $group);
+            $quiz = get_page_by_path($group);
             $quiz_id = !empty($quiz) ? $quiz->ID : '';
         }
 
