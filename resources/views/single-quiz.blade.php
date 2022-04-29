@@ -1,6 +1,6 @@
 <?php
 $post = get_post();
-$quiz_data = get_quiz_data($post->ID);
+$quiz_data = growtype_quiz_get_quiz_data($post->ID);
 
 if (!current_user_can('manage_options')) {
     if (!is_null($quiz_data['is_enabled']) && !$quiz_data['is_enabled']) {

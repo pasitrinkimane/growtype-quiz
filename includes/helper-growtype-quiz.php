@@ -24,7 +24,7 @@ function include_quiz_view($path, $data = null)
  * @return array|bool|object|null
  * Get quiz data
  */
-function get_quiz_data($quiz_id)
+function growtype_quiz_get_quiz_data($quiz_id)
 {
     $growtype_quiz_loader = new Growtype_Quiz_Loader();
 
