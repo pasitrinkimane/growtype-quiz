@@ -46,6 +46,8 @@ class Growtype_Quiz_Loader
      */
     protected $filters;
 
+    const CUSTOM_SLUG = 'quiz-results';
+
     /**
      * Initialize the collections used to maintain the actions and filters.
      *
@@ -69,6 +71,8 @@ class Growtype_Quiz_Loader
 
         add_action('wp_ajax_quiz_data', array ($this, 'quiz_data'), 5);
         add_action('wp_ajax_nopriv_quiz_data', array ($this, 'quiz_data'), 5);
+
+//        add_action('init', array ($this, 'custom_url'), 1);
     }
 
     /**
@@ -259,18 +263,33 @@ class Growtype_Quiz_Loader
      */
     public static function page_template_loader($template)
     {
-        $results_page = get_page_by_path('results');
+        if (current_user_can('manage_options')) {
+            $results_page = get_page_by_path('results');
 
-        if (empty($results_page)) {
-            return $template;
-        }
-
-        if ($results_page->ID === get_the_ID()) {
             $default_file = 'page-results.blade.php';
-            $template = plugin_dir_path(dirname(__FILE__)) . 'resources/views/' . $default_file;
+
+            $results_page_template = get_child_template_resource_path() . '/views/growtype-quiz/' . $default_file;
+
+            if (!file_exists($results_page_template)) {
+                $results_page_template = plugin_dir_path(dirname(__FILE__)) . 'resources/views/' . $default_file;
+            }
+
+            if (empty($results_page) && str_contains($_SERVER['REQUEST_URI'], self::CUSTOM_SLUG)) {
+                return $results_page_template;
+            } elseif (!empty($results_page) && $results_page->ID === get_the_ID()) {
+                return $results_page_template;
+            }
         }
 
         return $template;
+    }
+
+    /**
+     * @return void
+     */
+    function custom_url()
+    {
+        add_rewrite_endpoint(self::CUSTOM_SLUG, EP_ROOT);
     }
 
     /**
