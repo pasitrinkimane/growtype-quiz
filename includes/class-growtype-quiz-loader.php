@@ -508,7 +508,9 @@ class Growtype_Quiz_Loader
 
         $table_name = $this->quiz_results_table_name;
 
-        if ($based_on === 'performance') {
+        if ($based_on === 'any') {
+            $result = $wpdb->get_results("SELECT * FROM $table_name where quiz_id=$quiz_id limit 0, $limit", ARRAY_A);
+        } elseif ($based_on === 'performance') {
             for ($wrong_answers = 1; $wrong_answers < 5; $wrong_answers++) {
                 $result = $wpdb->get_results("SELECT *
 FROM $table_name
