@@ -146,3 +146,68 @@ if (!function_exists('growtype_quiz_get_quiz_link')) {
         return get_permalink(growtype_quiz_get_current_user_quiz_id());
     }
 }
+
+/**
+ * @param $quiz_id
+ * @param $answers
+ */
+function growtype_quiz_get_quiz_answers_list($user_id)
+{
+    $quiz_result_data = get_quiz_result_data_by_user_id($user_id);
+
+    if (empty($quiz_result_data)) {
+        return null;
+    }
+
+    $answers = isset($quiz_result_data['answers']) ? $quiz_result_data['answers'] : null;
+
+    if (empty($answers)) {
+        return null;
+    }
+
+    $answers = json_decode($answers, true);
+
+    $quiz_id = $quiz_result_data['quiz_id'];
+
+    $questions = get_field('questions', $quiz_id);
+
+    $answers_list = [];
+    foreach ($answers as $key => $answer) {
+        $question = array_where($questions, function ($question) use ($key) {
+            return $question['key'] === $key;
+        });
+
+        $question = array_values($question)[0];
+
+        $options = isset($question['options_all']) ? $question['options_all'] : [];
+
+        if (empty($options)) {
+            continue;
+        }
+
+        $correct_answer = array_where($options, function ($option) use ($answer) {
+            return $option['correct'];
+        });
+
+        $user_answer = array_where($options, function ($option) use ($answer) {
+            return $option['value'] === $answer[0];
+        });
+
+        $correct_answer_value = array_values($correct_answer)[0]['value'];
+        $correct_answer_label = array_values($correct_answer)[0]['label'];
+
+        $user_answer_value = array_values($user_answer)[0]['value'];
+        $user_answer_label = array_values($user_answer)[0]['label'];
+
+        $answers_list[$key] = [
+            'correct_answer_value' => $correct_answer_value,
+            'correct_answer_label' => $correct_answer_label,
+            'user_answer_value' => $user_answer_value,
+            'user_answer_label' => $user_answer_label,
+            'user_answer_is_correct' => $correct_answer_value === $user_answer_value,
+            'question_intro' => $question['intro']
+        ];
+    }
+
+    return $answers_list;
+}
