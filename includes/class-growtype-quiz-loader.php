@@ -467,7 +467,7 @@ class Growtype_Quiz_Loader
      */
     public function evaluate_quiz_answers($quiz_id, $user_answers)
     {
-        $quiz_data = get_quiz_data($quiz_id);
+        $quiz_data = $this->get_quiz_data($quiz_id);
         $questions = $quiz_data['questions'];
 
         $correct_answers = 0;
