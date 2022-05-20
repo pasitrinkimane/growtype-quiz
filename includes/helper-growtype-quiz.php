@@ -193,11 +193,11 @@ function growtype_quiz_get_quiz_answers_list($user_id)
             return $option['value'] === $answer[0];
         });
 
-        $correct_answer_value = array_values($correct_answer)[0]['value'];
-        $correct_answer_label = array_values($correct_answer)[0]['label'];
+        $correct_answer_value = array_values($correct_answer)[0]['value'] ?? '-';
+        $correct_answer_label = array_values($correct_answer)[0]['label'] ?? '-';
 
-        $user_answer_value = array_values($user_answer)[0]['value'];
-        $user_answer_label = array_values($user_answer)[0]['label'];
+        $user_answer_value = array_values($user_answer)[0]['value'] ?? '-';
+        $user_answer_label = array_values($user_answer)[0]['label'] ?? '-';
 
         $answers_list[$key] = [
             'correct_answer_value' => $correct_answer_value,
