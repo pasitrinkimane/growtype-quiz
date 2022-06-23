@@ -24,7 +24,7 @@ export function showNextQuestion() {
         /**
          * Reset next btn label
          */
-        $('.b-quiz-footer .btn-go-next .e-label').text($('.b-quiz-footer .btn-next .e-label').attr('data-label'));
+        $('.b-quiz-footer .btn-go-next .e-label').text($('.b-quiz-footer .btn-go-next .e-label').attr('data-label'));
 
         if (nextQuestion.length > 0) {
             updateProgressCounter();
