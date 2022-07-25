@@ -274,7 +274,7 @@ class Growtype_Quiz_Loader
                 $results_page_template = plugin_dir_path(dirname(__FILE__)) . 'resources/views/' . $default_file;
             }
 
-            if (empty($results_page) && str_contains($_SERVER['REQUEST_URI'], self::CUSTOM_SLUG)) {
+            if (empty($results_page) && strpos($_SERVER['REQUEST_URI'], self::CUSTOM_SLUG)) {
                 return $results_page_template;
             } elseif (!empty($results_page) && $results_page->ID === get_the_ID()) {
                 return $results_page_template;

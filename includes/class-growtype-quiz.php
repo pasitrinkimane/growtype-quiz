@@ -189,7 +189,7 @@ class Growtype_Quiz
 
         $plugin_public = new Growtype_Quiz_Public($this->get_growtype_quiz(), $this->get_version());
 
-        if (str_contains($_SERVER['REQUEST_URI'], '/' . $this->post_type)) {
+        if (strpos($_SERVER['REQUEST_URI'], '/' . $this->post_type)) {
             $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
             $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
         }
