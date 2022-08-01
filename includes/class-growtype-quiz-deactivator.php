@@ -20,17 +20,19 @@
  * @subpackage Growtype_Quiz/includes
  * @author     Your Name <email@example.com>
  */
-class Growtype_Quiz_Deactivator {
+class Growtype_Quiz_Deactivator
+{
 
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
-	 */
-	public static function deactivate() {
-
-	}
+    /**
+     * Short Description. (use period)
+     *
+     * Long Description.
+     *
+     * @since    1.0.0
+     */
+    public static function deactivate()
+    {
+        deactivate_plugins('growtype_quiz');
+    }
 
 }

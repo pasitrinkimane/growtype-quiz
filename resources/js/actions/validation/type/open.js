@@ -1,6 +1,5 @@
-export function open() {
+export function open(currentQuestion) {
     let btnIsValid = true;
-    let currentQuestion = $('.b-quiz-question.is-active');
     let textarea = currentQuestion.find('textarea').val();
 
     if (textarea.length === 0) {
@@ -8,9 +7,9 @@ export function open() {
     }
 
     if (!btnIsValid) {
-        currentQuestion.find('.b-quiz-question-answers-wrapper').addClass('anim-shake');
+        currentQuestion.find('.b-quiz-question-answers-wrapper').addClass('anim-wrong-selection');
         setTimeout(function () {
-            currentQuestion.find('.b-quiz-question-answers-wrapper').removeClass('anim-shake');
+            currentQuestion.find('.b-quiz-question-answers-wrapper').removeClass('anim-wrong-selection');
         }, 500);
     }
 

@@ -8,17 +8,105 @@ use function App\sage;
  * @return mixed
  * Include view
  */
-if (!function_exists('include_quiz_view')) {
-    function include_quiz_view($path, $data = null)
+if (!function_exists('growtype_quiz_include_public')) {
+    function growtype_quiz_include_public($file_path, $variables = array (), $print = false)
     {
-        $plugin_root = plugin_dir_path(__DIR__);
-        $full_path = $plugin_root . 'resources/views/' . str_replace('.', '/', $path) . '.blade.php';
+        $output = null;
 
-        if (empty($data)) {
-            return sage('blade')->render($full_path);
+        $plugin_root = plugin_dir_path(__DIR__);
+        $full_file_path = $plugin_root . 'public/' . $file_path;
+
+        if (file_exists($full_file_path)) {
+            // Extract the variables to a local namespace
+            extract($variables);
+
+            // Start output buffering
+            ob_start();
+
+            // Include the template file
+            include $full_file_path;
+
+            // End buffering and return its contents
+            $output = ob_get_clean();
         }
 
-        return sage('blade')->render($full_path, $data);
+        if ($print) {
+            print $output;
+        }
+
+        return $output;
+    }
+}
+
+/**
+ * @param $path
+ * @param null $data
+ * @return mixed
+ * Include view
+ */
+if (!function_exists('growtype_quiz_include_resource')) {
+    function growtype_quiz_include_resource($file_path, $variables = array (), $print = false)
+    {
+        $output = null;
+
+        $plugin_root = plugin_dir_path(__DIR__);
+        $full_file_path = $plugin_root . 'resources/' . $file_path;
+
+        if (file_exists($full_file_path)) {
+            // Extract the variables to a local namespace
+            extract($variables);
+
+            // Start output buffering
+            ob_start();
+
+            // Include the template file
+            include $full_file_path;
+
+            // End buffering and return its contents
+            $output = ob_get_clean();
+        }
+
+        if ($print) {
+            print $output;
+        }
+
+        return $output;
+    }
+}
+
+/**
+ * @param $path
+ * @param null $data
+ * @return mixed
+ * Include view
+ */
+if (!function_exists('growtype_quiz_include_view')) {
+    function growtype_quiz_include_view($file_path, $variables = array (), $print = false)
+    {
+        $output = null;
+
+        $plugin_root = plugin_dir_path(__DIR__);
+        $full_file_path = $plugin_root . 'resources/views/' . str_replace('.', '/', $file_path) . '.php';
+
+        if (file_exists($full_file_path)) {
+            // Extract the variables to a local namespace
+            extract($variables);
+
+            // Start output buffering
+            ob_start();
+
+            // Include the template file
+            include $full_file_path;
+
+            // End buffering and return its contents
+            $output = ob_get_clean();
+        }
+
+        if ($print) {
+            print $output;
+        }
+
+        return $output;
     }
 }
 

@@ -16,10 +16,10 @@ function saveQuizData(data) {
      * Save extra data to answers
      */
     $.ajax({
-        url: '/wp/wp-admin/admin-ajax.php',
+        url: ajax_object.ajaxurl,
         type: "post",
         data: {
-            action: 'quiz_data',
+            action: 'growtype_quiz_save_data',
             status: 'save',
             answers: answers,
             quiz_id: quizId,

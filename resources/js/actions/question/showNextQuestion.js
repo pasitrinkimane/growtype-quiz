@@ -20,26 +20,50 @@ export function showNextQuestion() {
 
     showProgressIndicators();
 
-    currentQuestion.removeClass('is-active').fadeOut(300, function () {
+    currentQuestion.removeClass('is-active').not('.is-always-visible').fadeOut(300, function () {
+    }).promise().done(function () {
+
+        /**
+         * Change next label
+         */
+        let finishLabel = $('.b-quiz-nav .btn-go-next .e-label').attr('data-label-finish');
+
+        if (window.quizCurrentQuestionNr === window.quizQuestionsAmount - 1 && finishLabel.length > 0) {
+            $(this).closest('.b-quiz').find('.b-quiz-nav .btn-go-next .e-label').text(finishLabel);
+        }
+
         /**
          * Reset next btn label
          */
-        $('.b-quiz-footer .btn-go-next .e-label').text($('.b-quiz-footer .btn-go-next .e-label').attr('data-label'));
+        if (window.quizCurrentQuestionNr < window.quizQuestionsAmount - 1) {
+            let nextLabel = $('.b-quiz-nav .btn-go-next .e-label').attr('data-label');
+            let nextQuestionTitle = nextQuestion.nextAll('.b-quiz-question:first').attr('data-question-title');
+
+            if ($('.b-quiz-nav').attr('data-question-title-nav') === 'true' && nextQuestionTitle.length > 0) {
+                nextLabel = nextQuestionTitle;
+            }
+
+            $('.b-quiz-nav .btn-go-next .e-label').attr('data-label', nextLabel).text(nextLabel);
+        }
+
+        $('.quiz-wrapper').attr('data-current-question-type', nextQuestion.attr('data-question-type'))
 
         if (nextQuestion.length > 0) {
             updateProgressCounter();
             updateProgressBar();
             nextQuestion.addClass('is-active').fadeIn(300).promise().done(function () {
-                $('.b-quiz-footer .btn').attr('disabled', false);
-                if (window.quizCurrentQuestionNr === window.quizQuestionsAmount && window.quizLastQuestionNextLabel.length > 0) {
-                    $(this).closest('.b-quiz').find('.b-quiz-footer .btn-go-next .e-label').text(window.quizLastQuestionNextLabel);
-                }
+                $('.b-quiz-nav .btn').attr('disabled', false);
             });
+
             window.scrollTo(0, 0);
         }
 
-        if (nextQuestion.length === 0 || nextQuestion.attr('data-type') === 'success') {
+        if (nextQuestion.attr('data-hide-footer') === 'true') {
             hideProgressIndicators();
+        }
+
+        if (nextQuestion.length === 0 || nextQuestion.attr('data-question-type') === 'success') {
+            $('.btn-go-next').hide();
             document.dispatchEvent(saveQuizDataEvent());
             evaluateQuizData();
         }

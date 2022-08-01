@@ -4,7 +4,7 @@ export function collectQuizData(currentQuestion) {
     let answers = saveQuizDataEvent().answers;
     let correctlyAnswered = saveQuizDataEvent().correctlyAnswered;
     let currentQuestionKey = currentQuestion.attr('data-key');
-    let currentQuestionType = currentQuestion.attr('data-type');
+    let currentQuestionType = currentQuestion.attr('data-question-type');
 
     /**
      * Collect answers

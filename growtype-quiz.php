@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Growtype - Quiz
  * Plugin URI:        http://newcoolstudio.com/
- * Description:       Quiz functionality for "Growtype" theme
+ * Description:       Creates CPT with advanced quiz functionality. Requires ACF.
  * Version:           1.0.0
  * Author:            Growtype
  * Author URI:        http://newcoolstudio.com/
@@ -26,8 +26,8 @@
  */
 
 // If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-	die;
+if (!defined('WPINC')) {
+    die;
 }
 
 /**
@@ -35,44 +35,61 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'GROWTYPE_QUIZ_VERSION', '1.0.0' );
+define('GROWTYPE_QUIZ_VERSION', '1.0.0');
 
 /**
  * Plugin post type.
  */
-define( 'GROWTYPE_QUIZ_POST_TYPE', 'quiz' );
+define('GROWTYPE_QUIZ_POST_TYPE', 'quiz');
+
+/**
+ * Plugin dir path
+ */
+define('GROWTYPE_QUIZ_PATH', plugin_dir_path(__FILE__));
+
+/**
+ * Plugin url
+ */
+define('GROWTYPE_QUIZ_URL', plugin_dir_url(__FILE__));
+
+/**
+ * Plugin url public
+ */
+define('GROWTYPE_QUIZ_URL_PUBLIC', plugin_dir_url(__FILE__) . 'public/');
 
 /**
  * Plugin taxonomy.
  */
-define( 'GROWTYPE_QUIZ_TAXONOMY', 'quiz_cat' );
+define('GROWTYPE_QUIZ_TAXONOMY', 'quiz_cat');
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-growtype-quiz-activator.php
  */
-function activate_growtype_quiz() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-growtype-quiz-activator.php';
-	Growtype_Quiz_Activator::activate();
+function activate_growtype_quiz()
+{
+    require_once plugin_dir_path(__FILE__) . 'includes/class-growtype-quiz-activator.php';
+    Growtype_Quiz_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-growtype-quiz-deactivator.php
  */
-function deactivate_growtype_quiz() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-growtype-quiz-deactivator.php';
-	Growtype_Quiz_Deactivator::deactivate();
+function deactivate_growtype_quiz()
+{
+    require_once plugin_dir_path(__FILE__) . 'includes/class-growtype-quiz-deactivator.php';
+    Growtype_Quiz_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_growtype_quiz' );
-register_deactivation_hook( __FILE__, 'deactivate_growtype_quiz' );
+register_activation_hook(__FILE__, 'activate_growtype_quiz');
+register_deactivation_hook(__FILE__, 'deactivate_growtype_quiz');
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-growtype-quiz.php';
+require plugin_dir_path(__FILE__) . 'includes/class-growtype-quiz.php';
 
 /**
  * Begins execution of the plugin.
@@ -83,10 +100,10 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-growtype-quiz.php';
  *
  * @since    1.0.0
  */
-function run_growtype_quiz() {
-
-	$plugin = new Growtype_Quiz();
-	$plugin->run();
-
+function run_growtype_quiz()
+{
+    $plugin = new Growtype_Quiz();
+    $plugin->run();
 }
+
 run_growtype_quiz();

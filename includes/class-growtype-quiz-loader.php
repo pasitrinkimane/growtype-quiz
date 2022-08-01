@@ -62,17 +62,35 @@ class Growtype_Quiz_Loader
 
         $this->quiz_results_table_name = $wpdb->prefix . 'quiz_results';
 
+        add_action('init', array ($this, 'check_ability_to_launch_plugin'), 5);
         add_action('init', array ($this, 'register_post_types'), 5);
+        add_action('after_setup_theme', array ($this, 'extend_theme_support'), 5);
         add_action('init', array ($this, 'register_taxonomy'), 5);
         add_action('init', array ($this, 'create_tables'), 5);
 
         add_filter('single_template', array (__CLASS__, 'single_template_loader'));
         add_filter('page_template', array (__CLASS__, 'page_template_loader'));
 
-        add_action('wp_ajax_quiz_data', array ($this, 'quiz_data'), 5);
-        add_action('wp_ajax_nopriv_quiz_data', array ($this, 'quiz_data'), 5);
+        add_action('wp_ajax_growtype_quiz_save_data', array ($this, 'growtype_quiz_save_data_handler'));
+        add_action('wp_ajax_nopriv_growtype_quiz_save_data', array ($this, 'growtype_quiz_save_data_handler'));
 
 //        add_action('init', array ($this, 'custom_url'), 1);
+    }
+
+    /**
+     * Check if plugin is valid to launch
+     */
+    public function check_ability_to_launch_plugin()
+    {
+        if (!class_exists('ACF')) {
+            add_action('admin_notices', array ($this, 'acf_required_admin_notice'));
+            deactivate_plugins('/growtype-quiz/growtype-quiz.php');
+        }
+    }
+
+    function acf_required_admin_notice()
+    {
+        echo '<div class="error"><p>ADVANCED CUSTOM FIELDS plugin is required.</p></div>';
     }
 
     /**
@@ -155,29 +173,38 @@ class Growtype_Quiz_Loader
     /**
      * Registers the post types.
      */
-    function register_post_types()
+    public function register_post_types()
     {
-        $post_type = defined('GROWTYPE_QUIZ_POST_TYPE') ? GROWTYPE_QUIZ_POST_TYPE : 'quiz';
+        $post_type = Growtype_Quiz::get_growtype_quiz_post_type();
+        $post_type_name = Growtype_Quiz::get_growtype_quiz_post_type_label_name();
+        $post_type_singular_name = Growtype_Quiz::get_growtype_quiz_post_type_label_singular_name();
 
         register_post_type($post_type,
             array (
                 'labels' => array (
-                    'name' => __('Quizes'),
-                    'singular_name' => __('Quiz')
+                    'name' => $post_type_name,
+                    'singular_name' => $post_type_singular_name
                 ),
                 'public' => true,
                 'hierarchical' => true,
                 'show_ui' => true,
                 'show_in_menu' => true,
-                'menu_icon' => 'dashicons-welcome-learn-more'
+                'menu_icon' => 'dashicons-welcome-learn-more',
+                'has_archive' => true,
+                'supports' => array ('title', 'editor', 'thumbnail'),
             )
         );
+    }
+
+    public function extend_theme_support()
+    {
+        add_theme_support('post-thumbnails');
     }
 
     /**
      * Registers the post types.
      */
-    function register_taxonomy()
+    public function register_taxonomy()
     {
         $tax = defined('GROWTYPE_QUIZ_TAXONOMY') ? GROWTYPE_QUIZ_TAXONOMY : 'quiz_cat';
         $post_type = defined('GROWTYPE_QUIZ_POST_TYPE') ? GROWTYPE_QUIZ_POST_TYPE : 'quiz';
@@ -204,7 +231,7 @@ class Growtype_Quiz_Loader
     /**
      * Create required tabled
      */
-    function create_tables()
+    public function create_tables()
     {
         global $wpdb;
 
@@ -215,7 +242,7 @@ class Growtype_Quiz_Loader
 
             $sql = "CREATE TABLE IF NOT EXISTS $quiz_results_table_name (
       id bigint(20) NOT NULL AUTO_INCREMENT,
-      user_id bigint(20) UNSIGNED NOT NULL,
+      user_id bigint(20) DEFAULT NULL,
       quiz_id bigint(20) UNSIGNED NOT NULL,
       answers TEXT NOT NULL,
       duration INTEGER,
@@ -242,11 +269,25 @@ class Growtype_Quiz_Loader
      * @param string $template Template to load.
      * @return string
      */
-    public static function single_template_loader($template)
+    public function single_template_loader($template)
     {
-        if (get_post_type() === 'quiz') {
-            $default_file = 'single-quiz.blade.php';
-            $template = plugin_dir_path(dirname(__FILE__)) . 'resources/views/' . $default_file;
+        if (get_post_type() === Growtype_Quiz::get_growtype_quiz_post_type()) {
+            $default_file = 'single-quiz.php';
+            $default_blade_file = 'single-quiz.blade.php';
+
+            $fallback_template = plugin_dir_path(dirname(__FILE__)) . 'resources/views/' . $default_file;
+            $child_blade_template = get_stylesheet_directory() . '/views/' . $default_blade_file;
+            $child_template = get_stylesheet_directory() . '/growtype-quiz/' . $default_file;
+
+            if (file_exists($child_blade_template)) {
+                $custom_template = $child_blade_template;
+            } elseif (file_exists($child_template)) {
+                $custom_template = $child_template;
+            } else {
+                $custom_template = $fallback_template;
+            }
+
+            return $custom_template;
         }
 
         return $template;
@@ -261,23 +302,30 @@ class Growtype_Quiz_Loader
      * @param string $template Template to load.
      * @return string
      */
-    public static function page_template_loader($template)
+    public function page_template_loader($template)
     {
         if (current_user_can('manage_options')) {
             $results_page = get_page_by_path('results');
 
-            $default_file = 'page-results.blade.php';
+            $default_file = 'page-results.php';
+            $default_blade_file = 'page-results.blade.php';
 
-            $results_page_template = get_child_template_resource_path() . '/views/growtype-quiz/' . $default_file;
+            $fallback_template = plugin_dir_path(dirname(__FILE__)) . 'resources/views/' . $default_file;
+            $child_blade_template = get_stylesheet_directory() . '/views/' . $default_blade_file;
+            $child_template = get_stylesheet_directory() . '/growtype-quiz/' . $default_file;
 
-            if (!file_exists($results_page_template)) {
-                $results_page_template = plugin_dir_path(dirname(__FILE__)) . 'resources/views/' . $default_file;
+            if (file_exists($child_blade_template)) {
+                $custom_template = $child_blade_template;
+            } elseif (file_exists($child_template)) {
+                $custom_template = $child_template;
+            } else {
+                $custom_template = $fallback_template;
             }
 
-            if (empty($results_page) && strpos($_SERVER['REQUEST_URI'], self::CUSTOM_SLUG)) {
-                return $results_page_template;
+            if (empty($results_page) && strpos($_SERVER['REQUEST_URI'], self::CUSTOM_SLUG) === 0) {
+                return $custom_template;
             } elseif (!empty($results_page) && $results_page->ID === get_the_ID()) {
-                return $results_page_template;
+                return $custom_template;
             }
         }
 
@@ -287,7 +335,7 @@ class Growtype_Quiz_Loader
     /**
      * @return void
      */
-    function custom_url()
+    public function custom_url()
     {
         add_rewrite_endpoint(self::CUSTOM_SLUG, EP_ROOT);
     }
@@ -295,7 +343,7 @@ class Growtype_Quiz_Loader
     /**
      * Handle quiz data
      */
-    function quiz_data()
+    function growtype_quiz_save_data_handler()
     {
         $quiz_data['answers'] = $_POST['answers'] ?? null;
         $quiz_data['status'] = $_POST['status'] ?? null;
@@ -366,24 +414,29 @@ class Growtype_Quiz_Loader
         global $wpdb;
 
         $table_name = $this->quiz_results_table_name;
-        $current_user = wp_get_current_user();
-        $user_id = $current_user->ID;
+
+        $user_id = null;
+        if (is_user_logged_in()) {
+            $current_user = wp_get_current_user();
+            $user_id = $current_user->ID;
+        }
+
         $quiz_id = $quiz_data['quiz_id'];
         $answers = json_encode($quiz_data['answers']);
 
-        $result = $wpdb->get_results("SELECT * FROM $table_name where quiz_id='$quiz_id' and user_id='$user_id' and answers='$answers'");
-
-        if (empty($result)) {
-            $wpdb->insert($table_name, [
-                'user_id' => $user_id,
-                'quiz_id' => $quiz_id,
-                'answers' => $answers,
-                'duration' => $quiz_data['duration'],
-                'questions_amount' => $this->get_quiz_data($quiz_data['quiz_id'])['questions_available_amount'],
-                'correct_answers_amount' => $this->evaluate_quiz_answers($quiz_data['quiz_id'], $quiz_data['answers'])['correct_answers_amount'],
-                'wrong_answers_amount' => $this->evaluate_quiz_answers($quiz_data['quiz_id'], $quiz_data['answers'])['wrong_answers_amount'],
-            ]);
+        if (is_user_logged_in()) {
+            $result = $wpdb->get_results("SELECT * FROM $table_name where quiz_id='$quiz_id' and user_id='$user_id' and answers='$answers'");
         }
+
+        $wpdb->insert($table_name, [
+            'user_id' => $user_id,
+            'quiz_id' => $quiz_id,
+            'answers' => $answers,
+            'duration' => $quiz_data['duration'],
+            'questions_amount' => $this->get_quiz_data($quiz_data['quiz_id'])['questions_available_amount'],
+            'correct_answers_amount' => $this->evaluate_quiz_answers($quiz_data['quiz_id'], $quiz_data['answers'])['correct_answers_amount'],
+            'wrong_answers_amount' => $this->evaluate_quiz_answers($quiz_data['quiz_id'], $quiz_data['answers'])['wrong_answers_amount'],
+        ]);
 
         return true;
     }
@@ -449,6 +502,7 @@ class Growtype_Quiz_Loader
         $quiz_data['limited_time'] = get_field('limited_time', $quiz_id);
         $quiz_data['duration'] = get_field('duration', $quiz_id);
         $quiz_data['progress_bar'] = get_field('progress_bar', $quiz_id);
+        $quiz_data['use_question_title_nav'] = get_field('use_question_title_nav', $quiz_id);
         $quiz_data['questions'] = get_field('questions', $quiz_id);
 
         $quiz_data['questions_available'] = array_filter($quiz_data['questions'], function ($question) {

@@ -15,8 +15,10 @@ export function nextQuestionTrigger() {
             return false;
         }
 
-        $('.b-quiz-footer .btn').attr('disabled', true)
+        $('.b-quiz-nav .btn').attr('disabled', true)
+
         collectQuizData(currentQuestion);
+
         showNextQuestion();
     });
 }

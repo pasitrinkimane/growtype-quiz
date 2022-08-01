@@ -1,0 +1,76 @@
+.b-quiz-question[data-question-style="horizontal"] {
+  margin-bottom: 40px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+
+  .main-content-wrapper {
+    padding: 0;
+  }
+
+  .main-content-wrapper {
+    flex-direction: column;
+    padding-top: 45px;
+    padding-left: 30px;
+    padding-bottom: 40px;
+    width: 100%;
+  }
+
+  &[data-question-type="success"] {
+    padding-left: 0;
+
+    .main-content-wrapper {
+      padding: 0;
+      width: 100%;
+    }
+
+    .form-group {
+      width: 100%;
+
+      input {
+        border: none;
+        border-bottom: 1px solid #7c9cae;
+        font-size: 16px;
+        color: #202633;
+      }
+    }
+  }
+
+  .b-img + .main-content-wrapper {
+    padding-left: 50px;
+  }
+
+  .b-quiz-question-answers {
+    flex-direction: column;
+  }
+
+  .b-quiz-question-answer {
+    margin-bottom: 20px;
+  }
+
+  .wpcf7-form {
+    margin: auto;
+    padding: 50px 50px;
+    margin-left: 0;
+  }
+
+  .row {
+    display: flex;
+    gap: 20px;
+  }
+
+  .cta-wrapper {
+    width: 100%;
+    justify-content: space-between;
+
+    .ajax-loader {
+      position: absolute;
+    }
+
+    .wpcf7-list-item-label {
+      color: #202633;
+    }
+  }
+}

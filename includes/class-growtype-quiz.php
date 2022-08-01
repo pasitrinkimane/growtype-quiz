@@ -74,21 +74,37 @@ class Growtype_Quiz
         } else {
             $this->version = '1.0.0';
         }
+
         $this->growtype_quiz = 'growtype-quiz';
+
+        $this->load_admin_traits();
 
         /**
          * Quiz post type
          */
-        if (defined('GROWTYPE_QUIZ_POST_TYPE')) {
-            $this->post_type = GROWTYPE_QUIZ_POST_TYPE;
-        } else {
-            $this->post_type = 'quiz';
-        }
+        $this->post_type = self::get_growtype_quiz_post_type();
 
         $this->load_dependencies();
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
+    }
+
+    /**
+     * Load the required traits for this plugin.
+     */
+    private function load_admin_traits()
+    {
+        /**
+         * Admin traits
+         */
+        spl_autoload_register(function ($traitName) {
+            $fileName = GROWTYPE_QUIZ_PATH . 'admin/traits/' . $traitName . '.php';
+
+            if (file_exists($fileName)) {
+                include $fileName;
+            }
+        });
     }
 
     /**
@@ -169,7 +185,6 @@ class Growtype_Quiz
      */
     private function define_admin_hooks()
     {
-
         $plugin_admin = new Growtype_Quiz_Admin($this->get_growtype_quiz(), $this->get_version());
 
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
@@ -186,10 +201,9 @@ class Growtype_Quiz
      */
     private function define_public_hooks()
     {
-
         $plugin_public = new Growtype_Quiz_Public($this->get_growtype_quiz(), $this->get_version());
 
-        if (strpos($_SERVER['REQUEST_URI'], '/' . $this->post_type)) {
+        if (strpos($_SERVER['REQUEST_URI'], '/' . $this->post_type) === 0) {
             $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
             $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
         }
@@ -239,4 +253,33 @@ class Growtype_Quiz
         return $this->version;
     }
 
+    /**
+     * @return string
+     */
+    public static function get_growtype_quiz_post_type()
+    {
+        $custom_post_type = get_option('growtype_quiz_custom_post_type');
+
+        return !empty($custom_post_type) ? $custom_post_type : (defined('GROWTYPE_QUIZ_POST_TYPE') ? GROWTYPE_QUIZ_POST_TYPE : 'quiz');
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_growtype_quiz_post_type_label_name()
+    {
+        $custom_post_type_name = get_option('growtype_quiz_custom_post_type_label_name');
+
+        return !empty($custom_post_type_name) ? $custom_post_type_name : __('Quizes', 'growtype-quiz');
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_growtype_quiz_post_type_label_singular_name()
+    {
+        $custom_post_type_name = get_option('growtype_quiz_custom_post_type_label_singular_name');
+
+        return !empty($custom_post_type_name) ? $custom_post_type_name : __('Quiz', 'growtype-quiz');
+    }
 }

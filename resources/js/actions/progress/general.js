@@ -1,7 +1,7 @@
 export function hideProgressIndicators() {
     $('.b-quiz-progressbar').hide();
     $('.b-quiz-header').hide();
-    $('.b-quiz-footer').hide();
+    $('.b-quiz-nav').hide();
 
     if($('.b-quiz-timer').length > 0){
         $('.b-quiz-timer').hide();
@@ -12,7 +12,7 @@ export function hideProgressIndicators() {
 export function showProgressIndicators() {
     $('.b-quiz-progressbar').show();
     $('.b-quiz-header').show();
-    $('.b-quiz-footer').show();
+    $('.b-quiz-nav').show();
 
     if($('.b-quiz-timer').length > 0){
         $('.b-quiz-timer').show();

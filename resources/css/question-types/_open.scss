@@ -1,5 +1,5 @@
 .b-quiz-question {
-  &[data-type="open"] {
+  &[data-question-type="open"] {
     .e-explanation {
       text-align: right;
       margin-top: 5px;

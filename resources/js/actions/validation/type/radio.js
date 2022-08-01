@@ -1,6 +1,5 @@
-export function radio() {
+export function radio(currentQuestion) {
     let btnIsValid = true;
-    let currentQuestion = $('.b-quiz-question.is-active');
     let activeBtns = currentQuestion.find('.b-quiz-question-answer.is-active');
 
     if (activeBtns.length === 0) {
@@ -35,9 +34,10 @@ export function radio() {
             currentQuestion.find('.b-quiz-hint').fadeIn();
         }
 
-        currentQuestion.find('.b-quiz-question-answers').addClass('anim-shake');
+        currentQuestion.find('.b-quiz-question-answers').addClass('anim-wrong-selection');
+
         setTimeout(function () {
-            currentQuestion.find('.b-quiz-question-answers').removeClass('anim-shake');
+            currentQuestion.find('.b-quiz-question-answers').removeClass('anim-wrong-selection');
         }, 500);
     }
 

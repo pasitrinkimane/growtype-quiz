@@ -1,14 +1,64 @@
 @import "../../../../themes/growtype/resources/styles/common/variables";
 @import "../../../../themes/growtype/resources/styles/common/mixins";
-@import "components/progress-bar";
-@import "components/timer";
 
-@import "partials/question-types/open";
-@import "partials/question-types/radio";
+.quiz-wrapper {
 
-.single-quiz {
+  @import "components/progress-bar";
+  @import "components/timer";
+  @import "components/input";
+
+  @import "question-types/open";
+  @import "question-types/radio";
+  @import "question-types/success";
+
+  @import "question-styles/horizontal-intro-select";
+  @import "question-styles/horizontal-featured-select";
+  @import "question-styles/horizontal";
+
+  .s-intro {
+    width: 100%;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    margin-bottom: 30px;
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      min-height: 160px;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+  }
+
+  .b-quiz-question-nr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .b-quiz-question-nr-separator {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .b-quiz-question-text {
+      padding-left: 5px;
+    }
+  }
+
   .s-quiz {
     padding-bottom: 50px;
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+
+    .b-quiz-question-intro {
+      padding-bottom: 20px;
+
+      p {
+        padding-bottom: 0;
+      }
+    }
   }
 
   .dashicons-arrow-right-alt2:before {
@@ -23,8 +73,18 @@
     border-radius: 10px;
     padding: 60px 80px;
     border: 1px solid grey;
+    box-sizing: border-box;
     @include bp-phone-xl() {
       padding: 30px 25px;
+    }
+
+    .b-quiz-question-answers {
+      display: inline-block;
+      width: 100%;
+
+      &.anim-wrong-selection {
+        animation: growtype-quiz-wrong-answer 0.25s infinite;
+      }
     }
 
     .b-quiz-header {
@@ -57,28 +117,110 @@
     &.first-question {
       display: block;
     }
-  }
 
-  .b-quiz-footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-    gap: 15px;
-    flex-wrap: wrap;
-    @include bp-phone-xl() {
-      flex-direction: column;
-      justify-content: initial;
+    &.is-visible {
+      display: flex;
     }
 
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      @include bp-phone-xl() {
+    &.is-always-visible {
+      display: block !important;
+    }
+
+    .b-img {
+      width: 90%;
+
+      .e-img {
         width: 100%;
+        height: 100%;
+      }
+    }
+
+    &[data-question-style="horizontal"] {
+      .b-quiz-question-answers {
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    .b-quiz-question-inner {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .b-quiz-nav {
+    .b-quiz-nav-inner {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+      gap: 15px;
+      flex-wrap: wrap;
+      @include bp-phone-xl() {
+        flex-direction: column;
+        justify-content: initial;
+      }
+
+      .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        background: none;
+        border: 1px solid black;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        @include bp-phone-xl() {
+          width: 100%;
+        }
+      }
+
+      .btn-go-back {
+        .icon-arrow {
+          transform: rotate(180deg);
+          margin-right: 5px;
+          position: relative;
+          top: -1px;
+        }
+      }
+
+      .btn-go-next {
+        margin-left: auto;
+
+        .icon-arrow {
+          margin-left: 5px;
+          position: relative;
+          bottom: -1px;
+        }
+      }
+
+      .b-quiz-question-nr {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
       }
     }
   }
 }
 
-
+@keyframes growtype-quiz-wrong-answer {
+  0% {
+    transform: translateX(0)
+  }
+  25% {
+    transform: translateX(5px)
+  }
+  50% {
+    transform: translateX(-5px)
+  }
+  75% {
+    transform: translateX(5px)
+  }
+  100% {
+    transform: translateX(0)
+  }
+}
