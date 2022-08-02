@@ -269,7 +269,7 @@ class Growtype_Quiz_Loader
      * @param string $template Template to load.
      * @return string
      */
-    public function single_template_loader($template)
+    public static function single_template_loader($template)
     {
         if (get_post_type() === Growtype_Quiz::get_growtype_quiz_post_type()) {
             $default_file = 'single-quiz.php';
@@ -302,7 +302,7 @@ class Growtype_Quiz_Loader
      * @param string $template Template to load.
      * @return string
      */
-    public function page_template_loader($template)
+    public static function page_template_loader($template)
     {
         if (current_user_can('manage_options')) {
             $results_page = get_page_by_path('results');
