@@ -4,6 +4,7 @@
   .b-quiz-question-answers {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 
     .b-quiz-question-answer {
       padding: 20px 40px;
@@ -12,10 +13,14 @@
       padding-top: 21px;
       padding-bottom: 16px;
       cursor: pointer;
+      @include bp-phone-xl() {
+        padding: 20px 20px;
+      }
 
       label {
         font-size: 18px;
         text-transform: uppercase;
+        cursor: pointer;
       }
 
       &:nth-child(1) {

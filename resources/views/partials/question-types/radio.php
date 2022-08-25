@@ -8,6 +8,8 @@
                          data-extra-value="<?php echo $option['extra_value'] ?>"
                          data-cor="<?php echo $quiz_data['is_test_mode'] ? $option['correct'] : '' ?>"
                          data-default-belongs-to="<?php echo $option['default_belongs_to'] ?>"
+                         data-url="<?php echo $question['has_url'] && !empty($option['url']) ? $option['url'] : '' ?>"
+                         data-funnel="<?php echo $option['next_funnel'] ?>"
                     >
                         <?php if (!empty($option['featured_image'])) { ?>
                             <div class="e-img" style="background:url(<?php echo $option['featured_image']['sizes']['medium'] ?>);background-position: center;background-size: cover;background-repeat: no-repeat;"></div>

@@ -127,8 +127,8 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
  * @return array|bool|object|null
  * Get quiz data
  */
-if (!function_exists('get_quiz_results_data')) {
-    function get_quiz_results_data()
+if (!function_exists('growtype_quiz_get_results_data')) {
+    function growtype_quiz_get_results_data()
     {
         $growtype_quiz_loader = new Growtype_Quiz_Loader();
 
@@ -140,8 +140,8 @@ if (!function_exists('get_quiz_results_data')) {
  * @return array|bool|object|null
  * Get quiz data
  */
-if (!function_exists('get_quiz_result_data_by_user_id')) {
-    function get_quiz_result_data_by_user_id($user_id)
+if (!function_exists('growtype_quiz_get_result_data_by_user_id')) {
+    function growtype_quiz_get_result_data_by_user_id($user_id)
     {
         $growtype_quiz_loader = new Growtype_Quiz_Loader();
 
@@ -153,8 +153,8 @@ if (!function_exists('get_quiz_result_data_by_user_id')) {
  * @return array|bool|object|null
  * Get quiz data
  */
-if (!function_exists('get_quiz_results_open_question_answers')) {
-    function get_quiz_results_open_question_answers($quiz_id)
+if (!function_exists('growtype_quiz_get_results_open_question_answers')) {
+    function growtype_quiz_get_results_open_question_answers($quiz_id)
     {
         $growtype_quiz_loader = new Growtype_Quiz_Loader();
         $quiz_results_data = $growtype_quiz_loader->get_quiz_results_data($quiz_id);
@@ -236,17 +236,11 @@ if (!function_exists('growtype_quiz_get_quiz_link')) {
 }
 
 /**
- * @param $quiz_id
- * @param $answers
+ * @param $quiz_result_data
+ * @return array|null
  */
-function growtype_quiz_get_quiz_answers_list($user_id)
+function growtype_quiz_map_quiz_results($quiz_result_data)
 {
-    $quiz_result_data = get_quiz_result_data_by_user_id($user_id);
-
-    if (empty($quiz_result_data)) {
-        return null;
-    }
-
     $answers = isset($quiz_result_data['answers']) ? $quiz_result_data['answers'] : null;
 
     if (empty($answers)) {
@@ -259,43 +253,85 @@ function growtype_quiz_get_quiz_answers_list($user_id)
 
     $questions = get_field('questions', $quiz_id);
 
-    $answers_list = [];
-    foreach ($answers as $key => $answer) {
-        $question = array_where($questions, function ($question) use ($key) {
-            return $question['key'] === $key;
-        });
+    $quiz_type = get_field('quiz_type', $quiz_id);
 
-        $question = array_values($question)[0];
+    $results_data = [];
+    foreach ($answers as $answer_key => $answers_values) {
 
-        $options = isset($question['options_all']) ? $question['options_all'] : [];
+        $index = 1;
+        $question = null;
+        foreach ($questions as $single_question) {
+            $question_key = $single_question['key'];
 
-        if (empty($options)) {
+            if (empty($question_key)) {
+                $question_key = 'question_' . $index;
+            }
+
+            if ($question_key === $answer_key) {
+                $question = $single_question;
+                break;
+            }
+
+            $index++;
+        }
+
+        if (empty($question)) {
             continue;
         }
 
-        $correct_answer = array_where($options, function ($option) use ($answer) {
-            return $option['correct'];
-        });
+        $answer_options = isset($question['options_all']) ? $question['options_all'] : [];
 
-        $user_answer = array_where($options, function ($option) use ($answer) {
-            return $option['value'] === $answer[0];
-        });
+        if (empty($answer_options)) {
+            continue;
+        }
 
-        $correct_answer_value = array_values($correct_answer)[0]['value'] ?? '-';
-        $correct_answer_label = array_values($correct_answer)[0]['label'] ?? '-';
+        $user_answer_values = [];
+        foreach ($answers_values as $answer) {
+            $user_answer = array_filter($answer_options, function ($option) use ($answer) {
+                return $option['value'] === $answer;
+            });
 
-        $user_answer_value = array_values($user_answer)[0]['value'] ?? '-';
-        $user_answer_label = array_values($user_answer)[0]['label'] ?? '-';
+            if (!empty($user_answer)) {
+                array_push($user_answer_values, array_values($user_answer)[0]);
+            }
+        }
 
-        $answers_list[$key] = [
-            'correct_answer_value' => $correct_answer_value,
-            'correct_answer_label' => $correct_answer_label,
-            'user_answer_value' => $user_answer_value,
-            'user_answer_label' => $user_answer_label,
-            'user_answer_is_correct' => $correct_answer_value === $user_answer_value,
-            'question_intro' => $question['intro']
+        $results_data[$answer_key] = [
+            'answers' => $user_answer_values,
+            'question_title' => $question['question_title'],
+            'question_intro' => $question['intro'],
         ];
+
+        if ($quiz_type === 'scored') {
+            $correct_answers = [];
+            foreach ($answers_values as $answer) {
+                $correct_answer = array_filter($answer_options, function ($option) use ($answer) {
+                    return $option['correct'] && $option['value'] === $answer;
+                });
+
+                if (!empty($correct_answer)) {
+                    array_push($correct_answers, array_values($correct_answer)[0]);
+                }
+            }
+
+            $results_data[$answer_key]['correct_answers'] = $correct_answers;
+        }
     }
 
-    return $answers_list;
+    return $results_data;
+}
+
+/**
+ * @param $quiz_id
+ * @param $answers
+ */
+function growtype_quiz_get_extended_user_quiz_results($user_id)
+{
+    $quiz_result_data = growtype_quiz_get_result_data_by_user_id($user_id);
+
+    if (empty($quiz_result_data)) {
+        return null;
+    }
+
+    return growtype_quiz_map_quiz_results($quiz_result_data);
 }

@@ -12,7 +12,7 @@ export function previousQuestionTrigger() {
 
         window.quizBackBtnWasClicked = true;
 
-        if (window.quizQuestionsKeysAlreadyVisited.length === 0) {
+        if (window.growtype_quiz.already_visited_questions_keys.length === 0) {
             return window.location.replace("/");
         }
 

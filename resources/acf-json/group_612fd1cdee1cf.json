@@ -22,9 +22,34 @@
             "ui_off_text": ""
         },
         {
-            "key": "field_613602bdbd0ec",
-            "label": "Test Mode",
-            "name": "is_test_mode",
+            "key": "field_6131101a223f8",
+            "label": "Quiz Type",
+            "name": "quiz_type",
+            "type": "select",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "15",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "poll": "Poll",
+                "scored": "Scored"
+            },
+            "default_value": [],
+            "allow_null": 0,
+            "multiple": 0,
+            "ui": 0,
+            "return_format": "value",
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_614d8441d31ee",
+            "label": "Save Answers On Success",
+            "name": "save_answers",
             "type": "true_false",
             "instructions": "",
             "required": 0,
@@ -35,7 +60,7 @@
                 "id": ""
             },
             "message": "",
-            "default_value": 0,
+            "default_value": 1,
             "ui": 0,
             "ui_on_text": "",
             "ui_off_text": ""
@@ -68,48 +93,31 @@
             "ui_off_text": ""
         },
         {
-            "key": "field_614d8441d31ee",
-            "label": "Save Answers On Success",
-            "name": "save_answers",
+            "key": "field_613602bdbd0ec",
+            "label": "Test Mode",
+            "name": "is_test_mode",
             "type": "true_false",
             "instructions": "",
             "required": 0,
-            "conditional_logic": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_6131101a223f8",
+                        "operator": "==",
+                        "value": "scored"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "10",
                 "class": "",
                 "id": ""
             },
             "message": "",
-            "default_value": 1,
+            "default_value": 0,
             "ui": 0,
             "ui_on_text": "",
             "ui_off_text": ""
-        },
-        {
-            "key": "field_6131101a223f8",
-            "label": "Quiz Type",
-            "name": "quiz_type",
-            "type": "select",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "15",
-                "class": "",
-                "id": ""
-            },
-            "choices": {
-                "poll": "Poll",
-                "scored": "Scored"
-            },
-            "default_value": [],
-            "allow_null": 0,
-            "multiple": 0,
-            "ui": 0,
-            "return_format": "value",
-            "ajax": 0,
-            "placeholder": ""
         },
         {
             "key": "field_613116cc0605c",
@@ -231,13 +239,40 @@
             "step": ""
         },
         {
+            "key": "field_62e8e0c00a748",
+            "label": "Has custom success url",
+            "name": "has_custom_success_url",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "10",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
             "key": "field_616dbb56a7e9b",
             "label": "Success Url",
             "name": "success_url",
             "type": "text",
             "instructions": "",
             "required": 0,
-            "conditional_logic": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_62e8e0c00a748",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "15",
                 "class": "",
@@ -295,6 +330,33 @@
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
+            "wrapper": {
+                "width": "10",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_63079c73d3913",
+            "label": "Extra value is visible",
+            "name": "extra_value_is_visible",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_62e11ad333aa7",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "10",
                 "class": "",
@@ -479,7 +541,7 @@
                 },
                 {
                     "key": "field_62e792dda621b",
-                    "label": "Has Question Title",
+                    "label": "Has Custom Title",
                     "name": "has_question_title",
                     "type": "true_false",
                     "instructions": "",
@@ -756,7 +818,7 @@
                 },
                 {
                     "key": "field_62e689eec4034",
-                    "label": "Hide footer",
+                    "label": "Hide Footer",
                     "name": "hide_footer",
                     "type": "true_false",
                     "instructions": "",
@@ -859,7 +921,7 @@
                 },
                 {
                     "key": "field_62dfde0a285f9",
-                    "label": "Always visible",
+                    "label": "Always Visible",
                     "name": "always_visible",
                     "type": "true_false",
                     "instructions": "",
@@ -886,7 +948,7 @@
                 },
                 {
                     "key": "field_62dff4c3316c6",
-                    "label": "Featured image",
+                    "label": "Featured Image",
                     "name": "featured_image",
                     "type": "image",
                     "instructions": "",
@@ -910,8 +972,46 @@
                 },
                 {
                     "key": "field_62dff71928dd4",
-                    "label": "Options has featured images",
+                    "label": "Options Has Featured Images",
                     "name": "options_has_featured_images",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "10",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 0,
+                    "ui_on_text": "",
+                    "ui_off_text": ""
+                },
+                {
+                    "key": "field_62e8dcfc0edf7",
+                    "label": "Has Url",
+                    "name": "has_url",
+                    "type": "true_false",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "10",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 0,
+                    "ui_on_text": "",
+                    "ui_off_text": ""
+                },
+                {
+                    "key": "field_62e917b27a532",
+                    "label": "Answer Is Not Required",
+                    "name": "not_required",
                     "type": "true_false",
                     "instructions": "",
                     "required": 0,
@@ -1073,7 +1173,7 @@
                             "required": 0,
                             "conditional_logic": 0,
                             "wrapper": {
-                                "width": "30",
+                                "width": "20",
                                 "class": "",
                                 "id": ""
                             },
@@ -1154,7 +1254,34 @@
                                 ]
                             ],
                             "wrapper": {
-                                "width": "30",
+                                "width": "10",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
+                        },
+                        {
+                            "key": "field_62e8dd230edf8",
+                            "label": "Url",
+                            "name": "url",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_62e8dcfc0edf7",
+                                        "operator": "==",
+                                        "value": "1"
+                                    }
+                                ]
+                            ],
+                            "wrapper": {
+                                "width": "20",
                                 "class": "",
                                 "id": ""
                             },
@@ -1213,5 +1340,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1659351249
+    "modified": 1661443229
 }

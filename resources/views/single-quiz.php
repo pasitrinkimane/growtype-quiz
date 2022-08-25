@@ -60,12 +60,13 @@ if (!current_user_can('manage_options')) {
                                  data-key="<?php echo !empty($question['key']) ? $question['key'] : 'question_' . ($index + 1) ?>"
                                  data-question-type="<?php echo $question['question_type'] ?>"
                                  data-question-style="<?php echo $question['question_style'] ?>"
-                                 data-answer-type="<?php echo $question['answer_type'] ?>"
+                                 data-answer-type="<?php echo !is_array($question['answer_type']) ? $question['answer_type'] : '' ?>"
                                  data-answer-style="<?php echo $question['answer_style'] ?>"
                                  data-funnel="<?php echo $question['funnel'] ?>"
                                  data-hint="<?php echo $question['has_a_hint'] ?>"
                                  data-hide-footer="<?php echo $question['hide_footer'] ? 'true' : 'false' ?>"
                                  data-question-title="<?php echo $question['question_title'] ?>"
+                                 data-answer-required="<?php echo $question['not_required'] ? 'false' : 'true' ?>"
                             >
                                 <div class="b-quiz-question-inner">
                                     <?php if (!empty($question['featured_image'])) { ?>
@@ -122,15 +123,9 @@ if (!current_user_can('manage_options')) {
     let quizSaveAnswers = <?php echo $quiz_data['save_answers'] === false ? 'false' : 'true' ?>;
     let showCorrectAnswersInitially = <?php echo $quiz_data['show_correct_answers_initially'] === false ? 'false' : 'true' ?>;
     let quizId = <?php echo $post->ID ?>;
-    window.quizCurrentFunnel = 'a';
-    window.quizQuestionsAmount = $('.b-quiz-question:not(.b-quiz-question[data-question-type="success"]):not(.is-always-visible)').length;
-    if (!$('.b-quiz-question:visible').hasClass('is-visible')) {
-        window.quizQuestionsAmount++;
-    }
-    if ($('.b-quiz-question[data-question-type="success"][data-hide-footer="false"]')) {
-        window.quizQuestionsAmount++;
-    }
-    window.quizCurrentQuestionNr = 1;
-    window.quizQuestionsKeysAlreadyVisited = [];
-    window.quizQuestionsFunnelsAlreadyVisited = [];
+    window.growtype_quiz = {}
+    window.growtype_quiz.current_funnel = 'a';
+    window.growtype_quiz.current_question_nr = 1;
+    window.growtype_quiz.already_visited_questions_keys = [];
+    window.growtype_quiz.already_visited_questions_funnels = [];
 </script>

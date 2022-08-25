@@ -9,7 +9,7 @@ export function nextQuestionTrigger() {
 
         let currentQuestion = $('.b-quiz-question.is-active');
 
-        let isValidQuestion = validateQuestion();
+        let isValidQuestion = currentQuestion.attr('data-answer-required') === 'false' ? true : validateQuestion();
 
         if (!isValidQuestion) {
             return false;
@@ -17,8 +17,17 @@ export function nextQuestionTrigger() {
 
         $('.b-quiz-nav .btn').attr('disabled', true)
 
+        /**
+         * Colect answers for existing questions
+         */
+        if ($('.b-quiz-question.is-visible').length > 0) {
+            $('.b-quiz-question.is-visible').each(function (index, element) {
+                collectQuizData($(element));
+            });
+        }
+
         collectQuizData(currentQuestion);
 
-        showNextQuestion();
+        showNextQuestion(currentQuestion);
     });
 }

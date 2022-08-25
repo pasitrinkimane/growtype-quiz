@@ -16,6 +16,11 @@
     padding-left: 30px;
     padding-bottom: 40px;
     width: 100%;
+    @include bp-phone-xl() {
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 20px;
+    }
   }
 
   &[data-question-type="success"] {
@@ -40,6 +45,9 @@
 
   .b-img + .main-content-wrapper {
     padding-left: 50px;
+    @include bp-phone-xl() {
+      padding-left: 20px;
+    }
   }
 
   .b-quiz-question-answers {
@@ -54,16 +62,25 @@
     margin: auto;
     padding: 50px 50px;
     margin-left: 0;
+    @include bp-phone-xl() {
+      padding: 20px;
+    }
   }
 
   .row {
     display: flex;
     gap: 20px;
+    @include bp-phone-xl() {
+      flex-wrap: wrap;
+    }
   }
 
   .cta-wrapper {
     width: 100%;
     justify-content: space-between;
+    @include bp-phone-xl() {
+      flex-direction: column;
+    }
 
     .ajax-loader {
       position: absolute;

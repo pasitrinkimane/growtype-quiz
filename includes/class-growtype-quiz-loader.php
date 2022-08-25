@@ -74,6 +74,7 @@ class Growtype_Quiz_Loader
         add_action('wp_ajax_growtype_quiz_save_data', array ($this, 'growtype_quiz_save_data_handler'));
         add_action('wp_ajax_nopriv_growtype_quiz_save_data', array ($this, 'growtype_quiz_save_data_handler'));
 
+//        add_filter('acf/load_field/name=questions', array (__CLASS__, 'acf_question_key_default_value'));
 //        add_action('init', array ($this, 'custom_url'), 1);
     }
 
@@ -579,5 +580,36 @@ order by wrong_answers_amount asc, duration ASC limit 0,$limit", ARRAY_A);
         }
 
         return $result ?? null;
+    }
+
+    /**
+     *Acf
+     */
+    public static function acf_question_key_default_value($field)
+    {
+        global $post;
+//
+//        if (get_post_meta($post->ID, $field['name'], true) == '') {
+//            $field['value'] = 'FOO';
+//        }
+
+//        echo '<pre>' . var_export($field['sub_fields'], true) . '</pre>';
+
+//
+        $altered_field = $field;
+        $altered_field['sub_fields'] = [];
+
+        foreach ($field['sub_fields'] as $sub_field) {
+            if ($sub_field['name'] === 'key' && empty($sub_field['value'])) {
+                $sub_field['value'] = 'test';
+            }
+
+            array_push($altered_field['sub_fields'], $sub_field);
+        }
+
+//        echo '<pre>' . var_export(!empty($altered_field['sub_fields']) ? $altered_field : $field, true) . '</pre>';
+//        die();
+
+        return !empty($altered_field['sub_fields']) ? $altered_field : $field;
     }
 }

@@ -1,3 +1,6 @@
+@import "../../../../../themes/growtype/resources/styles/common/variables";
+@import "../../../../../themes/growtype/resources/styles/common/mixins";
+
 html,
 body {
   overflow-x: hidden;
@@ -26,11 +29,17 @@ body {
     display: flex;
     align-items: flex-start;
     text-align: left;
+    @include bp-phone-xl() {
+      min-height: initial;
+    }
 
     h2 {
       color: white !important;
       padding: 0;
       font-size: 58px !important;
+      @include bp-phone-xl() {
+        font-size: 36px !important;
+      }
     }
   }
 
@@ -40,6 +49,7 @@ body {
       color: black;
       padding-bottom: 10px;
       padding-top: 10px;
+      line-height: 36px;
     }
   }
 
@@ -77,6 +87,9 @@ body {
 
   .b-quiz-question[data-question-style=horizontal-featured-select] {
     margin-bottom: 70px;
+    @include bp-phone-xl() {
+      margin-bottom: 30px;
+    }
   }
 
   .b-quiz-nav .b-quiz-nav-inner .btn {

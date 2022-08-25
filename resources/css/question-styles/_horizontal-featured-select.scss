@@ -4,6 +4,7 @@
   .b-quiz-question-answers {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 
     .b-quiz-question-answer {
       padding: 10px 15px;
@@ -18,6 +19,10 @@
         min-height: 220px;
         border-radius: 10px;
         position: relative;
+        @include bp-phone-xl() {
+          min-width: 120px;
+          min-height: 120px;
+        }
       }
 
       label {
