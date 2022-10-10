@@ -25,7 +25,7 @@ export function collectQuizData(currentQuestion) {
     if ($('.b-quiz[data-type="scored"]').length > 0 && currentQuestionType !== 'open') {
         let correctAnswer = true;
         currentQuestion.find('.b-quiz-question-answer').map(function (index, element) {
-            if ($(this).hasClass('is-active') && $(this).attr('data-cor').length === 0) {
+            if ($(this).hasClass('is-active') && ($(this).attr('data-cor') === undefined || $(this).attr('data-cor').length === 0)) {
                 correctAnswer = false;
             }
         });
