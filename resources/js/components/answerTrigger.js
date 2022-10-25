@@ -17,4 +17,14 @@ export function answerTrigger() {
             }
         }
     });
+
+    /**
+     * Hover
+     */
+    $('.b-quiz-question-answers .b-quiz-question-answer').hover(function () {
+        let imgUrl = $(this).attr('data-img-url')
+        if (imgUrl.length > 0) {
+            $(this).closest('.b-quiz-question').find('.b-img .e-img').css({"background-image": "url( " + imgUrl + " )"});
+        }
+    });
 }

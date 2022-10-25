@@ -22,7 +22,7 @@ export function showFirstQuestion(initialLoad = false) {
     setTimeout(function () {
         let nextQuestionTitle = firstQuestion.nextAll('.b-quiz-question:first').attr('data-question-title');
 
-        if ($('.b-quiz-nav').attr('data-question-title-nav') === 'true' && nextQuestionTitle.length > 0) {
+        if ($('.b-quiz-nav').attr('data-question-title-nav') === 'true' && nextQuestionTitle !== undefined && nextQuestionTitle.length > 0) {
             $('.b-quiz-nav .btn-go-next .e-label').attr('data-label', nextQuestionTitle).text(nextQuestionTitle)
         }
     }, 500)

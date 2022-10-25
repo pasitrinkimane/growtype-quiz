@@ -10,9 +10,19 @@
                          data-default-belongs-to="<?php echo $option['default_belongs_to'] ?>"
                          data-url="<?php echo $question['has_url'] && !empty($option['url']) ? $option['url'] : '' ?>"
                          data-funnel="<?php echo $option['next_funnel'] ?>"
+                         data-img-url="<?php echo isset($option['featured_image']['sizes']['large']) ? $option['featured_image']['sizes']['large'] : '' ?>"
                     >
-                        <?php if (!empty($option['featured_image'])) { ?>
-                            <div class="e-img" style="background:url(<?php echo $option['featured_image']['sizes']['medium'] ?>);background-position: center;background-size: cover;background-repeat: no-repeat;"></div>
+                        <?php if (isset($question['option_featured_image_as_main']) && !$question['option_featured_image_as_main'] && !empty($option['featured_image'])) { ?>
+                            <?php
+                            $f_img = $option['featured_image']['sizes']['medium'];
+                            $ext = pathinfo($f_img, PATHINFO_EXTENSION);
+                            if ($ext === 'svg') { ?>
+                                <div class="e-img">
+                                    <?php echo file_get_contents($f_img); ?>
+                                </div>
+                            <?php } else { ?>
+                                <div class="e-img" style="background:url(<?php echo $f_img ?>);background-position: center;background-size: cover;background-repeat: no-repeat;"></div>
+                            <?php } ?>
                         <?php } ?>
                         <div class="e-radio-wrapper">
                             <div class="e-radio"></div>
