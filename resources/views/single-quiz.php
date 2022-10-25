@@ -71,7 +71,10 @@ if (!current_user_can('manage_options')) {
                                 <div class="b-quiz-question-inner">
                                     <?php if (!empty($question['featured_image'])) { ?>
                                         <div class="b-img">
-                                            <div class="e-img" style="background:url(<?php echo $question['featured_image'] ?>);background-position: center;background-size: cover;background-repeat: no-repeat;"></div>
+                                            <div class="e-img"
+                                                 style="background:url(<?php echo $question['featured_image'] ?>);background-position: center;background-size: cover;background-repeat: no-repeat;"
+                                                 data-img-url="<?php echo isset($question['featured_image']) ? $question['featured_image'] : '' ?>"
+                                            ></div>
                                         </div>
                                     <?php } ?>
                                     <div class="main-content-wrapper">
