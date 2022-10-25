@@ -51,7 +51,7 @@
             "label": "Save Answers On Success",
             "name": "save_answers",
             "type": "true_false",
-            "instructions": "",
+            "instructions": "save quiz answers when question_type=\"success\" is showed",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -758,33 +758,6 @@
                     "maxlength": ""
                 },
                 {
-                    "key": "field_612fd3536771c",
-                    "label": "Next Funnel",
-                    "name": "next_funnel",
-                    "type": "text",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_62e1811b4d6af",
-                                "operator": "==",
-                                "value": "1"
-                            }
-                        ]
-                    ],
-                    "wrapper": {
-                        "width": "10",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "a",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": ""
-                },
-                {
                     "key": "field_6131124408ead",
                     "label": "Has a Hint",
                     "name": "has_a_hint",
@@ -978,6 +951,33 @@
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "10",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "ui": 0,
+                    "ui_on_text": "",
+                    "ui_off_text": ""
+                },
+                {
+                    "key": "field_632b1362959af",
+                    "label": "Option Featured Image As Main",
+                    "name": "option_featured_image_as_main",
+                    "type": "true_false",
+                    "instructions": "Main featured image changes",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_62dff71928dd4",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
                     "wrapper": {
                         "width": "10",
                         "class": "",
@@ -1290,6 +1290,33 @@
                             "prepend": "",
                             "append": "",
                             "maxlength": ""
+                        },
+                        {
+                            "key": "field_612fd3536771c",
+                            "label": "Next Funnel",
+                            "name": "next_funnel",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_62e1811b4d6af",
+                                        "operator": "==",
+                                        "value": "1"
+                                    }
+                                ]
+                            ],
+                            "wrapper": {
+                                "width": "10",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "a",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
                         }
                     ]
                 },
@@ -1340,5 +1367,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1661443229
+    "modified": 1665430734
 }
