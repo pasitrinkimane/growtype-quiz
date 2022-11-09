@@ -1,5 +1,9 @@
 .b-quiz-question {
   &[data-question-type="radio"] {
+    .b-quiz-question-answer-wrapper {
+      display: flex;
+    }
+
     .b-quiz-question-answer {
       display: flex;
       margin-bottom: 10px;

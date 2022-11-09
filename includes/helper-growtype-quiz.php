@@ -251,7 +251,7 @@ function growtype_quiz_map_quiz_results($quiz_result_data)
 
     $quiz_id = $quiz_result_data['quiz_id'];
 
-    $questions = get_field('questions', $quiz_id);
+    $questions = growtype_quiz_get_questions($quiz_id);
 
     $quiz_type = get_field('quiz_type', $quiz_id);
 
@@ -334,4 +334,32 @@ function growtype_quiz_get_extended_user_quiz_results($user_id)
     }
 
     return growtype_quiz_map_quiz_results($quiz_result_data);
+}
+
+/**
+ *
+ */
+if (!function_exists('growtype_quiz_get_questions')) {
+    function growtype_quiz_get_questions($quiz_id)
+    {
+        return get_field('questions', $quiz_id);
+    }
+}
+
+/**
+ *
+ */
+if (!function_exists('growtype_quiz_get_question_by_title')) {
+    function growtype_quiz_get_question_by_title($question_title, $quiz_id)
+    {
+        $questions = growtype_quiz_get_questions($quiz_id);
+
+        foreach ($questions as $question) {
+            if ($question['question_title'] === $question_title) {
+                return $question;
+            }
+        }
+
+        return null;
+    }
 }

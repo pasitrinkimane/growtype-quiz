@@ -18,15 +18,20 @@ export function answerTrigger() {
     });
 
     /**
-     * Hover
+     * F img change on click
      */
-    $('.b-quiz-question-answers .b-quiz-question-answer').hover(function () {
+    $('.b-quiz-question-answers .b-quiz-question-answer[data-option-featured-img-main="true"]').click(function () {
         var imgUrl = $(this).attr('data-img-url');
+        let imageHolder = $(this).closest('.b-quiz-question').find('.b-img .e-img')
+        let currentImgUrl = imageHolder.css('background-image').replace(/^url\(['"](.+)['"]\)/, '$1');
 
-        if (imgUrl.length > 0) {
-            $(this).closest('.b-quiz-question').find('.b-img .e-img').css({
-                "background-image": "url( " + imgUrl + " )"
-            });
+        if (imgUrl.length > 0 && currentImgUrl !== imgUrl) {
+            imageHolder.fadeOut(100).promise().done(function () {
+                imageHolder.css({
+                    "background-image": "url( " + imgUrl + " )"
+                })
+                imageHolder.fadeIn(100);
+            })
         }
     });
 }

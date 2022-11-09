@@ -23,17 +23,23 @@
         cursor: pointer;
       }
 
-      &:nth-child(1) {
-        border-radius: 40px 0px 0px 40px;
-      }
-
-      &:nth-child(2) {
-        border-radius: 0 40px 40px 0;
-      }
-
       &.is-active {
         background: #7C9CAE;
         color: white;
+      }
+    }
+
+    .b-quiz-question-answer-wrapper {
+      &:nth-child(1) {
+        .b-quiz-question-answer {
+          border-radius: 40px 0px 0px 40px;
+        }
+      }
+
+      &:nth-child(2) {
+        .b-quiz-question-answer {
+          border-radius: 0 40px 40px 0;
+        }
       }
     }
 
