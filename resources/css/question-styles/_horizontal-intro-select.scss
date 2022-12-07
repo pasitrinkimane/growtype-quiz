@@ -1,12 +1,12 @@
-.b-quiz-question[data-question-style="horizontal-intro-select"] {
+.growtype-quiz-question[data-question-style="horizontal-intro-select"] {
   margin-bottom: 40px;
 
-  .b-quiz-question-answers {
+  .growtype-quiz-question-answers {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
 
-    .b-quiz-question-answer {
+    .growtype-quiz-question-answer {
       padding: 20px 40px;
       margin: 0;
       background: white;
@@ -29,15 +29,15 @@
       }
     }
 
-    .b-quiz-question-answer-wrapper {
+    .growtype-quiz-question-answer-wrapper {
       &:nth-child(1) {
-        .b-quiz-question-answer {
+        .growtype-quiz-question-answer {
           border-radius: 40px 0px 0px 40px;
         }
       }
 
       &:nth-child(2) {
-        .b-quiz-question-answer {
+        .growtype-quiz-question-answer {
           border-radius: 0 40px 40px 0;
         }
       }

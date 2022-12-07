@@ -1,17 +1,17 @@
 export function answerTrigger() {
-    $('.b-quiz-question-answers .b-quiz-question-answer').click(function () {
+    $('.growtype-quiz-question-answers .growtype-quiz-question-answer').click(function () {
         if ($(this).attr('data-url').length > 0) {
             window.location = $(this).attr('data-url');
         }
 
-        if ($(this).closest('.b-quiz-question').attr('data-answer-type') !== 'multiple') {
-            $(this).closest('.b-quiz-question-answers').find('.b-quiz-question-answer').removeClass('is-active');
+        if ($(this).closest('.growtype-quiz-question').attr('data-answer-type') !== 'multiple') {
+            $(this).closest('.growtype-quiz-question-answers').find('.growtype-quiz-question-answer').removeClass('is-active');
         }
 
         if (!$(this).hasClass('is-active')) {
             $(this).addClass('is-active');
         } else {
-            if ($(this).closest('.b-quiz-question').attr('data-answer-type') === 'multiple') {
+            if ($(this).closest('.growtype-quiz-question').attr('data-answer-type') === 'multiple') {
                 $(this).removeClass('is-active');
             }
         }
@@ -20,9 +20,9 @@ export function answerTrigger() {
     /**
      * F img change on click
      */
-    $('.b-quiz-question-answers .b-quiz-question-answer[data-option-featured-img-main="true"]').click(function () {
+    $('.growtype-quiz-question-answers .growtype-quiz-question-answer[data-option-featured-img-main="true"]').click(function () {
         var imgUrl = $(this).attr('data-img-url');
-        let imageHolder = $(this).closest('.b-quiz-question').find('.b-img .e-img')
+        let imageHolder = $(this).closest('.growtype-quiz-question').find('.b-img .e-img')
         let currentImgUrl = imageHolder.css('background-image').replace(/^url\(['"](.+)['"]\)/, '$1');
 
         if (imgUrl.length > 0 && currentImgUrl !== imgUrl) {

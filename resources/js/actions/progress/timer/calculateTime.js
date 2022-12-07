@@ -5,7 +5,7 @@ import {saveQuizDataEvent} from "../../../events/saveQuizData";
  * Calculate time
  */
 export function calculateTime() {
-    let timer = $('.b-quiz-timer');
+    let timer = $('.growtype-quiz-timer');
 
     if (timer.length === 0) {
         return false;
@@ -31,7 +31,7 @@ export function calculateTime() {
             document.dispatchEvent(showSuccessQuestion());
             document.dispatchEvent(saveQuizDataEvent());
         } else {
-            window.countDownTimerDuration = Number(durationInSeconds) - Number(((minutes * 60) + seconds));
+            window.growtype_quiz.countDownTimerDuration = Number(durationInSeconds) - Number(((minutes * 60) + seconds));
 
             /**
              * Format time

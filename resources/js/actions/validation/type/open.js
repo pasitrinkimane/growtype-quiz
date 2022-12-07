@@ -1,17 +1,17 @@
 export function open(currentQuestion) {
-    let btnIsValid = true;
+    let isValid = true;
     let textarea = currentQuestion.find('textarea').val();
 
     if (textarea.length === 0) {
-        btnIsValid = false;
+        isValid = false;
     }
 
-    if (!btnIsValid) {
-        currentQuestion.find('.b-quiz-question-answers-wrapper').addClass('anim-wrong-selection');
+    if (!isValid) {
+        currentQuestion.find('.growtype-quiz-question-answers').addClass('anim-wrong-selection');
         setTimeout(function () {
-            currentQuestion.find('.b-quiz-question-answers-wrapper').removeClass('anim-wrong-selection');
+            currentQuestion.find('.growtype-quiz-question-answers').removeClass('anim-wrong-selection');
         }, 500);
     }
 
-    return btnIsValid;
+    return isValid;
 }

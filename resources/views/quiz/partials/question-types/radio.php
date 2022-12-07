@@ -1,11 +1,12 @@
 <?php if ($question['question_type'] !== 'success') { ?>
-    <div class="b-quiz-question-answers-wrapper">
-        <div class="b-quiz-question-answers">
-            <?php if (!empty($question['options_all'])) { ?>
+
+    <?php if (!empty($question['options_all'])) { ?>
+        <div class="growtype-quiz-question-answers-wrapper">
+            <div class="growtype-quiz-question-answers">
                 <?php foreach ($question['options_all'] as $option) { ?>
-                    <div class="b-quiz-question-answer-wrapper">
-                        <div class="b-quiz-question-answer <?php echo $option['default'] ? 'is-active' : '' ?>"
-                             data-value="<?php echo $option['value'] ?>"
+                    <div class="growtype-quiz-question-answer-wrapper">
+                        <div class="growtype-quiz-question-answer <?php echo $option['default'] ? 'is-active' : '' ?>"
+                             data-value="<?php echo isset($option['value']) && !empty($option['value']) ? $option['value'] : str_replace(' ', '_', strtolower($option['label'])) ?>"
                              data-extra-value="<?php echo $option['extra_value'] ?>"
                              data-cor="<?php echo $quiz_data['is_test_mode'] ? $option['correct'] : '' ?>"
                              data-default-belongs-to="<?php echo $option['default_belongs_to'] ?>"
@@ -33,12 +34,12 @@
                         </div>
                     </div>
                 <?php } ?>
-            <?php } ?>
+            </div>
         </div>
-    </div>
+    <?php } ?>
 
     <?php if (!empty($question['hint'])) { ?>
-        <div class="b-quiz-hint" style="display: none;">
+        <div class="growtype-quiz-hint" style="display: none;">
             <?php echo $question['hint'] ?>
         </div>
     <?php } ?>

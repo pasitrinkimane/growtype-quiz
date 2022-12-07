@@ -8,7 +8,7 @@ document.addEventListener('showSuccessQuestion', showSuccessQuestion)
 
 function showSuccessQuestion() {
     hideProgressIndicators();
-    $('.b-quiz-question').hide().promise().done(function (){
-        $('.b-quiz-question[data-question-type="success"]').fadeIn();
+    $('.growtype-quiz-question').hide().promise().done(function (){
+        $('.growtype-quiz-question[data-question-type="success"]').fadeIn();
     });
 }

@@ -1,4 +1,4 @@
-.b-quiz-progressbar {
+.growtype-quiz-progressbar {
   height: 10px;
   width: 100%;
   background: grey;
@@ -6,11 +6,15 @@
   border-radius: 20px;
   overflow: hidden;
 
-  .b-quiz-progressbar-inner {
+  .growtype-quiz-progressbar-inner {
     background: blue;
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
+  }
+
+  & + .growtype-quiz-header {
+    margin-top: 25px;
   }
 }

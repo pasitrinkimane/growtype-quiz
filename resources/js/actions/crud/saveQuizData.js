@@ -10,7 +10,22 @@ function saveQuizData(data) {
 
     const answers = data.answers;
     const showLastQuestionOnError = false;
-    const duration = window.countDownTimerDuration;
+    const duration = window.growtype_quiz.countDownTimerDuration ?? null;
+    const quizId = $('.growtype-quiz-wrapper').attr('data-quiz-id');
+    const files = window.growtype_quiz.files ?? null;
+
+    let formData = new FormData();
+    formData.append("action", "growtype_quiz_save_data");
+    formData.append("status", "save");
+    formData.append("answers", JSON.stringify(answers));
+    formData.append("quiz_id", quizId);
+    formData.append("duration", duration);
+
+    if (files) {
+        for (var pair of files.entries()) {
+            formData.append(pair[0], pair[1]);
+        }
+    }
 
     /**
      * Save extra data to answers
@@ -18,13 +33,11 @@ function saveQuizData(data) {
     $.ajax({
         url: ajax_object.ajaxurl,
         type: "post",
-        data: {
-            action: 'growtype_quiz_save_data',
-            status: 'save',
-            answers: answers,
-            quiz_id: quizId,
-            duration: duration
-        },
+        processData: false,
+        contentType: false,
+        cache: false,
+        enctype: 'multipart/form-data',
+        data: formData,
         beforeSend: function () {
         },
         success: function (data) {
@@ -46,10 +59,14 @@ function saveQuizData(data) {
                 }
             }
         },
-        error: function (xhr) {
+        error: function (data) {
             if (showLastQuestionOnError) {
                 showLastQuestion(answers, false);
+            } else if (data['responseJSON']['message'] !== undefined) {
+                alert(data['responseJSON']['message'])
             }
+
+            $('.growtype-quiz-wrapper .btn').attr('disabled', false).fadeIn();
         },
         complete: function () {
         },

@@ -308,7 +308,7 @@ function validateMeasurementsOnEnter() {
          * On enter continue to next slide
          */
         if (key.charCode == 13) {
-            $(this).closest('.quizslide').find('.btn-go-next').click();
+            $(this).closest('.quizslide').find('.growtype-quiz-btn-go-next').click();
             return false;
         }
 
@@ -410,11 +410,11 @@ function validateMeasurementsOnEnter() {
             if (validateMeasurements($(this).closest('.input-wrapper'), false)) {
                 $(this).closest('.form-group').removeClass('is-invalid');
                 $(this).closest('.form-group').addClass('is-valid');
-                $(this).closest('.quizslide').find('.btn-go-next').addClass('is-active');
+                $(this).closest('.quizslide').find('.growtype-quiz-btn-go-next').addClass('is-active');
             } else {
                 $(this).closest('.form-group').removeClass('is-valid');
                 $(this).closest('.form-group').addClass('is-invalid');
-                $(this).closest('.quizslide').find('.btn-go-next').removeClass('is-active');
+                $(this).closest('.quizslide').find('.growtype-quiz-btn-go-next').removeClass('is-active');
             }
         });
     }

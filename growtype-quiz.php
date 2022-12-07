@@ -38,6 +38,11 @@ if (!defined('WPINC')) {
 define('GROWTYPE_QUIZ_VERSION', '1.0.0');
 
 /**
+ * Plugin text domain
+ */
+define('GROWTYPE_QUIZ_TEXT_DOMAIN', 'growtype-quiz');
+
+/**
  * Plugin post type.
  */
 define('GROWTYPE_QUIZ_POST_TYPE', 'quiz');

@@ -3,38 +3,27 @@
 use function App\sage;
 
 /**
- * @param $path
- * @param null $data
- * @return mixed
- * Include view
+ *
  */
-if (!function_exists('growtype_quiz_include_public')) {
-    function growtype_quiz_include_public($file_path, $variables = array (), $print = false)
+if (!function_exists('growtype_quiz_render_svg')) {
+    function growtype_quiz_render_svg($path)
     {
-        $output = null;
+        $url = GROWTYPE_QUIZ_URL_PUBLIC . $path;
 
-        $plugin_root = plugin_dir_path(__DIR__);
-        $full_file_path = $plugin_root . 'public/' . $file_path;
+        $arrContextOptions = [
+            "ssl" => array (
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+            ),
+        ];
 
-        if (file_exists($full_file_path)) {
-            // Extract the variables to a local namespace
-            extract($variables);
+        $response = file_get_contents(
+            $url,
+            false,
+            stream_context_create($arrContextOptions)
+        );
 
-            // Start output buffering
-            ob_start();
-
-            // Include the template file
-            include $full_file_path;
-
-            // End buffering and return its contents
-            $output = ob_get_clean();
-        }
-
-        if ($print) {
-            print $output;
-        }
-
-        return $output;
+        return $response;
     }
 }
 
@@ -75,38 +64,46 @@ if (!function_exists('growtype_quiz_include_resource')) {
 }
 
 /**
- * @param $path
- * @param null $data
- * @return mixed
- * Include view
+ * Include custom view
  */
 if (!function_exists('growtype_quiz_include_view')) {
-    function growtype_quiz_include_view($file_path, $variables = array (), $print = false)
+    function growtype_quiz_include_view($file_path, $variables = array (), $only_template_path = false)
     {
-        $output = null;
+        $fallback_view = GROWTYPE_QUIZ_PATH . 'resources/views/' . str_replace('.', '/', $file_path) . '.php';
+        $fallback_blade_view = GROWTYPE_QUIZ_PATH . 'resources/views/' . str_replace('.', '/', $file_path) . '.blade.php';
+        $child_blade_view = get_stylesheet_directory() . '/views/' . GROWTYPE_QUIZ_TEXT_DOMAIN . '/' . str_replace('.', '/', $file_path) . '.blade.php';
+        $child_view = get_stylesheet_directory() . '/views/' . GROWTYPE_QUIZ_TEXT_DOMAIN . '/' . str_replace('.', '/', $file_path) . '.php';
 
-        $plugin_root = plugin_dir_path(__DIR__);
-        $full_file_path = $plugin_root . 'resources/views/' . str_replace('.', '/', $file_path) . '.php';
+        $template_path = $fallback_view;
 
-        if (file_exists($full_file_path)) {
-            // Extract the variables to a local namespace
+        if (file_exists($child_blade_view) && function_exists('App\template')) {
+            if (!$only_template_path) {
+                return App\template($child_blade_view, $variables);
+            } else {
+                $template_path = $child_blade_view;
+            }
+        } elseif (file_exists($child_view)) {
+            $template_path = $child_view;
+        } elseif (file_exists($fallback_blade_view) && function_exists('App\template')) {
+            if (!$only_template_path) {
+                return App\template($fallback_blade_view, $variables);
+            } else {
+                $template_path = $fallback_blade_view;
+            }
+        }
+
+        if ($only_template_path) {
+            return $template_path;
+        }
+
+        if (file_exists($template_path)) {
             extract($variables);
-
-            // Start output buffering
             ob_start();
-
-            // Include the template file
-            include $full_file_path;
-
-            // End buffering and return its contents
+            include $template_path;
             $output = ob_get_clean();
         }
 
-        if ($print) {
-            print $output;
-        }
-
-        return $output;
+        return isset($output) ? $output : '';
     }
 }
 
@@ -117,7 +114,7 @@ if (!function_exists('growtype_quiz_include_view')) {
 if (!function_exists('growtype_quiz_get_quiz_data')) {
     function growtype_quiz_get_quiz_data($quiz_id)
     {
-        $growtype_quiz_loader = new Growtype_Quiz_Loader();
+        $growtype_quiz_loader = new Growtype_Quiz_Admin_Post();
 
         return $growtype_quiz_loader->get_quiz_data($quiz_id);
     }
@@ -128,11 +125,11 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
  * Get quiz data
  */
 if (!function_exists('growtype_quiz_get_results_data')) {
-    function growtype_quiz_get_results_data()
+    function growtype_quiz_get_results_data($quiz_id, $limit = 30, $based_on = 'performance')
     {
-        $growtype_quiz_loader = new Growtype_Quiz_Loader();
+        $growtype_quiz_loader = new Growtype_Quiz_Admin_Result_Crud();
 
-        return $growtype_quiz_loader->get_quiz_results_data();
+        return $growtype_quiz_loader->get_single_quiz_results($quiz_id, $limit, $based_on);
     }
 }
 
@@ -143,9 +140,9 @@ if (!function_exists('growtype_quiz_get_results_data')) {
 if (!function_exists('growtype_quiz_get_result_data_by_user_id')) {
     function growtype_quiz_get_result_data_by_user_id($user_id)
     {
-        $growtype_quiz_loader = new Growtype_Quiz_Loader();
+        $growtype_quiz_loader = new Growtype_Quiz_Admin_Result_Crud();
 
-        return $growtype_quiz_loader->get_quiz_result_data_by_user_id($user_id);
+        return $growtype_quiz_loader->get_quiz_results_by_user_id($user_id);
     }
 }
 
@@ -156,8 +153,7 @@ if (!function_exists('growtype_quiz_get_result_data_by_user_id')) {
 if (!function_exists('growtype_quiz_get_results_open_question_answers')) {
     function growtype_quiz_get_results_open_question_answers($quiz_id)
     {
-        $growtype_quiz_loader = new Growtype_Quiz_Loader();
-        $quiz_results_data = $growtype_quiz_loader->get_quiz_results_data($quiz_id);
+        $quiz_results_data = growtype_quiz_get_results_data($quiz_id);
         $open_questions = [];
 
         $groups_amount = 0;

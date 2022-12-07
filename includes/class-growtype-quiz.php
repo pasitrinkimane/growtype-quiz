@@ -130,32 +130,40 @@ class Growtype_Quiz
          * The class responsible for orchestrating the actions and filters of the
          * core plugin.
          */
-        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-growtype-quiz-loader.php';
+        require_once GROWTYPE_QUIZ_PATH . 'includes/class-growtype-quiz-loader.php';
 
         /**
          * The class responsible for defining internationalization functionality
          * of the plugin.
          */
-        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-growtype-quiz-i18n.php';
+        require_once GROWTYPE_QUIZ_PATH . 'includes/class-growtype-quiz-i18n.php';
 
         /**
          * The class responsible for defining all actions that occur in the admin area.
          */
-        require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-growtype-quiz-admin.php';
+        require_once GROWTYPE_QUIZ_PATH . 'admin/class-growtype-quiz-admin.php';
 
         /**
          * The class responsible for defining all actions that occur in the public-facing
          * side of the site.
          */
-        require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-growtype-quiz-public.php';
+        require_once GROWTYPE_QUIZ_PATH . 'public/class-growtype-quiz-public.php';
 
         /**
          * The helper functions
          */
-        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/helper-growtype-quiz.php';
+        require_once GROWTYPE_QUIZ_PATH . 'includes/helpers/general.php';
 
+        /**
+         * Shortcode
+         */
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/shortcodes/class-growtype-quiz-input.php';
+        $this->loader = new Growtype_Quiz_Input();
+
+        /**
+         * Load
+         */
         $this->loader = new Growtype_Quiz_Loader();
-
     }
 
     /**
@@ -203,10 +211,18 @@ class Growtype_Quiz
     {
         $plugin_public = new Growtype_Quiz_Public($this->get_growtype_quiz(), $this->get_version());
 
-        if (strpos($_SERVER['REQUEST_URI'], '/' . $this->post_type) === 0) {
+        if ($this->is_quiz_page()) {
             $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
             $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function is_quiz_page()
+    {
+        return strpos($_SERVER['REQUEST_URI'], '/' . $this->post_type) > -1;
     }
 
     /**

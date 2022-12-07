@@ -3,7 +3,7 @@ import {showPreviousQuestion} from "../actions/question/showPreviousQuestion";
 window.quizBackBtnWasClicked = false;
 
 export function previousQuestionTrigger() {
-    $('.b-quiz .btn-go-back').click(function () {
+    $('.growtype-quiz .growtype-quiz-btn-go-back').click(function () {
         event.preventDefault();
 
         if (window.quizBackBtnWasClicked) {

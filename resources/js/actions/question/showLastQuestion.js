@@ -13,7 +13,7 @@ export function showLastQuestion(answers, showAlert = true) {
 
     if (lastQuestionKey !== undefined) {
         showProgressIndicators();
-        $('.b-quiz-question[data-key="' + lastQuestionKey + '"]').addClass('is-active').fadeIn(300).promise().done(function () {
+        $('.growtype-quiz-question[data-key="' + lastQuestionKey + '"]').addClass('is-active').fadeIn(300).promise().done(function () {
         });
     }
 }

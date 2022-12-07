@@ -1,20 +1,20 @@
 export function hideProgressIndicators() {
-    $('.b-quiz-progressbar').hide();
-    $('.b-quiz-header').hide();
-    $('.b-quiz-nav').hide();
+    $('.growtype-quiz-progressbar').hide();
+    $('.growtype-quiz-header').hide();
+    $('.growtype-quiz-nav').hide();
 
-    if($('.b-quiz-timer').length > 0){
-        $('.b-quiz-timer').hide();
+    if($('.growtype-quiz-timer').length > 0){
+        $('.growtype-quiz-timer').hide();
         clearInterval(window.countDownTimer);
     }
 }
 
 export function showProgressIndicators() {
-    $('.b-quiz-progressbar').show();
-    $('.b-quiz-header').show();
-    $('.b-quiz-nav').show();
+    $('.growtype-quiz-progressbar').show();
+    $('.growtype-quiz-header').show();
+    $('.growtype-quiz-nav').show();
 
-    if($('.b-quiz-timer').length > 0){
-        $('.b-quiz-timer').show();
+    if($('.growtype-quiz-timer').length > 0){
+        $('.growtype-quiz-timer').show();
     }
 }

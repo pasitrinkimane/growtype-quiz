@@ -1,45 +1,45 @@
 export function radio(currentQuestion) {
-    let btnIsValid = true;
-    let activeBtns = currentQuestion.find('.b-quiz-question-answer.is-active');
+    let isValid = true;
+    let activeBtns = currentQuestion.find('.growtype-quiz-question-answer.is-active');
 
     if (activeBtns.length === 0) {
-        btnIsValid = false;
+        isValid = false;
     }
 
-    if (btnIsValid && $('.b-quiz').attr('data-type') === 'scored' && showCorrectAnswersInitially && quizInTestMode) {
+    if (isValid && $('.growtype-quiz').attr('data-type') === 'scored' && showCorrectAnswersInitially && quizInTestMode) {
 
         activeBtns.map(function (index, element) {
             if ($(element).attr('data-cor') !== '1') {
-                btnIsValid = false;
+                isValid = false;
                 $(element).addClass('is-wrong')
             }
         });
 
         let correctAnswersSelected = true;
-        currentQuestion.find('.b-quiz-question-answer[data-cor="1"]').map(function (index, element) {
+        currentQuestion.find('.growtype-quiz-question-answer[data-cor="1"]').map(function (index, element) {
             if (!$(element).hasClass('is-active')) {
-                btnIsValid = false;
+                isValid = false;
                 correctAnswersSelected = false;
             }
         });
 
         if (correctAnswersSelected) {
-            btnIsValid = true;
-            currentQuestion.find('.b-quiz-question-answer.is-wrong').removeClass('is-active');
+            isValid = true;
+            currentQuestion.find('.growtype-quiz-question-answer.is-wrong').removeClass('is-active');
         }
     }
 
-    if (!btnIsValid) {
+    if (!isValid) {
         if (currentQuestion.attr('data-hint')) {
-            currentQuestion.find('.b-quiz-hint').fadeIn();
+            currentQuestion.find('.growtype-quiz-hint').fadeIn();
         }
 
-        currentQuestion.find('.b-quiz-question-answers').addClass('anim-wrong-selection');
+        currentQuestion.find('.growtype-quiz-question-answers').addClass('anim-wrong-selection');
 
         setTimeout(function () {
-            currentQuestion.find('.b-quiz-question-answers').removeClass('anim-wrong-selection');
+            currentQuestion.find('.growtype-quiz-question-answers').removeClass('anim-wrong-selection');
         }, 500);
     }
 
-    return btnIsValid;
+    return isValid;
 }

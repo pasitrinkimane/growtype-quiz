@@ -1,20 +1,15 @@
 <?php
 
-/**
- * Provide a admin area view for the plugin
- *
- * This file is used to markup the admin-facing aspects of the plugin.
- *
- * @link       http://example.com
- * @since      1.0.0
- *
- * @package    growtype_quiz
- * @subpackage growtype_quiz/admin/partials
- */
-
-trait AdminSettingsGeneralTrait
+class Growtype_Quiz_Admin_General_Setting
 {
-    public function general_content()
+    public function __construct()
+    {
+        if (is_admin()) {
+            add_action('admin_init', array ($this, 'growtype_quiz_general_admin_settings'));
+        }
+    }
+
+    public function growtype_quiz_general_admin_settings()
     {
         /**
          *
@@ -79,6 +74,38 @@ trait AdminSettingsGeneralTrait
             'growtype-quiz-settings',
             'growtype_quiz_settings_general'
         );
+
+        /**
+         *
+         */
+        register_setting(
+            'growtype_quiz_settings_general', // settings group name
+            'growtype_quiz_theme_header' // option name
+        );
+
+        add_settings_field(
+            'growtype_quiz_theme_header',
+            'Theme Header',
+            array ($this, 'growtype_quiz_theme_header_callback'),
+            'growtype-quiz-settings',
+            'growtype_quiz_settings_general'
+        );
+
+        /**
+         *
+         */
+        register_setting(
+            'growtype_quiz_settings_general', // settings group name
+            'growtype_quiz_iframe_hide_header_footer' // option name
+        );
+
+        add_settings_field(
+            'growtype_quiz_iframe_hide_header_footer',
+            'If Iframe hide Header and Hooter',
+            array ($this, 'growtype_quiz_iframe_hide_header_footer_callback'),
+            'growtype-quiz-settings',
+            'growtype_quiz_settings_general'
+        );
     }
 
     /**
@@ -123,8 +150,30 @@ trait AdminSettingsGeneralTrait
         ?>
         <select name='growtype_quiz_theme'>
             <option value='none' <?php selected($selected, 'none'); ?>>None</option>
-            <option value='rekviem' <?php selected($selected, 'rekviem'); ?>>Rekviem</option>
+            <option value='theme-1' <?php selected($selected, 'theme-1'); ?>>Theme 1</option>
         </select>
+        <?php
+    }
+
+    /**
+     *
+     */
+    function growtype_quiz_theme_header_callback()
+    {
+        $value = get_option('growtype_quiz_theme_header');
+        ?>
+        <input type="text" name="growtype_quiz_theme_header" value="<?php echo $value ?>"/>
+        <?php
+    }
+
+    /**
+     *
+     */
+    function growtype_quiz_iframe_hide_header_footer_callback()
+    {
+        $value = get_option('growtype_quiz_iframe_hide_header_footer');
+        ?>
+        <input type="checkbox" id="growtype_quiz_iframe_hide_header_footer" name="growtype_quiz_iframe_hide_header_footer" value="1" <?php echo checked(1, $value, false) ?>/>
         <?php
     }
 }

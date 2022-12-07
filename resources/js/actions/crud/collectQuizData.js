@@ -14,7 +14,7 @@ export function collectQuizData(currentQuestion) {
     if (currentQuestionType === 'open') {
         answers[currentQuestionKey].push(currentQuestion.find('textarea').val())
     } else {
-        currentQuestion.find('.b-quiz-question-answer.is-active').map(function (index, element) {
+        currentQuestion.find('.growtype-quiz-question-answer.is-active').map(function (index, element) {
             answers[currentQuestionKey].push($(this).attr('data-value'))
         });
     }
@@ -22,16 +22,28 @@ export function collectQuizData(currentQuestion) {
     /**
      * Collect correctly answered
      */
-    if ($('.b-quiz[data-type="scored"]').length > 0 && currentQuestionType !== 'open') {
+    if ($('.growtype-quiz[data-type="scored"]').length > 0 && currentQuestionType !== 'open') {
         let correctAnswer = true;
-        currentQuestion.find('.b-quiz-question-answer').map(function (index, element) {
+        currentQuestion.find('.growtype-quiz-question-answer').map(function (index, element) {
             if ($(this).hasClass('is-active') && $(this).attr('data-cor').length === 0) {
                 correctAnswer = false;
             }
         });
 
-        correctlyAnswered[currentQuestion.attr('data-key')] = [];
-        correctlyAnswered[currentQuestion.attr('data-key')].push(correctAnswer);
+        correctlyAnswered[currentQuestionKey] = [];
+        correctlyAnswered[currentQuestionKey].push(correctAnswer);
+    }
+
+    /**
+     * Collect file inputs data
+     */
+    if (currentQuestion.find('input[type="file"][required]').length > 0) {
+        let formData = new FormData();
+        currentQuestion.find('input[type="file"][required]').each(function (index, element) {
+            formData.append($(element).attr('name') + '-' + currentQuestionKey + '-' + index, $(element)[0].files[0]);
+        })
+
+        window.growtype_quiz.files = formData
     }
 
     saveQuizDataEvent().answers = answers;

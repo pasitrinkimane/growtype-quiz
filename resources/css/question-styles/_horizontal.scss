@@ -1,4 +1,4 @@
-.b-quiz-question[data-question-style="horizontal"] {
+.growtype-quiz-question[data-question-style="horizontal"] {
   margin-bottom: 40px;
   background: white;
   border-radius: 10px;
@@ -6,11 +6,11 @@
   position: relative;
   z-index: 1;
 
-  .main-content-wrapper {
+  .growtype-quiz-main-content-wrapper {
     padding: 0;
   }
 
-  .main-content-wrapper {
+  .growtype-quiz-main-content-wrapper {
     flex-direction: column;
     padding-top: 45px;
     padding-left: 30px;
@@ -26,7 +26,7 @@
   &[data-question-type="success"] {
     padding-left: 0;
 
-    .main-content-wrapper {
+    .growtype-quiz-main-content-wrapper {
       padding: 0;
       width: 100%;
     }
@@ -43,19 +43,19 @@
     }
   }
 
-  .b-img + .main-content-wrapper {
-    padding-left: 50px;
+  .b-img + .growtype-quiz-main-content-wrapper {
+    padding-left: 40px;
     @include bp-phone-xl() {
       padding-left: 20px;
     }
   }
 
-  .b-quiz-question-answers {
+  .growtype-quiz-question-answers {
     flex-direction: column;
   }
 
-  .b-quiz-question-answer {
-    margin-bottom: 20px;
+  .growtype-quiz-question-answer {
+    margin-bottom: 10px;
   }
 
   .wpcf7-form {

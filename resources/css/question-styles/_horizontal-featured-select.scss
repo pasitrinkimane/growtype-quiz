@@ -1,12 +1,12 @@
-.b-quiz-question[data-question-style="horizontal-featured-select"] {
+.growtype-quiz-question[data-question-style="horizontal-featured-select"] {
   margin-bottom: 60px;
 
-  .b-quiz-question-answers {
+  .growtype-quiz-question-answers {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
 
-    .b-quiz-question-answer {
+    .growtype-quiz-question-answer {
       padding: 10px 15px;
       margin: 0;
       flex-direction: column;
@@ -17,7 +17,7 @@
         margin-bottom: 10px;
         min-width: 220px;
         min-height: 220px;
-        border-radius: 10px;
+        border-radius: 5px;
         position: relative;
         @include bp-phone-xl() {
           min-width: 120px;
@@ -72,7 +72,7 @@
             height: 60px;
             width: 60px;
             margin: auto;
-            background: url('./../../icons/check.svg');
+            background: url('./../../images/check.svg');
             background-position: center;
             background-repeat: no-repeat;
             background-size: 30px;

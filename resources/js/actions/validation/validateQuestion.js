@@ -1,16 +1,27 @@
 import {radio} from "./type/radio";
 import {open} from "./type/open";
+import {general} from "./type/general";
+import {shortcode} from "./type/shortcode";
 
 export function validateQuestion() {
     let isValid = true;
 
-    $('.b-quiz-question:visible').each(function (index, element) {
+    $('.growtype-quiz-question:visible').each(function (index, element) {
         let currentQuestion = $(element);
 
-        if (currentQuestion.attr('data-question-type') === 'radio') {
-            isValid = radio(currentQuestion);
-        } else if (currentQuestion.attr('data-question-type') === 'open') {
-            isValid = open(currentQuestion);
+        /**
+         * First Check shortcodes
+         */
+        isValid = shortcode(currentQuestion);
+
+        if (isValid) {
+            if (currentQuestion.attr('data-question-type') === 'radio') {
+                isValid = radio(currentQuestion);
+            } else if (currentQuestion.attr('data-question-type') === 'open') {
+                isValid = open(currentQuestion);
+            } else if (currentQuestion.attr('data-question-type') === 'general') {
+                isValid = general(currentQuestion);
+            }
         }
 
         if (!isValid) {

@@ -5,13 +5,13 @@ mix.setResourceRoot('./../')
 
 mix
     .sass('resources/css/growtype-quiz-public.scss', 'css')
-    .sass('resources/css/themes/rekviem.scss', 'css/themes')
+    .sass('resources/css/growtype-quiz-public-theme-1.scss', 'css')
 
 mix
     .js('resources/js/growtype-quiz-public.js', 'js')
 
 mix
-    .copyDirectory('resources/icons', 'public/icons')
+    .copyDirectory('resources/images', 'public/images')
 
 mix
     .sourceMaps()

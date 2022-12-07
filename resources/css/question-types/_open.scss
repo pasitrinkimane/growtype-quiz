@@ -1,9 +1,19 @@
-.b-quiz-question {
+.growtype-quiz-question {
   &[data-question-type="open"] {
     .e-explanation {
       text-align: right;
       margin-top: 5px;
       font-size: 14px;
+    }
+
+    .growtype-quiz-question-answer {
+      textarea {
+        width: 100%;
+        border-radius: 5px;
+        background: #F6F6F9;
+        border-color: #ECECEE;
+        padding: 20px 25px;
+      }
     }
   }
 }

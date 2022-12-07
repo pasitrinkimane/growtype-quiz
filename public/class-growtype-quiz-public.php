@@ -63,7 +63,6 @@ class Growtype_Quiz_Public
      */
     public function enqueue_styles()
     {
-
         /**
          * Main
          */
@@ -72,8 +71,8 @@ class Growtype_Quiz_Public
         /**
          * Themes
          */
-        if (get_option('growtype_quiz_theme') === 'rekviem') {
-            wp_enqueue_style($this->growtype_quiz . '/theme-rekviem', GROWTYPE_QUIZ_URL_PUBLIC . 'css/themes/rekviem.css', array (), $this->version, 'all');
+        if (get_option('growtype_quiz_theme') === 'theme-1') {
+            wp_enqueue_style($this->growtype_quiz . '/theme-1', GROWTYPE_QUIZ_URL_PUBLIC . 'css/growtype-quiz-public-theme-1.css', array (), $this->version, 'all');
         }
     }
 

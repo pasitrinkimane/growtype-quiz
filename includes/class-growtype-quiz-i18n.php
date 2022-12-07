@@ -24,24 +24,19 @@
  * @subpackage Growtype_Quiz/includes
  * @author     Your Name <email@example.com>
  */
-class Growtype_Quiz_i18n {
-
-
-	/**
-	 * Load the plugin text domain for translation.
-	 *
-	 * @since    1.0.0
-	 */
-	public function load_plugin_textdomain() {
-
-		load_plugin_textdomain(
-			'growtype-quiz',
-			false,
-			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
-		);
-
-	}
-
-
-
+class Growtype_Quiz_i18n
+{
+    /**
+     * Load the plugin text domain for translation.
+     *
+     * @since    1.0.0
+     */
+    public function load_plugin_textdomain()
+    {
+        load_plugin_textdomain(
+            GROWTYPE_QUIZ_TEXT_DOMAIN,
+            false,
+            GROWTYPE_QUIZ_TEXT_DOMAIN . '/languages/'
+        );
+    }
 }
