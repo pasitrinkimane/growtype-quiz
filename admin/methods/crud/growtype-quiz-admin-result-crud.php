@@ -141,7 +141,7 @@ order by wrong_answers_amount asc, duration ASC limit 0,$limit", ARRAY_A);
         $correct_answers_amount = $growtype_quiz_admin_post->evaluate_quiz_answers($quiz_data['quiz_id'], $quiz_data['answers'])['correct_answers_amount'] ?? null;
         $wrong_answers_amount = $growtype_quiz_admin_post->evaluate_quiz_answers($quiz_data['quiz_id'], $quiz_data['answers'])['wrong_answers_amount'] ?? null;
 
-        $wpdb->insert($table_name, [
+        $insert_data = [
             'user_id' => $user_id,
             'quiz_id' => $quiz_id,
             'answers' => $answers,
@@ -149,7 +149,11 @@ order by wrong_answers_amount asc, duration ASC limit 0,$limit", ARRAY_A);
             'questions_amount' => $questions_amount,
             'correct_answers_amount' => $correct_answers_amount,
             'wrong_answers_amount' => $wrong_answers_amount,
-        ]);
+        ];
+
+        $insert_data = apply_filters('save_quiz_results_data', $insert_data, $quiz_data);
+
+        $wpdb->insert($table_name, $insert_data);
 
         return true;
     }
@@ -181,9 +185,9 @@ order by wrong_answers_amount asc, duration ASC limit 0,$limit", ARRAY_A);
 
         $table_name = self::table_name();
 
-        $result = $wpdb->get_results("SELECT * FROM $table_name where user_id=$user_id", ARRAY_A);
+        $results = $wpdb->get_results("SELECT * FROM $table_name where user_id=$user_id", ARRAY_A);
 
-        return $result[0] ?? null;
+        return $results;
     }
 
     /**

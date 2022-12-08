@@ -171,6 +171,7 @@ class Growtype_Quiz_Admin_Post
         $quiz_data['quiz_id'] = $_POST['quiz_id'] ?? null;
         $quiz_data['duration'] = $_POST['duration'] ?? null;
         $quiz_data['files'] = $_FILES ?? null;
+        $quiz_data['http_referer'] = $_SERVER['HTTP_REFERER'] ?? null;
 
         if (empty($quiz_data['status'])) {
             return wp_send_json([

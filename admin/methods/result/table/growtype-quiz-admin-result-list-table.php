@@ -182,7 +182,7 @@ class Growtype_Quiz_Admin_Result_List_Table extends WP_List_Table
     function column_id($item)
     {
         $actions = array (
-            'edit' => sprintf('<a href="?post_type=%s&page=%s&action=%s&item=%s">' . __('Edit', 'growtype-quiz') . '</a>', Growtype_Quiz::get_growtype_quiz_post_type(), $_REQUEST['page'], 'edit', $item['id']),
+//            'edit' => sprintf('<a href="?post_type=%s&page=%s&action=%s&item=%s">' . __('Edit', 'growtype-quiz') . '</a>', Growtype_Quiz::get_growtype_quiz_post_type(), $_REQUEST['page'], 'edit', $item['id']),
             'delete' => sprintf('<a href="?post_type=%s&page=%s&action=%s&item=%s&_wpnonce=%s">' . __('Delete', 'growtype-quiz') . '</a>', Growtype_Quiz::get_growtype_quiz_post_type(), $_REQUEST['page'], 'delete', $item['id'], wp_create_nonce(Growtype_Quiz_Admin_Result::DELETE_NONCE)),
         );
 

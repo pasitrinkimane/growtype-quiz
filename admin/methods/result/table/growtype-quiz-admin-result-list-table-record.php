@@ -27,7 +27,7 @@ class Growtype_Quiz_Admin_Result_List_Table_Record
     {
         if (isset($_REQUEST['post_type']) && $_REQUEST['post_type'] === Growtype_Quiz::get_growtype_quiz_post_type() && isset($_REQUEST['action'])) {
             $action = $_REQUEST['action'];
-            $action2 = $_REQUEST['action2'];
+            $action2 = $_REQUEST['action2'] ?? '';
 
             if ('delete' === $action || 'delete' === $action2) {
                 $nonce = esc_attr($_REQUEST['_wpnonce']);

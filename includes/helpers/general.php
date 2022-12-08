@@ -137,8 +137,8 @@ if (!function_exists('growtype_quiz_get_results_data')) {
  * @return array|bool|object|null
  * Get quiz data
  */
-if (!function_exists('growtype_quiz_get_result_data_by_user_id')) {
-    function growtype_quiz_get_result_data_by_user_id($user_id)
+if (!function_exists('growtype_quiz_get_user_results')) {
+    function growtype_quiz_get_user_results($user_id)
     {
         $growtype_quiz_loader = new Growtype_Quiz_Admin_Result_Crud();
 
@@ -323,7 +323,7 @@ function growtype_quiz_map_quiz_results($quiz_result_data)
  */
 function growtype_quiz_get_extended_user_quiz_results($user_id)
 {
-    $quiz_result_data = growtype_quiz_get_result_data_by_user_id($user_id);
+    $quiz_result_data = growtype_quiz_get_user_results($user_id);
 
     if (empty($quiz_result_data)) {
         return null;
