@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Growtype - Quiz\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-06 15:25+0000\n"
+"POT-Creation-Date: 2022-12-08 16:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -19,6 +19,14 @@ msgstr ""
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/growtype-quiz-admin-result.php:92
 #, php-format
 msgid "%d items were deleted."
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:31
+msgid ":nr image is selected"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:32
+msgid ":nr images are selected"
 msgstr ""
 
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:101
@@ -49,10 +57,6 @@ msgstr ""
 
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:102
 msgid "Duration"
-msgstr ""
-
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:185
-msgid "Edit"
 msgstr ""
 
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:106
@@ -90,6 +94,10 @@ msgstr ""
 msgid "ID %d was deleted."
 msgstr ""
 
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:30
+msgid "Image :image_name size is too big. Allowed size :max_size."
+msgstr ""
+
 #: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:37
 msgid "Liko:"
 msgstr ""
@@ -114,7 +122,7 @@ msgstr ""
 msgid "Questions amount"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:293
+#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:299
 msgid "Quiz"
 msgstr ""
 
@@ -122,7 +130,7 @@ msgstr ""
 msgid "Quiz ID"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:283
+#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:289
 msgid "Quizes"
 msgstr ""
 
@@ -130,6 +138,10 @@ msgstr ""
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/growtype-quiz-admin-result.php:32
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/growtype-quiz-admin-result.php:70
 msgid "Results"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:29
+msgid "Select an image"
 msgstr ""
 
 #: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:106
