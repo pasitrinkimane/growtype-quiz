@@ -6,8 +6,7 @@ export function radio(currentQuestion) {
         isValid = false;
     }
 
-    if (isValid && $('.growtype-quiz').attr('data-type') === 'scored' && showCorrectAnswersInitially && quizInTestMode) {
-
+    if (isValid && $('.growtype-quiz-wrapper').attr('data-quiz-type') === 'scored' && showCorrectAnswersInitially && quizInTestMode) {
         activeBtns.map(function (index, element) {
             if ($(element).attr('data-cor') !== '1') {
                 isValid = false;

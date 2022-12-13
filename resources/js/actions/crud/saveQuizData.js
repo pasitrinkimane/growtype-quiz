@@ -10,7 +10,7 @@ function saveQuizData(data) {
 
     const answers = data.answers;
     const showLastQuestionOnError = false;
-    const duration = window.growtype_quiz.countDownTimerDuration ?? null;
+    const duration = window.growtype_quiz.duration ?? null;
     const quizId = $('.growtype-quiz-wrapper').attr('data-quiz-id');
     const files = window.growtype_quiz.files ?? null;
 

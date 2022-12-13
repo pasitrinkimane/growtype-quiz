@@ -128,6 +128,12 @@ class Growtype_Quiz_Admin_Post
             $template = growtype_quiz_include_view('quiz.index', [], true);
         }
 
+        $extra_post_types = Growtype_Quiz::get_growtype_extra_post_types();
+
+        if (in_array(get_post_type(), $extra_post_types)) {
+            $template = growtype_quiz_include_view('quiz.index', [], true);
+        }
+
         return $template;
     }
 
@@ -313,14 +319,7 @@ class Growtype_Quiz_Admin_Post
     public static function acf_question_key_default_value($field)
     {
         global $post;
-//
-//        if (get_post_meta($post->ID, $field['name'], true) == '') {
-//            $field['value'] = 'FOO';
-//        }
 
-//        echo '<pre>' . var_export($field['sub_fields'], true) . '</pre>';
-
-//
         $altered_field = $field;
         $altered_field['sub_fields'] = [];
 
@@ -331,9 +330,6 @@ class Growtype_Quiz_Admin_Post
 
             array_push($altered_field['sub_fields'], $sub_field);
         }
-
-//        echo '<pre>' . var_export(!empty($altered_field['sub_fields']) ? $altered_field : $field, true) . '</pre>';
-//        die();
 
         return !empty($altered_field['sub_fields']) ? $altered_field : $field;
     }

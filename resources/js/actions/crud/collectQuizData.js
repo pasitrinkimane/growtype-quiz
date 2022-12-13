@@ -22,7 +22,7 @@ export function collectQuizData(currentQuestion) {
     /**
      * Collect correctly answered
      */
-    if ($('.growtype-quiz[data-type="scored"]').length > 0 && currentQuestionType !== 'open') {
+    if ($('.growtype-quiz-wrapper[data-quiz-type="scored"]').length > 0 && currentQuestionType !== 'open') {
         let correctAnswer = true;
         currentQuestion.find('.growtype-quiz-question-answer').map(function (index, element) {
             if ($(this).hasClass('is-active') && $(this).attr('data-cor').length === 0) {

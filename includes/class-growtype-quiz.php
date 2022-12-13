@@ -222,7 +222,15 @@ class Growtype_Quiz
      */
     public function is_quiz_page()
     {
-        return strpos($_SERVER['REQUEST_URI'], '/' . $this->post_type) > -1;
+        $posts = Growtype_Quiz::get_growtype_quiz_post_types();
+
+        foreach ($posts as $post_type) {
+            if (strpos($_SERVER['REQUEST_URI'], '/' . $post_type) > -1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -277,6 +285,27 @@ class Growtype_Quiz
         $custom_post_type = get_option('growtype_quiz_custom_post_type');
 
         return !empty($custom_post_type) ? $custom_post_type : (defined('GROWTYPE_QUIZ_POST_TYPE') ? GROWTYPE_QUIZ_POST_TYPE : 'quiz');
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_growtype_extra_post_types()
+    {
+        $custom_post_type = get_option('growtype_quiz_extra_post_types');
+
+        return !empty($custom_post_type) ? explode(',', $custom_post_type) : [];
+    }
+
+    /**
+     * @return string
+     */
+    public static function get_growtype_quiz_post_types()
+    {
+        $post_type = self::get_growtype_quiz_post_type();
+        $extra_post_type = self::get_growtype_extra_post_types();
+
+        return array_merge([$post_type], $extra_post_type);
     }
 
     /**

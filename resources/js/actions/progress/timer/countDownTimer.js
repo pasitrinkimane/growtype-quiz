@@ -4,12 +4,14 @@ import {saveQuizDataEvent} from "../../../events/saveQuizData";
 /**
  * Calculate time
  */
-export function calculateTime() {
+export function countDownTimer() {
     let timer = $('.growtype-quiz-timer');
 
     if (timer.length === 0) {
         return false;
     }
+
+    window.growtype_quiz.countdown = {};
 
     let durationInSeconds = timer.attr('data-duration');
     let currentTime = new Date();
@@ -18,7 +20,7 @@ export function calculateTime() {
 
     let countDownDate = currentTime.getTime();
 
-    window.countDownTimer = setInterval(function () {
+    window.countdown_timer = setInterval(function () {
         let now = new Date().getTime();
         let distance = countDownDate - now;
         let days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -27,11 +29,11 @@ export function calculateTime() {
         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         if (distance < 0) {
-            clearInterval(window.countDownTimer);
+            clearInterval(window.countdown_timer);
             document.dispatchEvent(showSuccessQuestion());
             document.dispatchEvent(saveQuizDataEvent());
         } else {
-            window.growtype_quiz.countDownTimerDuration = Number(durationInSeconds) - Number(((minutes * 60) + seconds));
+            window.growtype_quiz.countdown.duration = Number(durationInSeconds) - Number(((minutes * 60) + seconds));
 
             /**
              * Format time
@@ -44,9 +46,9 @@ export function calculateTime() {
                 seconds = '0' + seconds;
             }
 
-            window.countDownTimerCurrentTime = minutes + ":" + seconds;
+            window.growtype_quiz.countdown.current_time = minutes + ":" + seconds;
 
-            timer.find('.e-time').text(window.countDownTimerCurrentTime);
+            timer.find('.e-time').text(window.growtype_quiz.countdown.current_time);
         }
     }, 1000);
 }

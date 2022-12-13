@@ -44,7 +44,7 @@ class Growtype_Quiz_Admin_General_Setting
         );
 
         /**
-         *
+         * main post type
          */
         register_setting(
             'growtype_quiz_settings_general', // settings group name
@@ -53,8 +53,24 @@ class Growtype_Quiz_Admin_General_Setting
 
         add_settings_field(
             'growtype_quiz_custom_post_type',
-            'Post Type (default: quiz)',
+            'Main Post Type (default: quiz)',
             array ($this, 'growtype_quiz_custom_post_type_callback'),
+            'growtype-quiz-settings',
+            'growtype_quiz_settings_general'
+        );
+
+        /**
+         * extra post type
+         */
+        register_setting(
+            'growtype_quiz_settings_general', // settings group name
+            'growtype_quiz_extra_post_types' // option name
+        );
+
+        add_settings_field(
+            'growtype_quiz_extra_post_types',
+            'Extra Post Types',
+            array ($this, 'growtype_quiz_extra_post_types_callback'),
             'growtype-quiz-settings',
             'growtype_quiz_settings_general'
         );
@@ -138,6 +154,17 @@ class Growtype_Quiz_Admin_General_Setting
         $value = get_option('growtype_quiz_custom_post_type');
         ?>
         <input type="text" name="growtype_quiz_custom_post_type" value="<?php echo $value ?>"/>
+        <?php
+    }
+
+    /**
+     *
+     */
+    function growtype_quiz_extra_post_types_callback()
+    {
+        $value = get_option('growtype_quiz_extra_post_types');
+        ?>
+        <input type="text" name="growtype_quiz_extra_post_types" value="<?php echo $value ?>"/>
         <?php
     }
 

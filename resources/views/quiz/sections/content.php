@@ -4,7 +4,7 @@ if ($iframe_hide_header_footer) {
 }
 ?>
 
-<div class="growtype-quiz-wrapper" data-current-question-type="" data-quiz-id="<?php echo $post->ID ?>">
+<div class="growtype-quiz-wrapper" data-current-question-type="" data-quiz-id="<?php echo $post->ID ?>" data-quiz-type="<?php echo $quiz_data['quiz_type'] ?>">
     <?php
     $intro_content = apply_filters('the_content', get_the_content());
     $intro_f_img = isset(wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'single-post-thumbnail')[0]) ? wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'single-post-thumbnail')[0] : '';
@@ -19,8 +19,7 @@ if ($iframe_hide_header_footer) {
 
     <section class="s-quiz">
         <div class="container">
-
-            <div class="growtype-quiz" data-type="<?php echo $quiz_data['quiz_type'] ?>">
+            <div class="growtype-quiz">
                 <div class="growtype-quiz-inner">
                     <?php if ($quiz_data['progress_bar']) { ?>
                         <div class="growtype-quiz-progressbar mb-4">
@@ -32,6 +31,7 @@ if ($iframe_hide_header_footer) {
                             <?php echo growtype_quiz_include_view('quiz.partials.components.question-nr'); ?>
                         </div>
                     <?php } ?>
+
                     <?php if ($quiz_data['limited_time']) { ?>
                         <div class="growtype-quiz-timer" data-duration="<?php echo $quiz_data['duration'] ?>">
                             <span><?php echo __('Liko:', 'growtype-quiz') ?></span>
@@ -61,6 +61,7 @@ if ($iframe_hide_header_footer) {
                                  data-question-title="<?php echo $question['question_title'] ?>"
                                  data-answer-required="<?php echo $question['not_required'] ? 'false' : 'true' ?>"
                                  data-hide-back-button="<?php echo $question['hide_back_button'] ? 'true' : 'false' ?>"
+                                 data-hide-next-button="<?php echo $question['hide_next_button'] ? 'true' : 'false' ?>"
                             >
                                 <div class="growtype-quiz-question-inner">
                                     <?php if (!empty($question['featured_image'])) { ?>
@@ -79,7 +80,8 @@ if ($iframe_hide_header_footer) {
                                         <?php } ?>
                                         <?php if ($question['question_type'] === 'open') { ?>
                                             <?php echo growtype_quiz_include_view('quiz.partials.question-types.open', ['question' => $question, 'quiz_data' => $quiz_data]) ?>
-                                        <?php } else { ?>
+                                        <?php } elseif ($question['question_type'] === 'info') {
+                                        } else { ?>
                                             <?php echo growtype_quiz_include_view('quiz.partials.question-types.radio', ['question' => $question, 'quiz_data' => $quiz_data]) ?>
                                         <?php } ?>
                                     </div>

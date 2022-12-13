@@ -7,9 +7,9 @@ export function open(currentQuestion) {
     }
 
     if (!isValid) {
-        currentQuestion.find('.growtype-quiz-question-answers').addClass('anim-wrong-selection');
+        currentQuestion.find('.growtype-quiz-question-answers-wrapper').addClass('anim-wrong-selection');
         setTimeout(function () {
-            currentQuestion.find('.growtype-quiz-question-answers').removeClass('anim-wrong-selection');
+            currentQuestion.find('.growtype-quiz-question-answers-wrapper').removeClass('anim-wrong-selection');
         }, 500);
     }
 

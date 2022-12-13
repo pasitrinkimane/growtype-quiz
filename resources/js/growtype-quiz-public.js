@@ -8,7 +8,8 @@ import {input} from './components/input.js';
 import {updateProgressBar} from "./actions/progress/bar/updateProgressBar";
 import {updateQuestionsCounter} from "./actions/progress/counter/updateQuestionsCounter";
 import {updateProgressCounter} from "./actions/progress/counter/updateProgressCounter";
-import {calculateTime} from "./actions/progress/timer/calculateTime";
+import {countDownTimer} from "./actions/progress/timer/countDownTimer";
+import {duration} from "./actions/progress/timer/duration";
 
 import "./listeners/showSuccessQuestion";
 
@@ -22,5 +23,6 @@ $(document).ready(function () {
     updateQuestionsCounter();
     updateProgressBar();
     updateProgressCounter();
-    calculateTime();
+    duration();
+    countDownTimer();
 });

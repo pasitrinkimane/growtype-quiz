@@ -50,10 +50,8 @@ class Growtype_Quiz_Public
      */
     public function __construct($growtype_quiz, $version)
     {
-
         $this->growtype_quiz = $growtype_quiz;
         $this->version = $version;
-
     }
 
     /**
@@ -83,19 +81,6 @@ class Growtype_Quiz_Public
      */
     public function enqueue_scripts()
     {
-
-        /**
-         * This function is provided for demonstration purposes only.
-         *
-         * An instance of this class should be passed to the run() function
-         * defined in Growtype_Quiz_Loader as all of the hooks are defined
-         * in that particular class.
-         *
-         * The Growtype_Quiz_Loader will then create the relationship
-         * between the defined hooks and the functions defined in this
-         * class.
-         */
-
         wp_enqueue_script($this->growtype_quiz, GROWTYPE_QUIZ_URL_PUBLIC . 'js/growtype-quiz-public.js', array ('jquery'), $this->version, false);
 
         wp_localize_script($this->growtype_quiz, 'ajax_object',
@@ -104,5 +89,4 @@ class Growtype_Quiz_Public
             )
         );
     }
-
 }

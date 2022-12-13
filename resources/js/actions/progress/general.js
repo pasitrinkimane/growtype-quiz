@@ -5,7 +5,7 @@ export function hideProgressIndicators() {
 
     if($('.growtype-quiz-timer').length > 0){
         $('.growtype-quiz-timer').hide();
-        clearInterval(window.countDownTimer);
+        clearInterval(window.countdown_timer);
     }
 }
 

@@ -72,6 +72,7 @@ export function showNextQuestion(currentQuestion) {
         updateQuizComponents(nextQuestion);
 
         if (nextQuestion.length === 0 || nextQuestion.attr('data-question-type') === 'success') {
+            $('.growtype-quiz-btn-go-back').attr('disabled', false);
             $('.growtype-quiz-btn-go-next').hide();
             document.dispatchEvent(saveQuizDataEvent());
             evaluateQuizData();
