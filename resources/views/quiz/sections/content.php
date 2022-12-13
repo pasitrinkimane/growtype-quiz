@@ -1,6 +1,6 @@
 <?php
 if ($iframe_hide_header_footer) {
-    echo '<style>header { display: none; } footer { display: none; } .growtype-quiz-wrapper { margin: 0; }</style>';
+    echo '<style>header { display: none; } footer { display: none; } .growtype-quiz-wrapper { margin: 0; } .growtype-quiz-wrapper .s-quiz {padding: 0;} </style>';
 }
 ?>
 
