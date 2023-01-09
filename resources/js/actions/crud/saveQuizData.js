@@ -42,6 +42,12 @@ function saveQuizData(data) {
         },
         success: function (data) {
             if (data.success) {
+
+                /**
+                 * Set unique hash if input exists
+                 */
+                $('input[name="growtype_quiz_unique_hash"]').val(data.unique_hash);
+
                 /**
                  * Save data to local storage
                  */

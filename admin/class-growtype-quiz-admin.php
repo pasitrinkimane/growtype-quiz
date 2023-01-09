@@ -81,22 +81,10 @@ class Growtype_Quiz_Admin
     private function load_settings()
     {
         /**
-         * Crud
-         */
-        require_once GROWTYPE_QUIZ_PATH . 'admin/methods/crud/growtype-quiz-admin-result-crud.php';
-        $this->loader = new Growtype_Quiz_Admin_Result_Crud();
-
-        /**
          * Settings
          */
         require_once GROWTYPE_QUIZ_PATH . 'admin/methods/setting/growtype-quiz-admin-setting.php';
         $this->loader = new Growtype_Quiz_Admin_Setting();
-
-        /**
-         * Post
-         */
-        require_once GROWTYPE_QUIZ_PATH . 'admin/methods/post/growtype-quiz-admin-post.php';
-        $this->loader = new Growtype_Quiz_Admin_Post();
 
         /**
          * Result

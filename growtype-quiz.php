@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       Growtype - Quiz
  * Plugin URI:        http://newcoolstudio.com/
- * Description:       Creates CPT with advanced quiz functionality. Requires ACF.
+ * Description:       Creates CPT with advanced quiz functionality. Requires Advanced custom fields plugin.
  * Version:           1.0.0
  * Author:            Growtype
  * Author URI:        http://newcoolstudio.com/

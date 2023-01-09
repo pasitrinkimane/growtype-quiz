@@ -63,11 +63,11 @@ class Growtype_Quiz_Admin_Result_List_Table extends WP_List_Table
             $args['order'] = $_REQUEST['order'];
         }
 
-        $growtype_quiz_admin_result_crud = new Growtype_Quiz_Admin_Result_Crud();
+        $growtype_quiz_result_crud = new Growtype_Quiz_Result_Crud();
 
-        $items = $growtype_quiz_admin_result_crud->get_quizes_results($args);
+        $items = $growtype_quiz_result_crud->get_quizes_results($args);
 
-        $total_items = $growtype_quiz_admin_result_crud->get_total_results_amount();
+        $total_items = $growtype_quiz_result_crud->get_total_results_amount();
 
         $this->items = $items;
 
@@ -104,6 +104,7 @@ class Growtype_Quiz_Admin_Result_List_Table extends WP_List_Table
             'correct_answers_amount' => __('Correct answers amount', 'growtype-quiz'),
             'wrong_answers_amount' => __('Correct answers amount', 'growtype-quiz'),
             'evaluated' => __('Evaluated', 'growtype-quiz'),
+            'extra_details' => __('Extra details', 'growtype-quiz'),
             'created_at' => __('Created at', 'growtype-quiz'),
             'updated_at' => __('Updated at', 'growtype-quiz'),
         ));

@@ -6,7 +6,7 @@
                 <?php foreach ($question['options_all'] as $option) { ?>
                     <div class="growtype-quiz-question-answer-wrapper">
                         <div class="growtype-quiz-question-answer <?php echo $option['default'] ? 'is-active' : '' ?>"
-                             data-value="<?php echo isset($option['value']) && !empty($option['value']) ? $option['value'] : str_replace(' ', '_', strtolower($option['label'])) ?>"
+                             data-value="<?php echo isset($option['value']) && !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']) ?>"
                              data-extra-value="<?php echo $option['extra_value'] ?>"
                              data-cor="<?php echo $quiz_data['is_test_mode'] ? $option['correct'] : '' ?>"
                              data-default-belongs-to="<?php echo $option['default_belongs_to'] ?>"

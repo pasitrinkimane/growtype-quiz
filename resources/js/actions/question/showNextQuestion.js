@@ -5,6 +5,8 @@ import {saveQuizDataEvent} from "../../events/saveQuizData";
 import {showProgressIndicators} from "../../actions/progress/general";
 import {evaluateQuizData} from "../../actions/crud/evaluateQuizData";
 import {updateQuizComponents} from "./updateQuizComponents";
+import {showLastQuestion} from "./showLastQuestion";
+import {showSuccessQuestion} from "../../events/showSuccessQuestion";
 
 /**
  * Show next slide
@@ -76,6 +78,7 @@ export function showNextQuestion(currentQuestion) {
             $('.growtype-quiz-btn-go-next').hide();
             document.dispatchEvent(saveQuizDataEvent());
             evaluateQuizData();
+            document.dispatchEvent(showSuccessQuestion());
         }
     });
 }

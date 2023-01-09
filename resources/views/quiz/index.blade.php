@@ -11,6 +11,7 @@
 @endsection
 
 @section('footer')
+    <?php do_action('growtype_quiz_section_footer'); ?>
     @include('partials.sections.footer')
 @endsection
 

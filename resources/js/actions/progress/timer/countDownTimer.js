@@ -26,7 +26,9 @@ export function countDownTimer() {
         let days = Math.floor(distance / (1000 * 60 * 60 * 24));
         let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let minutesFormatted = minutes;
         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        let secondsFormatted = seconds;
 
         if (distance < 0) {
             clearInterval(window.countdown_timer);
@@ -39,14 +41,14 @@ export function countDownTimer() {
              * Format time
              */
             if (minutes < 10) {
-                minutes = '0' + minutes;
+                minutesFormatted = '0' + minutes;
             }
 
             if (seconds < 10) {
-                seconds = '0' + seconds;
+                secondsFormatted = '0' + seconds;
             }
 
-            window.growtype_quiz.countdown.current_time = minutes + ":" + seconds;
+            window.growtype_quiz.countdown.current_time = minutesFormatted + ":" + secondsFormatted;
 
             timer.find('.e-time').text(window.growtype_quiz.countdown.current_time);
         }

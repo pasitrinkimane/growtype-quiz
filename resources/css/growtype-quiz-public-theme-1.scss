@@ -2,6 +2,40 @@
 @import "common/mixins";
 @import "common/global";
 
+body[data-current-question-type="general"] {
+  &[data-current-question="1"] {
+    .growtype-quiz-nav-inner {
+      .icon-arrow {
+        display: none;
+      }
+    }
+  }
+
+  .growtype-quiz-nav {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 50px;
+    width: 50%;
+
+    @include bp-tablet-portrait() {
+      padding: 30px;
+      width: 100%;
+      position: relative;
+    }
+
+    @include bp-phone-xl() {
+      padding: 25px;
+      padding-top: 10px;
+      padding-bottom: 30px;
+    }
+  }
+
+  .growtype-quiz {
+    padding: 0;
+  }
+}
+
 .growtype-quiz-wrapper {
   .growtype-quiz-question-nr {
     font-size: 16px;
@@ -131,32 +165,6 @@
     align-items: center;
   }
 
-  .growtype-quiz-question[data-question-type=radio][data-answer-style=radio] .growtype-quiz-question-answer.is-active .e-radio {
-    border: none;
-    background: black;
-
-    &:before {
-      content: '';
-      position: absolute;
-      background: url('./../images/check.svg') no-repeat;
-      width: 20px;
-      height: 15px;
-      top: 0;
-      bottom: 0;
-      left: 2px;
-      right: 0;
-      z-index: 1;
-      margin: auto;
-      background-size: contain;
-      @include bp-phone-xl() {
-        width: 15px;
-        height: 15px;
-        top: 3px;
-        left: 2px;
-      }
-    }
-  }
-
   .growtype-quiz {
     padding-left: 60px;
     padding-top: 50px;
@@ -233,16 +241,6 @@
     }
   }
 
-  &[data-current-question-type="general"] {
-    &[data-current-question="1"] {
-      .growtype-quiz-nav-inner {
-        .icon-arrow {
-          display: none;
-        }
-      }
-    }
-  }
-
   .growtype-quiz-question {
     &[data-question-type="general"] {
       &[data-question-style="horizontal"] {
@@ -313,32 +311,6 @@
           max-width: 80%;
         }
       }
-    }
-  }
-
-  &[data-current-question-type="general"] {
-    .growtype-quiz-nav {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      padding: 50px;
-      width: 50%;
-
-      @include bp-tablet-portrait() {
-        padding: 30px;
-        width: 100%;
-        position: relative;
-      }
-
-      @include bp-phone-xl() {
-        padding: 25px;
-        padding-top: 10px;
-        padding-bottom: 30px;
-      }
-    }
-
-    .growtype-quiz {
-      padding: 0;
     }
   }
 }

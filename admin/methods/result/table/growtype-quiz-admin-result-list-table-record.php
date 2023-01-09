@@ -7,7 +7,7 @@ class Growtype_Quiz_Admin_Result_List_Table_Record
 {
     public function __construct()
     {
-        $this->crud = new Growtype_Quiz_Admin_Result_Crud();
+        $this->crud = new Growtype_Quiz_Result_Crud();
 
         $this->redirect = admin_url('edit.php?post_type=' . Growtype_Quiz::get_growtype_quiz_post_type() . '&page=' . Growtype_Quiz_Admin_Result::PAGE_NAME);
     }

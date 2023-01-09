@@ -144,6 +144,24 @@ class Growtype_Quiz
         require_once GROWTYPE_QUIZ_PATH . 'admin/class-growtype-quiz-admin.php';
 
         /**
+         * Crud
+         */
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/crud/growtype-quiz-result-crud.php';
+        $this->loader = new Growtype_Quiz_Result_Crud();
+
+        /**
+         * Post
+         */
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/cpt/growtype-quiz-cpt.php';
+        $this->loader = new Growtype_Quiz_Cpt();
+
+        /**
+         * Ajax
+         */
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/ajax/class-growtype-quiz-ajax.php';
+        $this->loader = new Growtype_Quiz_Ajax();
+
+        /**
          * The class responsible for defining all actions that occur in the public-facing
          * side of the site.
          */

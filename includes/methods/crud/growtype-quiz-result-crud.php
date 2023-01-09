@@ -1,6 +1,6 @@
 <?php
 
-class Growtype_Quiz_Admin_Result_Crud
+class Growtype_Quiz_Result_Crud
 {
     public static function table_name()
     {
@@ -76,17 +76,7 @@ class Growtype_Quiz_Admin_Result_Crud
         if ($based_on === 'any') {
             $result = $wpdb->get_results("SELECT * FROM $table_name where quiz_id=$quiz_id limit 0, $limit", ARRAY_A);
         } elseif ($based_on === 'performance') {
-            for ($wrong_answers = 1; $wrong_answers < 5; $wrong_answers++) {
-                $result = $wpdb->get_results("SELECT *
-FROM $table_name
-where quiz_id=$quiz_id and evaluated=false and
-(user_id, wrong_answers_amount) in
-      (SELECT user_id, MIN(wrong_answers_amount) as wrong_answers_amount FROM wp_quiz_results where quiz_id=$quiz_id and wrong_answers_amount<$wrong_answers group by user_id)
-order by wrong_answers_amount asc, duration ASC limit 0,$limit", ARRAY_A);
-                if (count($result) > 3) {
-                    break;
-                }
-            }
+            $result = $wpdb->get_results("SELECT * FROM $table_name where quiz_id=$quiz_id order by correct_answers_amount desc, questions_amount asc, duration ASC limit 0, $limit", ARRAY_A);
         }
 
         return $result;
@@ -114,13 +104,11 @@ order by wrong_answers_amount asc, duration ASC limit 0,$limit", ARRAY_A);
         /**
          * Load post class
          */
-        $growtype_quiz_admin_post = new Growtype_Quiz_Admin_Post();
-
         if (isset($quiz_data['files']) && !empty($quiz_data['files'])) {
             foreach ($quiz_data['files'] as $file_key => $file) {
                 foreach ($answers_decoded as $answer_key => $answer) {
                     if (strpos($file_key, $answer_key) > -1) {
-                        $uploaded_file = $growtype_quiz_admin_post->upload_file_to_media_library($file);
+                        $uploaded_file = $this->upload_file_to_media_library($file);
                         $attachment_id = $uploaded_file['attachment_id'] ?? null;
                         if (!empty($attachment_id)) {
                             if (isset($answers_decoded[$answer_key]['files'])) {
@@ -137,9 +125,12 @@ order by wrong_answers_amount asc, duration ASC limit 0,$limit", ARRAY_A);
 
         $answers = json_encode($answers_decoded);
 
-        $questions_amount = $growtype_quiz_admin_post->get_quiz_data($quiz_data['quiz_id'])['questions_available_amount'] ?? null;
-        $correct_answers_amount = $growtype_quiz_admin_post->evaluate_quiz_answers($quiz_data['quiz_id'], $quiz_data['answers'])['correct_answers_amount'] ?? null;
-        $wrong_answers_amount = $growtype_quiz_admin_post->evaluate_quiz_answers($quiz_data['quiz_id'], $quiz_data['answers'])['wrong_answers_amount'] ?? null;
+        $questions_amount = growtype_quiz_get_quiz_data($quiz_data['quiz_id'])['questions_available_amount'] ?? null;
+        $evaluate_quiz_results = $this->evaluate_quiz_results($quiz_data['quiz_id'], $answers);
+        $correct_answers_amount = $evaluate_quiz_results['correct_answers_amount'] ?? null;
+        $wrong_answers_amount = $evaluate_quiz_results['wrong_answers_amount'] ?? null;
+
+        $unique_hash = bin2hex(random_bytes(12) . time());
 
         $insert_data = [
             'user_id' => $user_id,
@@ -149,13 +140,18 @@ order by wrong_answers_amount asc, duration ASC limit 0,$limit", ARRAY_A);
             'questions_amount' => $questions_amount,
             'correct_answers_amount' => $correct_answers_amount,
             'wrong_answers_amount' => $wrong_answers_amount,
+            'unique_hash' => $unique_hash,
         ];
 
         $insert_data = apply_filters('save_quiz_results_data', $insert_data, $quiz_data);
 
-        $wpdb->insert($table_name, $insert_data);
+        $data_insert = $wpdb->insert($table_name, $insert_data);
 
-        return true;
+        if (is_wp_error($data_insert)) {
+            return false;
+        }
+
+        return $insert_data;
     }
 
     /**
@@ -170,6 +166,22 @@ order by wrong_answers_amount asc, duration ASC limit 0,$limit", ARRAY_A);
         $table_name = self::table_name();
 
         $result = $wpdb->get_results("SELECT * FROM $table_name where id=$id", ARRAY_A);
+
+        return $result[0] ?? null;
+    }
+
+    /**
+     * @param $id
+     * @param $fields
+     * @return bool
+     */
+    public function get_quiz_single_result_data_by_unique_hash($unique_hash)
+    {
+        global $wpdb;
+
+        $table_name = self::table_name();
+
+        $result = $wpdb->get_results("SELECT * FROM $table_name where unique_hash='{$unique_hash}'", ARRAY_A);
 
         return $result[0] ?? null;
     }
@@ -204,6 +216,108 @@ order by wrong_answers_amount asc, duration ASC limit 0,$limit", ARRAY_A);
         $wpdb->update($table_name, $fields, ['id' => $id]);
 
         return true;
+    }
+
+    /**
+     * @param $file
+     * @return array
+     */
+    public function upload_file_to_media_library($file)
+    {
+        $file_name = basename($file["name"]);
+        $file_extension = pathinfo($file_name, PATHINFO_EXTENSION);
+        $file_mime = mime_content_type($file['tmp_name']);
+
+        if (!function_exists('wp_handle_upload')) {
+            require_once(ABSPATH . 'wp-admin/includes/file.php');
+        }
+
+        $upload_featured_image = wp_handle_upload($file, array ('test_form' => false));
+
+        if (isset($upload_featured_image['error'])) {
+            $response['success'] = false;
+            $response['message'] = $upload_featured_image['error'];
+
+            return $response;
+        }
+
+        $upload_featured_image_path = $upload_featured_image['file'];
+
+        $upload_id = wp_insert_attachment(array (
+            'guid' => $upload_featured_image_path,
+            'post_mime_type' => $file_mime,
+            'post_title' => preg_replace('/\.[^.]+$/', '', $file_name),
+            'post_content' => '',
+            'post_status' => 'inherit'
+        ), $upload_featured_image_path);
+
+        // wp_generate_attachment_metadata() won't work if you do not include this file
+        require_once(ABSPATH . 'wp-admin/includes/image.php');
+
+        // Generate and save the attachment metas into the database
+        wp_update_attachment_metadata($upload_id, wp_generate_attachment_metadata($upload_id, $upload_featured_image_path));
+
+        $response['attachment_id'] = $upload_id;
+
+        return $response;
+    }
+
+    /**
+     * @param $quiz_id
+     * @param $answers
+     */
+    public function evaluate_quiz_results($quiz_id, $user_answers)
+    {
+        $quiz_data = growtype_quiz_get_quiz_data($quiz_id);
+        $questions = $quiz_data['questions'];
+
+        $correct_answers = 0;
+        $wrong_answers = 0;
+
+        if (!is_array($user_answers)) {
+            $user_answers = json_decode($user_answers, true);
+        }
+
+        foreach ($user_answers as $user_answer_key => $user_answer) {
+            $question = null;
+            foreach ($questions as $index => $single_question) {
+                $question_key = !empty($single_question['key']) ? $single_question['key'] : 'question_' . ((int)$index + 1);
+
+                if ($user_answer_key === $question_key) {
+                    $question = $single_question;
+                    break;
+                }
+            }
+
+            if (empty($question)) {
+                continue;
+            }
+
+            $answer_is_wrong = false;
+            foreach ($question['options_all'] as $option) {
+                if ($option['correct']) {
+                    $option_value = !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']);
+
+                    foreach ($user_answer as $user_answer_single) {
+                        if ($option_value !== $user_answer_single) {
+                            $answer_is_wrong = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if ($answer_is_wrong) {
+                $wrong_answers++;
+            } else {
+                $correct_answers++;
+            }
+        }
+
+        return [
+            'correct_answers_amount' => $correct_answers,
+            'wrong_answers_amount' => $wrong_answers,
+        ];
     }
 }
 

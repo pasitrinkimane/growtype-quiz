@@ -1,4 +1,4 @@
-let successQuestionEvent = new Event('showSuccessQuestion');
+let successQuestionEvent = new Event('growtypeQuizShowSuccessQuestion');
 
 export function showSuccessQuestion() {
     return successQuestionEvent;

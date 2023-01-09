@@ -64,13 +64,33 @@
 
         &.is-active {
           .e-radio {
-            background-color: #7C9CAE;
+            background-color: black;
             background-image: url('./../../images/check.svg');
             background-size: 13px;
             background-repeat: no-repeat;
             background-position: center;
           }
         }
+      }
+    }
+
+    &[data-answer-style=radio] .growtype-quiz-question-answer.is-active .e-radio {
+      background: none;
+      border: 1px solid black;
+
+      &:before {
+        content: '';
+        position: absolute;
+        background: black;
+        width: 9px;
+        height: 9px;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        margin: auto;
+        border-radius: 50px;
       }
     }
   }

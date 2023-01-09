@@ -114,9 +114,39 @@ if (!function_exists('growtype_quiz_include_view')) {
 if (!function_exists('growtype_quiz_get_quiz_data')) {
     function growtype_quiz_get_quiz_data($quiz_id)
     {
-        $growtype_quiz_loader = new Growtype_Quiz_Admin_Post();
+        $quiz_data['quiz_type'] = get_field('quiz_type', $quiz_id);
+        $quiz_data['is_test_mode'] = get_field('is_test_mode', $quiz_id) ?? false;
+        $quiz_data['is_enabled'] = get_field('is_enabled', $quiz_id) ?? false;
+        $quiz_data['save_answers'] = get_field('save_answers', $quiz_id);
+        $quiz_data['show_correct_answers_initially'] = get_field('show_correct_answers_initially', $quiz_id);
+        $quiz_data['slide_counter'] = get_field('slide_counter', $quiz_id);
+        $quiz_data['slide_counter_position'] = get_field('slide_counter_position', $quiz_id);
+        $quiz_data['limited_time'] = get_field('limited_time', $quiz_id);
+        $quiz_data['duration'] = get_field('duration', $quiz_id);
+        $quiz_data['progress_bar'] = get_field('progress_bar', $quiz_id);
+        $quiz_data['use_question_title_nav'] = get_field('use_question_title_nav', $quiz_id);
+        $quiz_data['questions'] = !empty(get_field('questions', $quiz_id)) ? get_field('questions', $quiz_id) : [];
 
-        return $growtype_quiz_loader->get_quiz_data($quiz_id);
+        $has_success_question = array_filter($quiz_data['questions'], function ($question) {
+            return $question['question_type'] === 'success';
+        });
+
+        if (empty($has_success_question)) {
+            $success_question = apply_filters('growtype_quiz_add_success_question', []);
+
+            if (!empty($success_question)) {
+                $quiz_data['questions'][] = $success_question;
+            }
+        }
+
+        $quiz_data['questions_available'] = isset($quiz_data['questions']) && !empty($quiz_data['questions']) ? array_filter($quiz_data['questions'], function ($question) {
+            $disabled = $question['disabled'] ?? false;
+            return $question['question_type'] !== 'info' && $question['question_type'] !== 'success' && !$disabled;
+        }) : '';
+
+        $quiz_data['questions_available_amount'] = isset($quiz_data['questions_available']) && !empty($quiz_data['questions_available']) ? count($quiz_data['questions_available']) : '';
+
+        return $quiz_data;
     }
 }
 
@@ -127,7 +157,7 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
 if (!function_exists('growtype_quiz_get_results_data')) {
     function growtype_quiz_get_results_data($quiz_id, $limit = 30, $based_on = 'performance')
     {
-        $growtype_quiz_loader = new Growtype_Quiz_Admin_Result_Crud();
+        $growtype_quiz_loader = new Growtype_Quiz_Result_Crud();
 
         return $growtype_quiz_loader->get_single_quiz_results($quiz_id, $limit, $based_on);
     }
@@ -140,7 +170,7 @@ if (!function_exists('growtype_quiz_get_results_data')) {
 if (!function_exists('growtype_quiz_get_user_results')) {
     function growtype_quiz_get_user_results($user_id)
     {
-        $growtype_quiz_loader = new Growtype_Quiz_Admin_Result_Crud();
+        $growtype_quiz_loader = new Growtype_Quiz_Result_Crud();
 
         return $growtype_quiz_loader->get_quiz_results_by_user_id($user_id);
     }
@@ -357,5 +387,15 @@ if (!function_exists('growtype_quiz_get_question_by_title')) {
         }
 
         return null;
+    }
+}
+
+/**
+ *
+ */
+if (!function_exists('growtype_quiz_format_option_value')) {
+    function growtype_quiz_format_option_value($label)
+    {
+        return str_replace(' ', '_', strtolower($label));
     }
 }

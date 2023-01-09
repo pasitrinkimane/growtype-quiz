@@ -14,10 +14,10 @@ export function updateQuizComponents(question) {
     /**
      * Back btn
      */
+    $('.growtype-quiz-nav .growtype-quiz-btn-go-back').show();
+
     if (question.attr('data-hide-back-button') === 'true') {
         $('.growtype-quiz-nav .growtype-quiz-btn-go-back').hide();
-    } else {
-        $('.growtype-quiz-nav .growtype-quiz-btn-go-back').show();
     }
 
     /**
@@ -30,7 +30,7 @@ export function updateQuizComponents(question) {
     }
 
     /**
-     * Set question type
+     * Set question type attribute to highest dom element
      */
-    $('.growtype-quiz-wrapper').attr('data-current-question-type', question.attr('data-question-type'))
+    $('body').attr('data-current-question-type', question.attr('data-question-type'))
 }
