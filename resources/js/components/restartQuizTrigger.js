@@ -1,11 +1,13 @@
-import {showFirstQuestion} from './../actions/question/showFirstQuestion.js';
+import {showFirstQuestion} from "../actions/question/showFirstQuestion";
 
 export function restartQuizTrigger() {
-    $('.growtype-quiz .btn-restart-quiz').click(function () {
+    $('.growtype-quiz .btn-restart-quiz').click(function (event) {
         event.preventDefault();
-        if ($(this).attr('data-show-correct-answers') === 'true') {
-            $('.growtype-quiz').addClass('show-correct-answers')
-        }
+
+        window.growtype_quiz.is_finished = false;
+
+        $('.growtype-quiz-nav .btn').attr('disabled', false)
+
         showFirstQuestion();
     });
 }

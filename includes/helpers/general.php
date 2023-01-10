@@ -414,3 +414,13 @@ if (!function_exists('growtype_quiz_format_option_value')) {
         return str_replace(' ', '_', strtolower($label));
     }
 }
+
+/**
+ *
+ */
+if (!function_exists('growtype_quiz_save_empty_answers')) {
+    function growtype_quiz_save_empty_answers($quiz_id)
+    {
+        return get_field('save_empty_answers', $quiz_id) ? true : false;
+    }
+}

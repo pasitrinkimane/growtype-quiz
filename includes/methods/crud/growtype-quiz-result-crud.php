@@ -98,23 +98,33 @@ class Growtype_Quiz_Result_Crud
             $user_id = $current_user->ID;
         }
 
-        $quiz_id = $quiz_data['quiz_id'];
-        $answers_decoded = json_decode(stripslashes($quiz_data['answers']), true);
+        $quiz_id = isset($quiz_data['quiz_id']) ? $quiz_data['quiz_id'] : null;
+
+        if (empty($quiz_id)) {
+            return false;
+        }
+
+        /**
+         * Check if empty answers should be saved
+         */
+        if (!growtype_quiz_save_empty_answers($quiz_data['quiz_id']) && empty($answers)) {
+            return false;
+        }
 
         /**
          * Load post class
          */
         if (isset($quiz_data['files']) && !empty($quiz_data['files'])) {
             foreach ($quiz_data['files'] as $file_key => $file) {
-                foreach ($answers_decoded as $answer_key => $answer) {
+                foreach ($quiz_data['answers'] as $answer_key => $answer) {
                     if (strpos($file_key, $answer_key) > -1) {
                         $uploaded_file = $this->upload_file_to_media_library($file);
                         $attachment_id = $uploaded_file['attachment_id'] ?? null;
                         if (!empty($attachment_id)) {
-                            if (isset($answers_decoded[$answer_key]['files'])) {
-                                array_push($answers_decoded[$answer_key]['files'], $attachment_id);
+                            if (isset($quiz_data['answers'][$answer_key]['files'])) {
+                                array_push($quiz_data['answers'][$answer_key]['files'], $attachment_id);
                             } else {
-                                $answers_decoded[$answer_key]['files'] = [$attachment_id];
+                                $quiz_data['answers'][$answer_key]['files'] = [$attachment_id];
                             }
                         }
 
@@ -123,14 +133,14 @@ class Growtype_Quiz_Result_Crud
             }
         }
 
-        $answers = json_encode($answers_decoded);
+        $answers = json_encode($quiz_data['answers']);
 
         $questions_amount = growtype_quiz_get_quiz_data($quiz_data['quiz_id'])['questions_available_amount'] ?? null;
         $evaluate_quiz_results = $this->evaluate_quiz_results($quiz_data['quiz_id'], $answers);
         $correct_answers_amount = $evaluate_quiz_results['correct_answers_amount'] ?? null;
         $wrong_answers_amount = $evaluate_quiz_results['wrong_answers_amount'] ?? null;
         $questions_answered = $evaluate_quiz_results['questions_answered'] ?? null;
-
+        $extra_details = isset($quiz_data['extra_details']) && !empty($quiz_data['extra_details']) ? json_encode($quiz_data['extra_details']) : null;
         $unique_hash = bin2hex(random_bytes(12) . time());
 
         $insert_data = [
@@ -143,6 +153,7 @@ class Growtype_Quiz_Result_Crud
             'correct_answers_amount' => $correct_answers_amount,
             'wrong_answers_amount' => $wrong_answers_amount,
             'unique_hash' => $unique_hash,
+            'extra_details' => $extra_details
         ];
 
         $insert_data = apply_filters('save_quiz_results_data', $insert_data, $quiz_data);

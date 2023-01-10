@@ -4,7 +4,7 @@ document.addEventListener('saveQuizData', saveQuizData)
 
 function saveQuizData(data) {
 
-    if (!quizSaveAnswers) {
+    if (!window.growtype_quiz.save_answers) {
         return false;
     }
 
@@ -16,7 +16,6 @@ function saveQuizData(data) {
 
     let formData = new FormData();
     formData.append("action", "growtype_quiz_save_data");
-    formData.append("status", "save");
     formData.append("answers", JSON.stringify(answers));
     formData.append("quiz_id", quizId);
     formData.append("duration", duration);
@@ -69,7 +68,7 @@ function saveQuizData(data) {
             if (showLastQuestionOnError) {
                 showLastQuestion(answers, false);
             } else if (data['responseJSON']['message'] !== undefined) {
-                alert(data['responseJSON']['message'])
+                console.error(data['responseJSON']['message']);
             }
 
             $('.growtype-quiz-wrapper .btn').attr('disabled', false).fadeIn();

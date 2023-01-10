@@ -6,7 +6,7 @@ export function radio(currentQuestion) {
         isValid = false;
     }
 
-    if (isValid && $('.growtype-quiz-wrapper').attr('data-quiz-type') === 'scored' && showCorrectAnswer && correctAnswerTrigger === 'on_submit') {
+    if (isValid && $('.growtype-quiz-wrapper').attr('data-quiz-type') === 'scored' && window.growtype_quiz.show_correct_answer && window.growtype_quiz.correct_answer_trigger === 'on_submit') {
         activeBtns.map(function (index, element) {
             if ($(element).attr('data-cor') !== '1') {
                 isValid = false;

@@ -13,6 +13,7 @@ import {showSuccessQuestionEvent} from "../../events/showSuccessQuestionEvent";
  */
 export function showNextQuestion(currentQuestion) {
     let nextFunnel = currentQuestion.find('.growtype-quiz-question-answer.is-active').attr('data-funnel');
+    let submitDelay = 0;
 
     window.growtype_quiz.current_funnel = nextFunnel;
 
@@ -33,8 +34,7 @@ export function showNextQuestion(currentQuestion) {
     /**
      * Show correct answer
      */
-    let submitDelay = 0;
-    if (showCorrectAnswer && correctAnswerTrigger === 'after_submit') {
+    if (window.growtype_quiz.show_correct_answer && window.growtype_quiz.correct_answer_trigger === 'after_submit') {
         submitDelay = 1000;
         currentQuestion.find('.growtype-quiz-question-answer').map(function (index, element) {
             if ($(element).attr('data-cor') !== '1') {
@@ -50,6 +50,13 @@ export function showNextQuestion(currentQuestion) {
      */
     currentQuestion.delay(submitDelay).removeClass('is-active').not('.is-always-visible').fadeOut(300, function () {
     }).promise().done(function () {
+
+        /**
+         * Check if success page event was fired and quiz is finished
+         */
+        if (window.growtype_quiz.is_finished) {
+            return;
+        }
 
         /**
          * Change next label
