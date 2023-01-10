@@ -1,4 +1,4 @@
-import {saveQuizDataEvent} from "../../events/saveQuizData";
+import {saveQuizDataEvent} from "../../events/saveQuizDataEvent";
 
 export function collectQuizData(currentQuestion) {
     let answers = saveQuizDataEvent().answers;

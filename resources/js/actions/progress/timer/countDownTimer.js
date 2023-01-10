@@ -1,5 +1,5 @@
-import {showSuccessQuestion} from "../../../events/showSuccessQuestion";
-import {saveQuizDataEvent} from "../../../events/saveQuizData";
+import {showSuccessQuestionEvent} from "../../../events/showSuccessQuestionEvent";
+import {saveQuizDataEvent} from "../../../events/saveQuizDataEvent";
 
 /**
  * Calculate time
@@ -32,8 +32,8 @@ export function countDownTimer() {
 
         if (distance < 0) {
             clearInterval(window.countdown_timer);
-            document.dispatchEvent(showSuccessQuestion());
             document.dispatchEvent(saveQuizDataEvent());
+            document.dispatchEvent(showSuccessQuestionEvent());
         } else {
             window.growtype_quiz.countdown.duration = Number(durationInSeconds) - Number(((minutes * 60) + seconds));
 

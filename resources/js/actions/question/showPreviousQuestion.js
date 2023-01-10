@@ -1,7 +1,7 @@
 import {updateProgressCounter} from "../../actions/progress/counter/updateProgressCounter.js";
 import {updateProgressBar} from "../../actions/progress/bar/updateProgressBar";
 import {updateQuestionsCounter} from "../progress/counter/updateQuestionsCounter";
-import {saveQuizDataEvent} from "../../events/saveQuizData";
+import {saveQuizDataEvent} from "../../events/saveQuizDataEvent";
 import {updateQuizComponents} from "./updateQuizComponents";
 
 /**

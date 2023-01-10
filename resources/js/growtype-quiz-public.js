@@ -11,7 +11,7 @@ import {updateProgressCounter} from "./actions/progress/counter/updateProgressCo
 import {countDownTimer} from "./actions/progress/timer/countDownTimer";
 import {duration} from "./actions/progress/timer/duration";
 
-import "./listeners/showSuccessQuestion";
+import "./listeners/showSuccessQuestionListener";
 
 $(document).ready(function () {
     input();
