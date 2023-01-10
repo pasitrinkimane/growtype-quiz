@@ -6,7 +6,7 @@ export function radio(currentQuestion) {
         isValid = false;
     }
 
-    if (isValid && $('.growtype-quiz-wrapper').attr('data-quiz-type') === 'scored' && showCorrectAnswersInitially && quizInTestMode) {
+    if (isValid && $('.growtype-quiz-wrapper').attr('data-quiz-type') === 'scored' && showCorrectAnswer && correctAnswerTrigger === 'on_submit') {
         activeBtns.map(function (index, element) {
             if ($(element).attr('data-cor') !== '1') {
                 isValid = false;
@@ -24,6 +24,8 @@ export function radio(currentQuestion) {
 
         if (correctAnswersSelected) {
             isValid = true;
+            currentQuestion.find('.growtype-quiz-question-answer').removeClass('is-wrong');
+            currentQuestion.find('.growtype-quiz-question-answer[data-cor="1"]').addClass('is-correct');
             currentQuestion.find('.growtype-quiz-question-answer.is-wrong').removeClass('is-active');
         }
     }

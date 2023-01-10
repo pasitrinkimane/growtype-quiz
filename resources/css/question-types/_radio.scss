@@ -21,8 +21,14 @@
 
       &.is-wrong {
         label {
-          color: red !important;
+          color: $color-error !important;
           text-decoration: line-through !important;
+        }
+      }
+
+      &.is-correct {
+        label {
+          color: $color-success !important;
         }
       }
 

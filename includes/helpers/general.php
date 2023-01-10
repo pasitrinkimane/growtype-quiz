@@ -115,17 +115,32 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
     function growtype_quiz_get_quiz_data($quiz_id)
     {
         $quiz_data['quiz_type'] = get_field('quiz_type', $quiz_id);
-        $quiz_data['is_test_mode'] = get_field('is_test_mode', $quiz_id) ?? false;
         $quiz_data['is_enabled'] = get_field('is_enabled', $quiz_id) ?? false;
         $quiz_data['save_answers'] = get_field('save_answers', $quiz_id);
-        $quiz_data['show_correct_answers_initially'] = get_field('show_correct_answers_initially', $quiz_id);
+        $quiz_data['show_correct_answer'] = get_field('show_correct_answer', $quiz_id);
+        $quiz_data['correct_answer_trigger'] = get_field('correct_answer_trigger', $quiz_id);
         $quiz_data['slide_counter'] = get_field('slide_counter', $quiz_id);
         $quiz_data['slide_counter_position'] = get_field('slide_counter_position', $quiz_id);
         $quiz_data['limited_time'] = get_field('limited_time', $quiz_id);
         $quiz_data['duration'] = get_field('duration', $quiz_id);
         $quiz_data['progress_bar'] = get_field('progress_bar', $quiz_id);
         $quiz_data['use_question_title_nav'] = get_field('use_question_title_nav', $quiz_id);
+        $quiz_data['randomize_slides_on_load'] = get_field('randomize_slides_on_load', $quiz_id);
         $quiz_data['questions'] = !empty(get_field('questions', $quiz_id)) ? get_field('questions', $quiz_id) : [];
+
+        if ($quiz_data['randomize_slides_on_load'] && !empty($quiz_data['questions'])) {
+            $questions_without_success = array_filter($quiz_data['questions'], function ($question) {
+                return $question['question_type'] !== 'success';
+            });
+
+            $questions_success = array_filter($quiz_data['questions'], function ($question) {
+                return $question['question_type'] === 'success';
+            });
+
+            shuffle($questions_without_success);
+
+            $quiz_data['questions'] = array_merge($questions_without_success, $questions_success);
+        }
 
         $has_success_question = array_filter($quiz_data['questions'], function ($question) {
             return $question['question_type'] === 'success';

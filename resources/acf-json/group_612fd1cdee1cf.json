@@ -78,20 +78,12 @@
         },
         {
             "key": "field_614d88a06f6fb",
-            "label": "Show Correct Answers Initially",
-            "name": "show_correct_answers_initially",
+            "label": "Show Correct Answer",
+            "name": "show_correct_answer",
             "type": "true_false",
             "instructions": "",
             "required": 0,
-            "conditional_logic": [
-                [
-                    {
-                        "field": "field_613602bdbd0ec",
-                        "operator": "==",
-                        "value": "1"
-                    }
-                ]
-            ],
+            "conditional_logic": 0,
             "wrapper": {
                 "width": "10",
                 "class": "",
@@ -104,18 +96,18 @@
             "ui_off_text": ""
         },
         {
-            "key": "field_613602bdbd0ec",
-            "label": "Test Mode",
-            "name": "is_test_mode",
-            "type": "true_false",
+            "key": "field_63bd295edce8f",
+            "label": "Correct Answer Trigger",
+            "name": "correct_answer_trigger",
+            "type": "select",
             "instructions": "",
             "required": 0,
             "conditional_logic": [
                 [
                     {
-                        "field": "field_6131101a223f8",
+                        "field": "field_614d88a06f6fb",
                         "operator": "==",
-                        "value": "scored"
+                        "value": "1"
                     }
                 ]
             ],
@@ -124,11 +116,17 @@
                 "class": "",
                 "id": ""
             },
-            "message": "",
-            "default_value": 0,
+            "choices": {
+                "on_submit": "On submit",
+                "after_submit": "After submit"
+            },
+            "default_value": false,
+            "allow_null": 0,
+            "multiple": 0,
             "ui": 0,
-            "ui_on_text": "",
-            "ui_off_text": ""
+            "return_format": "value",
+            "ajax": 0,
+            "placeholder": ""
         },
         {
             "key": "field_613116cc0605c",
@@ -1661,5 +1659,5 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1673119668
+    "modified": 1673341412
 }

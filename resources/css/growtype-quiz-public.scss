@@ -103,20 +103,6 @@
         margin-left: auto;
       }
     }
-
-    &.show-correct-answers {
-      .growtype-quiz-question-answer.is-active[data-cor] {
-        color: $color-error;
-      }
-
-      .growtype-quiz-question-answer[data-cor="1"] {
-        color: $color-success !important;
-
-        .e-radio {
-          border: 7px solid #00B9D2;
-        }
-      }
-    }
   }
 
   .growtype-quiz-question {

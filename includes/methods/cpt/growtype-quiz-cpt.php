@@ -38,7 +38,7 @@ class Growtype_Quiz_Cpt
                 'show_ui' => true,
                 'show_in_menu' => true,
                 'menu_icon' => 'dashicons-welcome-learn-more',
-                'has_archive' => true,
+                'has_archive' => false,
                 'supports' => array ('title', 'editor', 'thumbnail'),
             )
         );

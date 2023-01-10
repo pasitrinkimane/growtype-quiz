@@ -30,7 +30,25 @@ export function showNextQuestion(currentQuestion) {
 
     showProgressIndicators();
 
-    currentQuestion.removeClass('is-active').not('.is-always-visible').fadeOut(300, function () {
+    /**
+     * Show correct answer
+     */
+    let submitDelay = 0;
+    if (showCorrectAnswer && correctAnswerTrigger === 'after_submit') {
+        submitDelay = 1000;
+        currentQuestion.find('.growtype-quiz-question-answer').map(function (index, element) {
+            if ($(element).attr('data-cor') !== '1') {
+                $(element).addClass('is-wrong')
+            } else {
+                $(element).addClass('is-correct')
+            }
+        });
+    }
+
+    /**
+     * Show new question
+     */
+    currentQuestion.delay(submitDelay).removeClass('is-active').not('.is-always-visible').fadeOut(300, function () {
     }).promise().done(function () {
 
         /**

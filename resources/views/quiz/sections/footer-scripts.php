@@ -1,7 +1,7 @@
 <script>
-    let quizInTestMode = <?php echo $quiz_data['is_test_mode'] ? 'true' : 'false' ?>;
     let quizSaveAnswers = <?php echo $quiz_data['save_answers'] === false ? 'false' : 'true' ?>;
-    let showCorrectAnswersInitially = <?php echo $quiz_data['show_correct_answers_initially'] === false ? 'false' : 'true' ?>;
+    let showCorrectAnswer = <?php echo $quiz_data['show_correct_answer'] === false ? 'false' : 'true' ?>;
+    let correctAnswerTrigger = '<?php echo $quiz_data['correct_answer_trigger'] ?>';
     window.growtype_quiz = {}
     window.growtype_quiz.current_funnel = 'a';
     window.growtype_quiz.current_question_nr = 1;
