@@ -87,7 +87,7 @@ class Growtype_Quiz_Ajax
         if (!isset($_POST['postdata'])) {
             return wp_send_json([
                 'success' => false,
-                'message' => __('Missing date', 'growtype-quiz'),
+                'message' => __('Missing data', 'growtype-quiz'),
             ]);
         }
 
