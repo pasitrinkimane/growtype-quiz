@@ -10,12 +10,8 @@ class Growtype_Quiz_Cpt
         add_action('after_setup_theme', array ($this, 'extend_theme_support'), 5);
         add_action('init', array ($this, 'register_taxonomy'), 5);
         add_action('init', array ($this, 'create_tables'), 5);
-
         add_filter('single_template', array (__CLASS__, 'single_template_loader'));
         add_filter('page_template', array (__CLASS__, 'page_template_loader'));
-
-//        add_filter('acf/load_field/name=questions', array (__CLASS__, 'acf_question_key_default_value'));
-//        add_action('init', array ($this, 'custom_url'), 1);
     }
 
     /**
@@ -95,6 +91,7 @@ class Growtype_Quiz_Cpt
       answers TEXT NOT NULL,
       duration INTEGER,
       questions_amount INTEGER,
+      questions_answered INTEGER,
       correct_answers_amount INTEGER,
       wrong_answers_amount INTEGER,
       evaluated BIT DEFAULT 0,
@@ -154,35 +151,6 @@ class Growtype_Quiz_Cpt
         }
 
         return $template;
-    }
-
-    /**
-     * @return void
-     */
-    public function custom_url()
-    {
-        add_rewrite_endpoint(self::CUSTOM_SLUG, EP_ROOT);
-    }
-
-    /**
-     *Acf
-     */
-    public static function acf_question_key_default_value($field)
-    {
-        global $post;
-
-        $altered_field = $field;
-        $altered_field['sub_fields'] = [];
-
-        foreach ($field['sub_fields'] as $sub_field) {
-            if ($sub_field['name'] === 'key' && empty($sub_field['value'])) {
-                $sub_field['value'] = 'test';
-            }
-
-            array_push($altered_field['sub_fields'], $sub_field);
-        }
-
-        return !empty($altered_field['sub_fields']) ? $altered_field : $field;
     }
 }
 

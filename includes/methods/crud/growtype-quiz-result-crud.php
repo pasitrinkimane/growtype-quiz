@@ -129,6 +129,7 @@ class Growtype_Quiz_Result_Crud
         $evaluate_quiz_results = $this->evaluate_quiz_results($quiz_data['quiz_id'], $answers);
         $correct_answers_amount = $evaluate_quiz_results['correct_answers_amount'] ?? null;
         $wrong_answers_amount = $evaluate_quiz_results['wrong_answers_amount'] ?? null;
+        $questions_answered = $evaluate_quiz_results['questions_answered'] ?? null;
 
         $unique_hash = bin2hex(random_bytes(12) . time());
 
@@ -138,6 +139,7 @@ class Growtype_Quiz_Result_Crud
             'answers' => $answers,
             'duration' => $quiz_data['duration'] ?? null,
             'questions_amount' => $questions_amount,
+            'questions_answered' => $questions_answered,
             'correct_answers_amount' => $correct_answers_amount,
             'wrong_answers_amount' => $wrong_answers_amount,
             'unique_hash' => $unique_hash,
@@ -266,7 +268,7 @@ class Growtype_Quiz_Result_Crud
      * @param $quiz_id
      * @param $answers
      */
-    public function evaluate_quiz_results($quiz_id, $user_answers)
+    public function evaluate_quiz_results($quiz_id, $answers)
     {
         $quiz_data = growtype_quiz_get_quiz_data($quiz_id);
         $questions = $quiz_data['questions'];
@@ -274,11 +276,11 @@ class Growtype_Quiz_Result_Crud
         $correct_answers = 0;
         $wrong_answers = 0;
 
-        if (!is_array($user_answers)) {
-            $user_answers = json_decode($user_answers, true);
+        if (!is_array($answers)) {
+            $answers = json_decode($answers, true);
         }
 
-        foreach ($user_answers as $user_answer_key => $user_answer) {
+        foreach ($answers as $user_answer_key => $user_answer) {
             $question = null;
             foreach ($questions as $index => $single_question) {
                 $question_key = !empty($single_question['key']) ? $single_question['key'] : 'question_' . ((int)$index + 1);
@@ -317,6 +319,7 @@ class Growtype_Quiz_Result_Crud
         return [
             'correct_answers_amount' => $correct_answers,
             'wrong_answers_amount' => $wrong_answers,
+            'questions_answered' => !empty($answers) ? count($answers) : 0,
         ];
     }
 }
