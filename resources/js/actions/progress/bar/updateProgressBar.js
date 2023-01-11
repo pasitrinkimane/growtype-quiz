@@ -12,7 +12,7 @@ export function updateProgressBar() {
 
     let progressbarWidth = progressBar.width();
     let progressbarStep = progressbarWidth / (window.quizQuestionsAmount);
-    progressbarIndicatorWidth = window.growtype_quiz.current_question_nr * progressbarStep;
+    progressbarIndicatorWidth = window.growtype_quiz_global.current_question_nr * progressbarStep;
 
     $('.growtype-quiz-progressbar-inner').width(progressbarIndicatorWidth);
 }

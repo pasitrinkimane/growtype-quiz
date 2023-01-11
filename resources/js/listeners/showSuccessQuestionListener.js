@@ -11,7 +11,7 @@ function showSuccessQuestionListener() {
     /**
      * Check if success page event was fired and quiz is finished
      */
-    window.growtype_quiz.is_finished = true;
+    window.growtype_quiz_global.is_finished = true;
 
     hideProgressIndicators();
     evaluateQuizData();

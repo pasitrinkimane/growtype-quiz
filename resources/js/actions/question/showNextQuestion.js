@@ -15,7 +15,7 @@ export function showNextQuestion(currentQuestion) {
     let nextFunnel = currentQuestion.find('.growtype-quiz-question-answer.is-active').attr('data-funnel');
     let submitDelay = 0;
 
-    window.growtype_quiz.current_funnel = nextFunnel;
+    window.growtype_quiz_global.current_funnel = nextFunnel;
 
     if (nextFunnel === undefined) {
         nextFunnel = 'a';
@@ -23,18 +23,18 @@ export function showNextQuestion(currentQuestion) {
 
     let nextQuestion = currentQuestion.nextAll('.growtype-quiz-question[data-funnel="' + nextFunnel + '"]:first');
 
-    window.growtype_quiz.already_visited_questions_keys.push(currentQuestion.attr('data-key'))
-    window.growtype_quiz.already_visited_questions_funnels.push(currentQuestion.attr('data-funnel'))
+    window.growtype_quiz_global.already_visited_questions_keys.push(currentQuestion.attr('data-key'))
+    window.growtype_quiz_global.already_visited_questions_funnels.push(currentQuestion.attr('data-funnel'))
 
     window.quizLastQuestion = currentQuestion;
-    window.growtype_quiz.current_question_nr++;
+    window.growtype_quiz_global.current_question_nr++;
 
     showProgressIndicators();
 
     /**
      * Show correct answer
      */
-    if (window.growtype_quiz.show_correct_answer && window.growtype_quiz.correct_answer_trigger === 'after_submit') {
+    if (growtype_quiz_local.show_correct_answer && growtype_quiz_local.correct_answer_trigger === 'after_submit') {
         submitDelay = 1000;
         currentQuestion.find('.growtype-quiz-question-answer').map(function (index, element) {
             if ($(element).attr('data-cor') !== '1') {
@@ -54,7 +54,7 @@ export function showNextQuestion(currentQuestion) {
         /**
          * Check if success page event was fired and quiz is finished
          */
-        if (window.growtype_quiz.is_finished) {
+        if (window.growtype_quiz_global.is_finished) {
             return;
         }
 
@@ -63,14 +63,14 @@ export function showNextQuestion(currentQuestion) {
          */
         let finishLabel = $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-finish');
 
-        if (window.growtype_quiz.current_question_nr === window.quizQuestionsAmount - 1 && finishLabel.length > 0) {
+        if (window.growtype_quiz_global.current_question_nr === window.quizQuestionsAmount - 1 && finishLabel.length > 0) {
             $(this).closest('.growtype-quiz').find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(finishLabel);
         }
 
         /**
          * Reset next btn label
          */
-        if (window.growtype_quiz.current_question_nr < window.quizQuestionsAmount - 1) {
+        if (window.growtype_quiz_global.current_question_nr < window.quizQuestionsAmount - 1) {
             let nextLabel = $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label');
 
             let nextQuestionTitle = nextQuestion.nextAll('.growtype-quiz-question:first').attr('data-question-title');

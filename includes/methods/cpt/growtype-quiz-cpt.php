@@ -88,7 +88,7 @@ class Growtype_Quiz_Cpt
       id bigint(20) NOT NULL AUTO_INCREMENT,
       user_id bigint(20) DEFAULT NULL,
       quiz_id bigint(20) UNSIGNED NOT NULL,
-      answers TEXT NOT NULL,
+      answers TEXT DEFAULT NULL,
       duration INTEGER,
       questions_amount INTEGER,
       questions_answered INTEGER,
@@ -96,7 +96,8 @@ class Growtype_Quiz_Cpt
       wrong_answers_amount INTEGER,
       evaluated BIT DEFAULT 0,
       unique_hash TEXT NOT NULL,
-      extra_details TEXT NOT NULL,
+      extra_details TEXT DEFAULT NULL,
+      ip_address TEXT DEFAULT NULL,
       created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY id (id)

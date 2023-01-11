@@ -9,8 +9,8 @@ import {updateQuizComponents} from "./updateQuizComponents";
  */
 export function showPreviousQuestion() {
     let currentQuestion = $('.growtype-quiz-question.is-active');
-    let lastVisitedQuestionKey = window.growtype_quiz.already_visited_questions_keys.slice(-1)[0];
-    let lastVisitedQuestionFunnel = window.growtype_quiz.already_visited_questions_funnels.slice(-1)[0];
+    let lastVisitedQuestionKey = window.growtype_quiz_global.already_visited_questions_keys.slice(-1)[0];
+    let lastVisitedQuestionFunnel = window.growtype_quiz_global.already_visited_questions_funnels.slice(-1)[0];
 
     var previousQuestion = currentQuestion.prevAll(".growtype-quiz-question[data-key='" + lastVisitedQuestionKey + "'][data-funnel='" + lastVisitedQuestionFunnel + "']:first");
 
@@ -21,13 +21,13 @@ export function showPreviousQuestion() {
         previousQuestion = $('.growtype-quiz-question:last');
     }
 
-    window.growtype_quiz.already_visited_questions_keys.splice(-1)
-    window.growtype_quiz.already_visited_questions_funnels.splice(-1)
+    window.growtype_quiz_global.already_visited_questions_keys.splice(-1)
+    window.growtype_quiz_global.already_visited_questions_funnels.splice(-1)
 
     delete saveQuizDataEvent().answers[lastVisitedQuestionKey]
 
     window.quizLastQuestion = currentQuestion;
-    window.growtype_quiz.current_question_nr--;
+    window.growtype_quiz_global.current_question_nr--;
 
     if (currentQuestion.length === 0) {
         initQuestion(currentQuestion, previousQuestion)
@@ -66,7 +66,7 @@ function initQuestion(currentQuestion, previousQuestion) {
     /**
      * Reset next label
      */
-    if (window.growtype_quiz.current_question_nr < window.quizQuestionsAmount - 1) {
+    if (window.growtype_quiz_global.current_question_nr < window.quizQuestionsAmount - 1) {
         $(this).closest('.growtype-quiz').find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(nextLabel);
     }
 

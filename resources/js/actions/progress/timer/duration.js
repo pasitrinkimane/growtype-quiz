@@ -15,6 +15,6 @@ export function duration() {
     setInterval(function () {
         let currentDate = new Date();
         let durationInMilliseconds = currentDate - initialDate;
-        window.growtype_quiz.duration = (durationInMilliseconds / 1000).toFixed(0);
+        window.growtype_quiz_global.duration = (durationInMilliseconds / 1000).toFixed(0);
     }, 1000);
 }

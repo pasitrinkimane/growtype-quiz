@@ -36,7 +36,7 @@ export function showFirstQuestion(initialLoad = false) {
 
     if (!initialLoad && !firstQuestion.hasClass('is-active')) {
         $('.growtype-quiz-question').removeClass('is-active').fadeOut().promise().done(function () {
-            window.growtype_quiz.current_question_nr = 1;
+            window.growtype_quiz_global.current_question_nr = 1;
             updateProgressCounter();
             firstQuestion.addClass('is-active').fadeIn();
             showProgressIndicators();

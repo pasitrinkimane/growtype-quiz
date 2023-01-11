@@ -95,7 +95,7 @@ class Growtype_Quiz_Result_Crud
         $user_id = null;
         if (is_user_logged_in()) {
             $current_user = wp_get_current_user();
-            $user_id = $current_user->ID;
+            $quiz_data['user_id'] = $current_user->ID;
         }
 
         $quiz_id = isset($quiz_data['quiz_id']) ? $quiz_data['quiz_id'] : null;
@@ -107,13 +107,41 @@ class Growtype_Quiz_Result_Crud
         /**
          * Check if empty answers should be saved
          */
-        if (!growtype_quiz_save_empty_answers($quiz_data['quiz_id']) && empty($answers)) {
+        if (!growtype_quiz_save_empty_answers($quiz_data['quiz_id']) && empty($quiz_data['answers'])) {
             return false;
         }
 
-        /**
-         * Load post class
-         */
+        $insert_values = $this->get_insert_values_from_quiz_data($quiz_data);
+
+        $insert_data = [
+            'user_id' => $insert_values['user_id'],
+            'quiz_id' => $insert_values['quiz_id'],
+            'answers' => $insert_values['answers'],
+            'duration' => $insert_values['duration'],
+            'questions_amount' => $insert_values['questions_amount'],
+            'questions_answered' => $insert_values['questions_answered'],
+            'correct_answers_amount' => $insert_values['correct_answers_amount'],
+            'wrong_answers_amount' => $insert_values['wrong_answers_amount'],
+            'unique_hash' => $insert_values['unique_hash'],
+            'extra_details' => $insert_values['extra_details'],
+            'ip_address' => $insert_values['ip_address'],
+        ];
+
+        $insert_data = apply_filters('save_quiz_results_data', $insert_data, $quiz_data);
+
+        $data_insert = $wpdb->insert($table_name, $insert_data);
+
+        if (is_wp_error($data_insert)) {
+            return false;
+        }
+
+        return $insert_data;
+    }
+
+    public function get_insert_values_from_quiz_data($quiz_data)
+    {
+        $quiz_id = $quiz_data['quiz_id'] ?? null;
+
         if (isset($quiz_data['files']) && !empty($quiz_data['files'])) {
             foreach ($quiz_data['files'] as $file_key => $file) {
                 foreach ($quiz_data['answers'] as $answer_key => $answer) {
@@ -133,38 +161,31 @@ class Growtype_Quiz_Result_Crud
             }
         }
 
-        $answers = json_encode($quiz_data['answers']);
-
-        $questions_amount = growtype_quiz_get_quiz_data($quiz_data['quiz_id'])['questions_available_amount'] ?? null;
-        $evaluate_quiz_results = $this->evaluate_quiz_results($quiz_data['quiz_id'], $answers);
+        $unique_hash = isset($quiz_data['unique_hash']) && !empty($quiz_data['unique_hash']) ? $quiz_data['unique_hash'] : bin2hex(random_bytes(12) . time());
+        $questions_amount = growtype_quiz_get_quiz_data($quiz_id)['questions_available_amount'] ?? null;
+        $evaluate_quiz_results = $this->evaluate_quiz_results($quiz_id, $quiz_data['answers']);
         $correct_answers_amount = $evaluate_quiz_results['correct_answers_amount'] ?? null;
         $wrong_answers_amount = $evaluate_quiz_results['wrong_answers_amount'] ?? null;
         $questions_answered = $evaluate_quiz_results['questions_answered'] ?? null;
         $extra_details = isset($quiz_data['extra_details']) && !empty($quiz_data['extra_details']) ? json_encode($quiz_data['extra_details']) : null;
-        $unique_hash = bin2hex(random_bytes(12) . time());
+        $ip_address = $quiz_data['ip_address'] ?? null;
+        $answers = is_array($quiz_data['answers']) ? json_encode($quiz_data['answers']) : $quiz_data['answers'];
+        $user_id = $quiz_data['user_id'] ?? null;
+        $duration = $quiz_data['duration'] ?? null;
 
-        $insert_data = [
+        return [
             'user_id' => $user_id,
             'quiz_id' => $quiz_id,
             'answers' => $answers,
-            'duration' => $quiz_data['duration'] ?? null,
+            'duration' => $duration,
             'questions_amount' => $questions_amount,
             'questions_answered' => $questions_answered,
             'correct_answers_amount' => $correct_answers_amount,
             'wrong_answers_amount' => $wrong_answers_amount,
             'unique_hash' => $unique_hash,
-            'extra_details' => $extra_details
+            'extra_details' => $extra_details,
+            'ip_address' => $ip_address
         ];
-
-        $insert_data = apply_filters('save_quiz_results_data', $insert_data, $quiz_data);
-
-        $data_insert = $wpdb->insert($table_name, $insert_data);
-
-        if (is_wp_error($data_insert)) {
-            return false;
-        }
-
-        return $insert_data;
     }
 
     /**

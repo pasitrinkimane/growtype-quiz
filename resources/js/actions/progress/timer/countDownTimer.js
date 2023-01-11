@@ -11,7 +11,7 @@ export function countDownTimer() {
         return false;
     }
 
-    window.growtype_quiz.countdown = {};
+    window.growtype_quiz_global.countdown = {};
 
     let durationInSeconds = timer.attr('data-duration');
     let currentTime = new Date();
@@ -35,7 +35,7 @@ export function countDownTimer() {
             document.dispatchEvent(saveQuizDataEvent());
             document.dispatchEvent(showSuccessQuestionEvent());
         } else {
-            window.growtype_quiz.countdown.duration = Number(durationInSeconds) - Number(((minutes * 60) + seconds));
+            window.growtype_quiz_global.countdown.duration = Number(durationInSeconds) - Number(((minutes * 60) + seconds));
 
             /**
              * Format time
@@ -48,9 +48,9 @@ export function countDownTimer() {
                 secondsFormatted = '0' + seconds;
             }
 
-            window.growtype_quiz.countdown.current_time = minutesFormatted + ":" + secondsFormatted;
+            window.growtype_quiz_global.countdown.current_time = minutesFormatted + ":" + secondsFormatted;
 
-            timer.find('.e-time').text(window.growtype_quiz.countdown.current_time);
+            timer.find('.e-time').text(window.growtype_quiz_global.countdown.current_time);
         }
     }, 1000);
 }

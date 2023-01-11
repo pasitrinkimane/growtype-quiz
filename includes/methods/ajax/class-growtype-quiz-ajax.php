@@ -16,10 +16,10 @@ class Growtype_Quiz_Ajax
         add_action('wp_ajax_nopriv_growtype_quiz_save_data', array ($this, 'growtype_quiz_save_data_handler'));
 
         /**
-         * Ajax save quiz extra_details
+         * Ajax save quiz update extra_details
          */
-        add_action('wp_ajax_growtype_quiz_save_extra_details', array ($this, 'growtype_quiz_save_extra_details_handler'));
-        add_action('wp_ajax_nopriv_growtype_quiz_save_extra_details', array ($this, 'growtype_quiz_save_extra_details_handler'));
+        add_action('wp_ajax_growtype_quiz_update_extra_details', array ($this, 'growtype_quiz_update_extra_details_handler'));
+        add_action('wp_ajax_nopriv_growtype_quiz_update_extra_details', array ($this, 'growtype_quiz_update_extra_details_handler'));
     }
 
     /**
@@ -51,6 +51,7 @@ class Growtype_Quiz_Ajax
         /**
          * Check other details
          */
+        $quiz_data['unique_hash'] = $_POST['unique_hash'] ?? null;
         $quiz_data['duration'] = $_POST['duration'] ?? null;
         $quiz_data['files'] = $_FILES ?? null;
         $quiz_data['extra_details'] = $_POST['extra_details'] ?? [];
@@ -63,13 +64,50 @@ class Growtype_Quiz_Ajax
 
         $quiz_data['extra_details'] = array_merge($quiz_data['extra_details'], $server_details);
 
-        $update_quiz_data = $this->result_crud->save_quiz_results_data($quiz_data);
+        $quiz_data['ip_address'] = isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? (explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0] ?? '') : '';
 
-        if (!empty($update_quiz_data)) {
+        /**
+         * Update if exists unique_hash
+         */
+        if (!empty($quiz_data['unique_hash'])) {
+            $existing_record = $this->result_crud->get_quiz_single_result_data_by_unique_hash($quiz_data['unique_hash']);
+
+            if (!empty($existing_record)) {
+
+                $insert_values = $this->result_crud->get_insert_values_from_quiz_data($quiz_data);
+
+                $this->result_crud->update_quiz_single_result($existing_record['id'], [
+                    'user_id' => !empty($insert_values['user_id']) ? $insert_values['user_id'] : $existing_record['user_id'],
+                    'answers' => $insert_values['answers'],
+                    'duration' => $insert_values['duration'],
+                    'questions_amount' => $insert_values['questions_amount'],
+                    'questions_answered' => $insert_values['questions_answered'],
+                    'correct_answers_amount' => $insert_values['correct_answers_amount'],
+                    'wrong_answers_amount' => $insert_values['wrong_answers_amount'],
+                    'extra_details' => $insert_values['extra_details'],
+                    'ip_address' => $insert_values['ip_address'],
+                    'updated_at' => current_time('mysql'),
+                ]);
+
+                return wp_send_json([
+                    'success' => true,
+                    'updated' => true,
+                    'redirect_url' => get_field('success_url', $existing_record['quiz_id']),
+                    'unique_hash' => $existing_record['unique_hash'],
+                ]);
+            }
+        }
+
+        /**
+         * Insert new record
+         */
+        $updated_quiz_data = $this->result_crud->save_quiz_results_data($quiz_data);
+
+        if (!empty($updated_quiz_data)) {
             return wp_send_json([
                 'success' => true,
-                'redirect_url' => class_exists('ACF') && get_field('success_url', $quiz_data['quiz_id']) ?? null,
-                'unique_hash' => $update_quiz_data['unique_hash'],
+                'redirect_url' => get_field('success_url', $quiz_data['quiz_id']),
+                'unique_hash' => $updated_quiz_data['unique_hash'],
             ]);
         }
 
@@ -82,7 +120,7 @@ class Growtype_Quiz_Ajax
     /**
      * Save quiz extra details
      */
-    function growtype_quiz_save_extra_details_handler()
+    function growtype_quiz_update_extra_details_handler()
     {
         if (!isset($_POST['postdata'])) {
             return wp_send_json([

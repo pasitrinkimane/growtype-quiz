@@ -43,7 +43,7 @@ export function collectQuizData(currentQuestion) {
             formData.append($(element).attr('name') + '-' + currentQuestionKey + '-' + index, $(element)[0].files[0]);
         })
 
-        window.growtype_quiz.files = formData
+        window.growtype_quiz_global.files = formData
     }
 
     saveQuizDataEvent().answers = answers;

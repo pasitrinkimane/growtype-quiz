@@ -4,21 +4,25 @@ document.addEventListener('saveQuizData', saveQuizData)
 
 function saveQuizData(data) {
 
-    if (!window.growtype_quiz.save_answers) {
+    if (!growtype_quiz_local.save_answers) {
         return false;
     }
 
     const answers = data.answers;
     const showLastQuestionOnError = false;
-    const duration = window.growtype_quiz.duration ?? null;
+    const duration = window.growtype_quiz_global.duration ?? null;
     const quizId = $('.growtype-quiz-wrapper').attr('data-quiz-id');
-    const files = window.growtype_quiz.files ?? null;
+    const files = window.growtype_quiz_global.files ?? null;
 
     let formData = new FormData();
     formData.append("action", "growtype_quiz_save_data");
     formData.append("answers", JSON.stringify(answers));
     formData.append("quiz_id", quizId);
     formData.append("duration", duration);
+
+    if (window.growtype_quiz_global.unique_hash) {
+        formData.append("unique_hash", window.growtype_quiz_global.unique_hash);
+    }
 
     if (files) {
         for (var pair of files.entries()) {
@@ -30,7 +34,7 @@ function saveQuizData(data) {
      * Save extra data to answers
      */
     $.ajax({
-        url: ajax_object.ajaxurl,
+        url: growtype_quiz_local.ajax_url,
         type: "post",
         processData: false,
         contentType: false,
@@ -41,6 +45,8 @@ function saveQuizData(data) {
         },
         success: function (data) {
             if (data.success) {
+
+                window.growtype_quiz_global.unique_hash = data.unique_hash;
 
                 /**
                  * Set unique hash if input exists
