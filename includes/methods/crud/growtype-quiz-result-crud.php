@@ -21,7 +21,7 @@ class Growtype_Quiz_Result_Crud
     /**
      * @return array|bool|object|null
      */
-    public function get_quizes_results($args)
+    public static function get_quizes_results($args)
     {
         global $wpdb;
 
@@ -30,7 +30,7 @@ class Growtype_Quiz_Result_Crud
             'search' => '',
             'limit' => '20',
             'orderby' => 'created_at',
-            'offset' => '0',
+            'offset' => '0'
         ), $args));
 
         if ($limit === -1) {
@@ -40,24 +40,20 @@ class Growtype_Quiz_Result_Crud
         $table = self::table_name();
 
         if (!empty($args['search'])) {
-            return $wpdb->get_results(
-                "SELECT * from {$table} WHERE id Like '%{$search}%' OR user_id Like '%{$search}%' OR quiz_id Like '%{$search}%' OR answers Like '%{$search}%' ORDER BY {$orderby} {$order} LIMIT {$limit} OFFSET {$offset}",
-                ARRAY_A
-            );
+            $query = "SELECT * from {$table} WHERE id Like '%{$search}%' OR user_id Like '%{$search}%' OR quiz_id Like '%{$search}%' OR answers Like '%{$search}%' ORDER BY {$orderby} {$order} LIMIT {$limit} OFFSET {$offset}";
         } else {
-            return $wpdb->get_results(
-                "SELECT * from {$table} ORDER BY {$orderby} {$order} LIMIT {$limit} OFFSET {$offset}",
-                ARRAY_A
-            );
+            $query = "SELECT * from {$table} ORDER BY {$orderby} {$order} LIMIT {$limit} OFFSET {$offset}";
         }
+
+        return $wpdb->get_results($query, ARRAY_A);
     }
 
     /**
      * @return array|bool|object|null
      */
-    public function get_total_results_amount()
+    public static function get_total_results_amount()
     {
-        return count($this->get_quizes_results([
+        return count(self::get_quizes_results([
             'limit' => -1
         ]));
     }
@@ -209,7 +205,7 @@ class Growtype_Quiz_Result_Crud
      * @param $fields
      * @return bool
      */
-    public function get_quiz_single_result_data_by_unique_hash($unique_hash)
+    public static function get_quiz_single_result_data_by_unique_hash($unique_hash)
     {
         global $wpdb;
 
@@ -308,43 +304,45 @@ class Growtype_Quiz_Result_Crud
         $correct_answers = 0;
         $wrong_answers = 0;
 
-        if (!is_array($answers)) {
-            $answers = json_decode($answers, true);
-        }
+        if (!empty($answers)) {
+            if (!is_array($answers)) {
+                $answers = json_decode($answers, true);
+            }
 
-        foreach ($answers as $user_answer_key => $user_answer) {
-            $question = null;
-            foreach ($questions as $index => $single_question) {
-                $question_key = !empty($single_question['key']) ? $single_question['key'] : 'question_' . ((int)$index + 1);
+            foreach ($answers as $user_answer_key => $user_answer) {
+                $question = null;
+                foreach ($questions as $index => $single_question) {
+                    $question_key = !empty($single_question['key']) ? $single_question['key'] : 'question_' . ((int)$index + 1);
 
-                if ($user_answer_key === $question_key) {
-                    $question = $single_question;
-                    break;
+                    if ($user_answer_key === $question_key) {
+                        $question = $single_question;
+                        break;
+                    }
                 }
-            }
 
-            if (empty($question)) {
-                continue;
-            }
+                if (empty($question)) {
+                    continue;
+                }
 
-            $answer_is_wrong = false;
-            foreach ($question['options_all'] as $option) {
-                if ($option['correct']) {
-                    $option_value = !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']);
+                $answer_is_wrong = false;
+                foreach ($question['options_all'] as $option) {
+                    if ($option['correct']) {
+                        $option_value = !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']);
 
-                    foreach ($user_answer as $user_answer_single) {
-                        if ($option_value !== $user_answer_single) {
-                            $answer_is_wrong = true;
-                            break;
+                        foreach ($user_answer as $user_answer_single) {
+                            if ($option_value !== $user_answer_single) {
+                                $answer_is_wrong = true;
+                                break;
+                            }
                         }
                     }
                 }
-            }
 
-            if ($answer_is_wrong) {
-                $wrong_answers++;
-            } else {
-                $correct_answers++;
+                if ($answer_is_wrong) {
+                    $wrong_answers++;
+                } else {
+                    $correct_answers++;
+                }
             }
         }
 

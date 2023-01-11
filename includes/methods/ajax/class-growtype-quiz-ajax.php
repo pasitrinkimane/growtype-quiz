@@ -70,7 +70,7 @@ class Growtype_Quiz_Ajax
          * Update if exists unique_hash
          */
         if (!empty($quiz_data['unique_hash'])) {
-            $existing_record = $this->result_crud->get_quiz_single_result_data_by_unique_hash($quiz_data['unique_hash']);
+            $existing_record = Growtype_Quiz_Result_Crud::get_quiz_single_result_data_by_unique_hash($quiz_data['unique_hash']);
 
             if (!empty($existing_record)) {
 
@@ -141,7 +141,7 @@ class Growtype_Quiz_Ajax
             ]);
         }
 
-        $quiz_result = $this->result_crud->get_quiz_single_result_data_by_unique_hash($unique_hash);
+        $quiz_result = Growtype_Quiz_Result_Crud::get_quiz_single_result_data_by_unique_hash($unique_hash);
 
         if (empty($quiz_result)) {
             return false;

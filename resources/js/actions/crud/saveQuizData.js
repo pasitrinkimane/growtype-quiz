@@ -8,7 +8,7 @@ function saveQuizData(data) {
         return false;
     }
 
-    const answers = data.answers;
+    const answers = Object.entries(data.answers).length > 0 ? data.answers : null;
     const showLastQuestionOnError = false;
     const duration = window.growtype_quiz_global.duration ?? null;
     const quizId = $('.growtype-quiz-wrapper').attr('data-quiz-id');

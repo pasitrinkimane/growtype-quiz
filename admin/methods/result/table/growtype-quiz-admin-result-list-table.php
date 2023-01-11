@@ -63,11 +63,9 @@ class Growtype_Quiz_Admin_Result_List_Table extends WP_List_Table
             $args['order'] = $_REQUEST['order'];
         }
 
-        $growtype_quiz_result_crud = new Growtype_Quiz_Result_Crud();
+        $items = Growtype_Quiz_Result_Crud::get_quizes_results($args);
 
-        $items = $growtype_quiz_result_crud->get_quizes_results($args);
-
-        $total_items = $growtype_quiz_result_crud->get_total_results_amount();
+        $total_items = Growtype_Quiz_Result_Crud::get_total_results_amount();
 
         $this->items = $items;
 
