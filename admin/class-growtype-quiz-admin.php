@@ -91,5 +91,11 @@ class Growtype_Quiz_Admin
          */
         require_once GROWTYPE_QUIZ_PATH . 'admin/methods/result/growtype-quiz-admin-result.php';
         $this->loader = new Growtype_Quiz_Admin_Result();
+
+        /**
+         * Statistics
+         */
+        require_once GROWTYPE_QUIZ_PATH . 'admin/methods/statistic/growtype-quiz-admin-statistic.php';
+        $this->loader = new Growtype_Quiz_Admin_Statistic();
     }
 }

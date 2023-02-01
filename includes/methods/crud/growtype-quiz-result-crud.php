@@ -51,7 +51,7 @@ class Growtype_Quiz_Result_Crud
     /**
      * @return array|bool|object|null
      */
-    public static function get_total_results_amount()
+    public static function get_results_count()
     {
         return count(self::get_quizes_results([
             'limit' => -1
@@ -61,18 +61,22 @@ class Growtype_Quiz_Result_Crud
     /**
      * @return array|bool|object|null
      */
-    public function get_single_quiz_results($quiz_id, $limit = 30, $based_on = 'performance')
+    public function get_single_quiz_results($quiz_id, $limit = 30, $based_on = 'any')
     {
         global $wpdb;
+
+        if ($limit === -1) {
+            $limit = '18446744073709551610';
+        }
 
         $table_name = self::table_name();
 
         $result = null;
 
         if ($based_on === 'any') {
-            $result = $wpdb->get_results("SELECT * FROM $table_name where quiz_id=$quiz_id limit 0, $limit", ARRAY_A);
+            $result = $wpdb->get_results("SELECT * FROM $table_name where quiz_id=$quiz_id and answers is not null order by id limit 0, $limit", ARRAY_A);
         } elseif ($based_on === 'performance') {
-            $result = $wpdb->get_results("SELECT * FROM $table_name where quiz_id=$quiz_id order by correct_answers_amount desc, questions_amount asc, duration ASC limit 0, $limit", ARRAY_A);
+            $result = $wpdb->get_results("SELECT * FROM $table_name where quiz_id=$quiz_id and answers is not null order by correct_answers_amount desc, questions_amount asc, duration ASC limit 0, $limit", ARRAY_A);
         }
 
         return $result;
@@ -159,10 +163,10 @@ class Growtype_Quiz_Result_Crud
 
         $unique_hash = isset($quiz_data['unique_hash']) && !empty($quiz_data['unique_hash']) ? $quiz_data['unique_hash'] : bin2hex(random_bytes(12) . time());
         $questions_amount = growtype_quiz_get_quiz_data($quiz_id)['questions_available_amount'] ?? null;
-        $evaluate_quiz_results = $this->evaluate_quiz_results($quiz_id, $quiz_data['answers']);
-        $correct_answers_amount = $evaluate_quiz_results['correct_answers_amount'] ?? null;
-        $wrong_answers_amount = $evaluate_quiz_results['wrong_answers_amount'] ?? null;
-        $questions_answered = $evaluate_quiz_results['questions_answered'] ?? null;
+        $evaluate_specific_quiz_answers = $this->evaluate_specific_quiz_answers($quiz_id, $quiz_data['answers']);
+        $correct_answers_amount = $evaluate_specific_quiz_answers['correct_answers_amount'] ?? null;
+        $wrong_answers_amount = $evaluate_specific_quiz_answers['wrong_answers_amount'] ?? null;
+        $questions_answered = $evaluate_specific_quiz_answers['questions_answered'] ?? null;
         $extra_details = isset($quiz_data['extra_details']) && !empty($quiz_data['extra_details']) ? json_encode($quiz_data['extra_details']) : null;
         $ip_address = $quiz_data['ip_address'] ?? null;
         $answers = is_array($quiz_data['answers']) ? json_encode($quiz_data['answers']) : $quiz_data['answers'];
@@ -296,13 +300,15 @@ class Growtype_Quiz_Result_Crud
      * @param $quiz_id
      * @param $answers
      */
-    public function evaluate_quiz_results($quiz_id, $answers)
+    public function evaluate_specific_quiz_answers($quiz_id, $answers)
     {
         $quiz_data = growtype_quiz_get_quiz_data($quiz_id);
         $questions = $quiz_data['questions'];
 
-        $correct_answers = 0;
-        $wrong_answers = 0;
+        $correct_answers_amount = 0;
+        $correct_answers = [];
+        $wrong_answers_amount = 0;
+        $wrong_answers = [];
 
         if (!empty($answers)) {
             if (!is_array($answers)) {
@@ -339,16 +345,20 @@ class Growtype_Quiz_Result_Crud
                 }
 
                 if ($answer_is_wrong) {
-                    $wrong_answers++;
+                    array_push($wrong_answers, $user_answer[0] . '_#_' . $user_answer_key);
+                    $wrong_answers_amount++;
                 } else {
-                    $correct_answers++;
+                    array_push($correct_answers, $user_answer[0] . '_#_' . $user_answer_key);
+                    $correct_answers_amount++;
                 }
             }
         }
 
         return [
-            'correct_answers_amount' => $correct_answers,
-            'wrong_answers_amount' => $wrong_answers,
+            'correct_answers_amount' => $correct_answers_amount,
+            'correct_answers' => $correct_answers,
+            'wrong_answers_amount' => $wrong_answers_amount,
+            'wrong_answers' => $wrong_answers,
             'questions_answered' => !empty($answers) ? count($answers) : 0,
         ];
     }
