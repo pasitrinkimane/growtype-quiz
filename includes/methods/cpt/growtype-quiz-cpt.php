@@ -73,7 +73,7 @@ class Growtype_Quiz_Cpt
     }
 
     /**
-     * Create required tabled
+     * Create required table
      */
     public function create_tables()
     {
