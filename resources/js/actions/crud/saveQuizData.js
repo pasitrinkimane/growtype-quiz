@@ -3,8 +3,7 @@ import {showLastQuestion} from "../question/showLastQuestion";
 document.addEventListener('saveQuizData', saveQuizData)
 
 function saveQuizData(data) {
-
-    if (!growtype_quiz_local.save_answers) {
+    if (growtype_quiz_local.save_answers === 'false') {
         return false;
     }
 
@@ -77,7 +76,9 @@ function saveQuizData(data) {
                 console.error(data['responseJSON']['message']);
             }
 
-            $('.growtype-quiz-wrapper .btn').attr('disabled', false).fadeIn();
+            if ($('.growtype-quiz-question.is-active').attr('data-hide-back-button') !== 'true') {
+                $('.growtype-quiz-wrapper .btn').attr('disabled', false).fadeIn();
+            }
         },
         complete: function () {
         },

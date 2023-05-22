@@ -3,10 +3,9 @@ import {updateQuestionsCounter} from "../../actions/progress/counter/updateQuest
 import {updateProgressBar} from "../../actions/progress/bar/updateProgressBar";
 import {saveQuizDataEvent} from "../../events/saveQuizDataEvent";
 import {showProgressIndicators} from "../../actions/progress/general";
-import {evaluateQuizData} from "../../actions/crud/evaluateQuizData";
 import {updateQuizComponents} from "./updateQuizComponents";
-import {showLastQuestion} from "./showLastQuestion";
 import {showSuccessQuestionEvent} from "../../events/showSuccessQuestionEvent";
+import {showNextQuestionEvent} from "../../events/showNextQuestionEvent";
 
 /**
  * Show next slide
@@ -103,6 +102,8 @@ export function showNextQuestion(currentQuestion) {
             $('.growtype-quiz-btn-go-next').hide();
             document.dispatchEvent(saveQuizDataEvent());
             document.dispatchEvent(showSuccessQuestionEvent());
+        } else {
+            document.dispatchEvent(showNextQuestionEvent());
         }
     });
 }

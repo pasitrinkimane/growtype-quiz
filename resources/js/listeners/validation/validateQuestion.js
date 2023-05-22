@@ -3,6 +3,8 @@ import {open} from "./type/open";
 import {general} from "./type/general";
 import {shortcode} from "./type/shortcode";
 
+document.addEventListener('validateQuestion', validateQuestion)
+
 export function validateQuestion() {
     let isValid = true;
 
@@ -29,6 +31,6 @@ export function validateQuestion() {
         }
     });
 
-    return isValid;
+    window.growtype_quiz_global.is_valid = isValid;
 }
 

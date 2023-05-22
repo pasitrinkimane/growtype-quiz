@@ -1,6 +1,6 @@
-import {saveQuizData} from './../actions/crud/saveQuizData.js';
-import {showNextQuestion} from './../actions/question/showNextQuestion.js';
-import {validateQuestion} from './../actions/validation/validateQuestion.js';
+import {saveQuizData} from './../actions/crud/saveQuizData';
+import {showNextQuestion} from './../actions/question/showNextQuestion';
+import {validateQuestionEvent} from './../events/validateQuestionEvent';
 import {collectQuizData} from "../actions/crud/collectQuizData";
 
 export function nextQuestionTrigger() {
@@ -9,10 +9,14 @@ export function nextQuestionTrigger() {
 
         let currentQuestion = $('.growtype-quiz-question.is-active');
 
-        let isValidQuestion = currentQuestion.attr('data-answer-required') === 'false' ? true : validateQuestion();
+        let isValidQuestion = currentQuestion.attr('data-answer-required') === 'false';
 
         if (!isValidQuestion) {
-            return false;
+            document.dispatchEvent(validateQuestionEvent())
+
+            if (!window.growtype_quiz_global.is_valid) {
+                return
+            }
         }
 
         $('.growtype-quiz-nav .btn').attr('disabled', true)

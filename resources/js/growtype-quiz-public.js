@@ -13,6 +13,7 @@ import {countDownTimer} from "./actions/progress/timer/countDownTimer";
 import {duration} from "./actions/progress/timer/duration";
 
 import "./listeners/showSuccessQuestionListener";
+import "./listeners/validation/validateQuestion";
 
 $(document).ready(function () {
 
