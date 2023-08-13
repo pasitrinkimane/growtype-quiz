@@ -30,7 +30,7 @@ if ($iframe_hide_header_footer) {
                     <?php } ?>
                     <?php if ($quiz_data['slide_counter'] && ($quiz_data['slide_counter_position'] === 'top' || $quiz_data['slide_counter_position'] === 'both')) { ?>
                         <div class="growtype-quiz-header">
-                            <?php echo growtype_quiz_include_view('quiz.partials.components.question-nr'); ?>
+                            <?php echo growtype_quiz_include_view('quiz.partials.components.question-nr', ['quiz_data' => $quiz_data]); ?>
                         </div>
                     <?php } ?>
 
@@ -75,15 +75,16 @@ if ($iframe_hide_header_footer) {
                                         </div>
                                     <?php } ?>
                                     <div class="growtype-quiz-main-content-wrapper">
-                                        <?php if ($question['has_intro']) { ?>
+                                        <?php if ($question['has_intro'] && isset($question['intro'])) { ?>
                                             <div class="growtype-quiz-question-intro">
                                                 <?php echo $question['intro'] ?>
                                             </div>
                                         <?php } ?>
                                         <?php if ($question['question_type'] === 'open') { ?>
                                             <?php echo growtype_quiz_include_view('quiz.partials.question-types.open', ['question' => $question, 'quiz_data' => $quiz_data]) ?>
-                                        <?php } elseif ($question['question_type'] === 'info') {
-                                        } else { ?>
+                                        <?php } elseif ($question['question_type'] === 'info') { ?>
+                                            <?php echo growtype_quiz_include_view('quiz.partials.question-types.info', ['question' => $question, 'quiz_data' => $quiz_data]) ?>
+                                        <?php } else { ?>
                                             <?php echo growtype_quiz_include_view('quiz.partials.question-types.radio', ['question' => $question, 'quiz_data' => $quiz_data]) ?>
                                         <?php } ?>
                                     </div>
@@ -95,7 +96,7 @@ if ($iframe_hide_header_footer) {
 
                     <?php } ?>
 
-                    <?php echo growtype_quiz_include_view('quiz.partials.components.quiz-nav'); ?>
+                    <?php echo growtype_quiz_include_view('quiz.partials.components.quiz-nav', ['quiz_data' => $quiz_data]); ?>
                 </div>
             </div>
 

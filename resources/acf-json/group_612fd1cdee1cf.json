@@ -563,10 +563,10 @@
                     },
                     "wpml_cf_preferences": 1,
                     "choices": {
-                        "info": "Info (for general info)",
                         "general": "Basic (for basic option)",
                         "radio": "Checkbox (for checklist)",
                         "open": "Textarea (for open question)",
+                        "info": "Info (for general content)",
                         "success": "Success (for success message)"
                     },
                     "default_value": false,

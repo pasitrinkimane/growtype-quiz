@@ -1,7 +1,10 @@
-let saveQuizData = new Event('saveQuizData');
-saveQuizData.answers = {};
-saveQuizData.correctlyAnswered = {};
+if (!window.growtype_quiz_data) {
+    window.growtype_quiz_data = new Event('saveQuizData');
+    window.growtype_quiz_data.answers = {};
+    window.growtype_quiz_data.correctlyAnswered = {};
+    window.growtype_quiz_data.extra_details = {};
+}
 
 export function saveQuizDataEvent() {
-    return saveQuizData;
+    return window.growtype_quiz_data;
 }

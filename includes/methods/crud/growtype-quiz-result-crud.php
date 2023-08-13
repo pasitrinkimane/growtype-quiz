@@ -92,7 +92,6 @@ class Growtype_Quiz_Result_Crud
 
         $table_name = self::table_name();
 
-        $user_id = null;
         if (is_user_logged_in()) {
             $current_user = wp_get_current_user();
             $quiz_data['user_id'] = $current_user->ID;
@@ -285,10 +284,8 @@ class Growtype_Quiz_Result_Crud
             'post_status' => 'inherit'
         ), $upload_featured_image_path);
 
-        // wp_generate_attachment_metadata() won't work if you do not include this file
         require_once(ABSPATH . 'wp-admin/includes/image.php');
 
-        // Generate and save the attachment metas into the database
         wp_update_attachment_metadata($upload_id, wp_generate_attachment_metadata($upload_id, $upload_featured_image_path));
 
         $response['attachment_id'] = $upload_id;
@@ -331,14 +328,17 @@ class Growtype_Quiz_Result_Crud
                 }
 
                 $answer_is_wrong = false;
-                foreach ($question['options_all'] as $option) {
-                    if ($option['correct']) {
-                        $option_value = !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']);
 
-                        foreach ($user_answer as $user_answer_single) {
-                            if ($option_value !== $user_answer_single) {
-                                $answer_is_wrong = true;
-                                break;
+                if (isset($question['options_all'])) {
+                    foreach ($question['options_all'] as $option) {
+                        if ($option['correct']) {
+                            $option_value = !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']);
+
+                            foreach ($user_answer as $user_answer_single) {
+                                if ($option_value !== $user_answer_single) {
+                                    $answer_is_wrong = true;
+                                    break;
+                                }
                             }
                         }
                     }

@@ -1,6 +1,7 @@
+$ = jQuery;
+
 import {saveQuizDataEvent} from "./events/saveQuizDataEvent";
 
-$ = jQuery;
 import {showFirstQuestion} from './actions/question/showFirstQuestion.js';
 import {nextQuestionTrigger} from './components/nextQuestionTrigger.js';
 import {previousQuestionTrigger} from './components/previousQuestionTrigger.js';

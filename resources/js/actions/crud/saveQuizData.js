@@ -7,7 +7,8 @@ function saveQuizData(data) {
         return false;
     }
 
-    const answers = Object.entries(data.answers).length > 0 ? data.answers : null;
+    const answers = data.answers && Object.entries(data.answers).length > 0 ? data.answers : null;
+    const extraDetails = data.extra_details && Object.entries(data.extra_details).length > 0 ? data.extra_details : null;
     const showLastQuestionOnError = false;
     const duration = window.growtype_quiz_global.duration ?? null;
     const quizId = $('.growtype-quiz-wrapper').attr('data-quiz-id');
@@ -16,12 +17,14 @@ function saveQuizData(data) {
     let formData = new FormData();
     formData.append("action", "growtype_quiz_save_data");
     formData.append("answers", JSON.stringify(answers));
+
+    if (extraDetails) {
+        formData.append("extra_details", JSON.stringify(extraDetails));
+    }
+
     formData.append("quiz_id", quizId);
     formData.append("duration", duration);
-
-    if (window.growtype_quiz_global.unique_hash) {
-        formData.append("unique_hash", window.growtype_quiz_global.unique_hash);
-    }
+    formData.append("unique_hash", window.growtype_quiz_local.unique_hash);
 
     if (files) {
         for (var pair of files.entries()) {
@@ -44,9 +47,6 @@ function saveQuizData(data) {
         },
         success: function (data) {
             if (data.success) {
-
-                window.growtype_quiz_global.unique_hash = data.unique_hash;
-
                 /**
                  * Set unique hash if input exists
                  */

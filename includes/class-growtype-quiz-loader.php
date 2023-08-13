@@ -64,15 +64,18 @@ class Growtype_Quiz_Loader
      */
     public function check_ability_to_launch_plugin()
     {
-        if (!class_exists('ACF')) {
+        $showed = isset($_COOKIE['acf_required_admin_notice_showed']) ? $_COOKIE['acf_required_admin_notice_showed'] : false;
+
+        if (!class_exists('ACF') && !$showed) {
             add_action('admin_notices', array ($this, 'acf_required_admin_notice'));
-            deactivate_plugins('/growtype-quiz/growtype-quiz.php');
+            setcookie('acf_required_admin_notice_showed', true, strtotime('+1 day'));
+//            deactivate_plugins('/growtype-quiz/growtype-quiz.php');
         }
     }
 
     function acf_required_admin_notice()
     {
-        echo '<div class="error"><p>ADVANCED CUSTOM FIELDS plugin is required.</p></div>';
+        echo '<div class="error"><p>Growtype - Quiz. ADVANCED CUSTOM FIELDS plugin should be installed for advanced functionality.</p></div>';
     }
 
     /**

@@ -51,10 +51,10 @@ class Growtype_Quiz_Ajax
         /**
          * Check other details
          */
-        $quiz_data['unique_hash'] = $_POST['unique_hash'] ?? null;
-        $quiz_data['duration'] = $_POST['duration'] ?? null;
-        $quiz_data['files'] = $_FILES ?? null;
-        $quiz_data['extra_details'] = $_POST['extra_details'] ?? [];
+        $quiz_data['unique_hash'] = isset($_POST['unique_hash']) ? $_POST['unique_hash'] : null;
+        $quiz_data['duration'] = isset($_POST['duration']) ? $_POST['duration'] : null;
+        $quiz_data['files'] = isset($_FILES) ? $_FILES : null;
+        $quiz_data['extra_details'] = isset($_POST['extra_details']) ? json_decode(stripslashes($_POST['extra_details']), true) : [];
 
         $server_details = [
             'remote_addr' => $_SERVER['REMOTE_ADDR'] ?? '',
@@ -89,10 +89,12 @@ class Growtype_Quiz_Ajax
                     'updated_at' => current_time('mysql'),
                 ]);
 
+                $success_url = class_exists('ACF') ? get_field('success_url', $existing_record['quiz_id']) : '';
+
                 return wp_send_json([
                     'success' => true,
                     'updated' => true,
-                    'redirect_url' => get_field('success_url', $existing_record['quiz_id']),
+                    'redirect_url' => $success_url,
                     'unique_hash' => $existing_record['unique_hash'],
                 ]);
             }
@@ -103,10 +105,12 @@ class Growtype_Quiz_Ajax
          */
         $updated_quiz_data = $this->result_crud->save_quiz_results_data($quiz_data);
 
+        $success_url = class_exists('ACF') ? get_field('success_url', $quiz_data['quiz_id']) : '';
+
         if (!empty($updated_quiz_data)) {
             return wp_send_json([
                 'success' => true,
-                'redirect_url' => get_field('success_url', $quiz_data['quiz_id']),
+                'redirect_url' => $success_url,
                 'unique_hash' => $updated_quiz_data['unique_hash'],
             ]);
         }

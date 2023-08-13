@@ -81,25 +81,34 @@ class Growtype_Quiz_Public
      */
     public function enqueue_scripts()
     {
-        wp_enqueue_script($this->growtype_quiz, GROWTYPE_QUIZ_URL_PUBLIC . 'js/growtype-quiz-public.js', array ('jquery'), $this->version, false);
+        wp_enqueue_script($this->growtype_quiz, GROWTYPE_QUIZ_URL_PUBLIC . 'js/growtype-quiz-public.js', array ('jquery'), time(), false);
+
+        $localize_data = array (
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'unique_hash' => bin2hex(random_bytes(12) . time()),
+        );
 
         $post = get_post();
-        $quiz_data = growtype_quiz_get_quiz_data($post->ID);
 
-        if (!current_user_can('manage_options')) {
-            if (!is_null($quiz_data['is_enabled']) && !$quiz_data['is_enabled']) {
-                wp_redirect(get_home_url());
+        if (!empty($post)) {
+            $quiz_data = growtype_quiz_get_quiz_data($post->ID);
+
+            if (!empty($quiz_data)) {
+                if (!current_user_can('manage_options')) {
+                    if (!is_null($quiz_data['is_enabled']) && !$quiz_data['is_enabled']) {
+                        wp_redirect(get_home_url());
+                    }
+                }
+
+                $localize_data['show_correct_answer'] = $quiz_data['show_correct_answer'] === false ? 'false' : 'true';
+                $localize_data['correct_answer_trigger'] = $quiz_data['correct_answer_trigger'];
+                $localize_data['save_data_on_load'] = $quiz_data['save_data_on_load'];
+                $localize_data['save_answers'] = $quiz_data['save_answers'] === false ? 'false' : 'true';
             }
         }
 
         wp_localize_script($this->growtype_quiz, 'growtype_quiz_local',
-            array (
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'show_correct_answer' => $quiz_data['show_correct_answer'] === false ? 'false' : 'true',
-                'correct_answer_trigger' => $quiz_data['correct_answer_trigger'],
-                'save_data_on_load' => true,
-                'save_answers' => $quiz_data['save_answers'] === false ? 'false' : 'true'
-            )
+            $localize_data
         );
     }
 }

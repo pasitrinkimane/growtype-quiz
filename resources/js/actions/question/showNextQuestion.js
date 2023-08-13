@@ -103,7 +103,10 @@ export function showNextQuestion(currentQuestion) {
             document.dispatchEvent(saveQuizDataEvent());
             document.dispatchEvent(showSuccessQuestionEvent());
         } else {
-            document.dispatchEvent(showNextQuestionEvent());
+            document.dispatchEvent(showNextQuestionEvent({
+                currentQuestion: currentQuestion,
+                nextQuestion: nextQuestion,
+            }));
         }
     });
 }

@@ -67,7 +67,7 @@ function initQuestion(currentQuestion, previousQuestion) {
      * Reset next label
      */
     if (window.growtype_quiz_global.current_question_nr < window.quizQuestionsAmount - 1) {
-        $(this).closest('.growtype-quiz').find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(nextLabel);
+        previousQuestion.closest('.growtype-quiz').find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(nextLabel);
     }
 
     previousQuestion.addClass('is-active').fadeIn(300).promise().done(function () {

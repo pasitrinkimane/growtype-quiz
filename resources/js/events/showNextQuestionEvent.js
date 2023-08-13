@@ -1,5 +1,5 @@
-let nextQuestion = new Event('growtypeQuizShowNextQuestion');
-
-export function showNextQuestionEvent() {
-    return nextQuestion;
+export function showNextQuestionEvent(params) {
+    return new CustomEvent("growtypeQuizShowNextQuestion", {
+        detail: params
+    });
 }

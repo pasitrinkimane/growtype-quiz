@@ -9,7 +9,9 @@ export function collectQuizData(currentQuestion) {
     /**
      * Collect answers
      */
-    answers[currentQuestionKey] = [];
+    if (!answers[currentQuestionKey]) {
+        answers[currentQuestionKey] = [];
+    }
 
     if (currentQuestionType === 'open') {
         answers[currentQuestionKey].push(currentQuestion.find('textarea').val())
@@ -30,7 +32,10 @@ export function collectQuizData(currentQuestion) {
             }
         });
 
-        correctlyAnswered[currentQuestionKey] = [];
+        if (!correctlyAnswered[currentQuestionKey]) {
+            correctlyAnswered[currentQuestionKey] = [];
+        }
+
         correctlyAnswered[currentQuestionKey].push(correctAnswer);
     }
 

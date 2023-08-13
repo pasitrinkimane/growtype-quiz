@@ -114,19 +114,125 @@ if (!function_exists('growtype_quiz_include_view')) {
 if (!function_exists('growtype_quiz_get_quiz_data')) {
     function growtype_quiz_get_quiz_data($quiz_id)
     {
-        $quiz_data['quiz_type'] = get_field('quiz_type', $quiz_id);
-        $quiz_data['is_enabled'] = get_field('is_enabled', $quiz_id) ?? false;
-        $quiz_data['save_answers'] = get_field('save_answers', $quiz_id);
-        $quiz_data['show_correct_answer'] = get_field('show_correct_answer', $quiz_id);
-        $quiz_data['correct_answer_trigger'] = get_field('correct_answer_trigger', $quiz_id);
-        $quiz_data['slide_counter'] = get_field('slide_counter', $quiz_id);
-        $quiz_data['slide_counter_position'] = get_field('slide_counter_position', $quiz_id);
-        $quiz_data['limited_time'] = get_field('limited_time', $quiz_id);
-        $quiz_data['duration'] = get_field('duration', $quiz_id);
-        $quiz_data['progress_bar'] = get_field('progress_bar', $quiz_id);
-        $quiz_data['use_question_title_nav'] = get_field('use_question_title_nav', $quiz_id);
-        $quiz_data['randomize_slides_on_load'] = get_field('randomize_slides_on_load', $quiz_id);
-        $quiz_data['questions'] = !empty(get_field('questions', $quiz_id)) ? get_field('questions', $quiz_id) : [];
+        $quiz_data = [
+            'quiz_type' => 'poll',
+            'is_enabled' => true,
+            'save_answers' => true,
+            'show_correct_answer' => false,
+            'correct_answer_trigger' => false,
+            'slide_counter' => true,
+            'slide_counter_position' => 'top',
+            'limited_time' => false,
+            'duration' => null,
+            'progress_bar' => true,
+            'use_question_title_nav' => true,
+            'randomize_slides_on_load' => false,
+            'slide_counter_style' => 'steps',
+            'save_data_on_load' => false,
+            'start_btn_label' => __('Start', 'growtype-quiz'),
+            'finish_btn_label' => __('Finish', 'growtype-quiz'),
+            'next_btn_label' => __('Next question', 'growtype-quiz'),
+            'back_btn_label' => __('Back', 'growtype-quiz'),
+            'questions' => [
+                [
+                    'has_intro' => true,
+                    'intro' => 'This intro demo text',
+                    'is_visible' => false,
+                    'always_visible' => false,
+                    'custom_class' => null,
+                    'question_style' => 'horizontal',
+                    'question_type' => 'basic',
+                    'answer_type' => 'single',
+                    'answer_style' => 'radio',
+                    'funnel' => 'a',
+                    'has_a_hint' => false,
+                    'hide_footer' => false,
+                    'question_title' => 'This is test question title',
+                    'not_required' => false,
+                    'hide_back_button' => false,
+                    'hide_next_button' => false,
+                    'has_url' => false,
+                    'options_all' => [
+                        [
+                            'value' => 1,
+                            'label' => 'Option 1',
+                            'default' => true,
+                            'extra_value' => null,
+                            'default_belongs_to' => null,
+                            'next_funnel' => 'a',
+                        ],
+                        [
+                            'value' => 2,
+                            'label' => 'Option 2',
+                            'default' => false,
+                            'extra_value' => null,
+                            'default_belongs_to' => null,
+                            'next_funnel' => 'a',
+                        ]
+                    ],
+                ],
+                [
+                    'has_intro' => true,
+                    'intro' => 'This intro demo text',
+                    'is_visible' => false,
+                    'always_visible' => false,
+                    'custom_class' => null,
+                    'question_style' => 'horizontal',
+                    'question_type' => 'basic',
+                    'answer_type' => 'single',
+                    'answer_style' => 'radio',
+                    'funnel' => 'a',
+                    'has_a_hint' => false,
+                    'hide_footer' => false,
+                    'question_title' => 'This is test question title',
+                    'not_required' => false,
+                    'hide_back_button' => false,
+                    'hide_next_button' => false,
+                    'has_url' => false,
+                    'options_all' => [
+                        [
+                            'value' => 1,
+                            'label' => 'Option 1',
+                            'default' => true,
+                            'extra_value' => null,
+                            'default_belongs_to' => null,
+                            'next_funnel' => 'a',
+                        ],
+                        [
+                            'value' => 2,
+                            'label' => 'Option 2',
+                            'default' => false,
+                            'extra_value' => null,
+                            'default_belongs_to' => null,
+                            'next_funnel' => 'a',
+                        ]
+                    ],
+                ]
+            ],
+        ];
+
+        if (class_exists('ACF')) {
+            $quiz_data['quiz_type'] = get_field('quiz_type', $quiz_id);
+            $quiz_data['is_enabled'] = get_field('is_enabled', $quiz_id) ?? false;
+            $quiz_data['save_answers'] = get_field('save_answers', $quiz_id);
+            $quiz_data['show_correct_answer'] = get_field('show_correct_answer', $quiz_id);
+            $quiz_data['correct_answer_trigger'] = get_field('correct_answer_trigger', $quiz_id);
+            $quiz_data['slide_counter'] = get_field('slide_counter', $quiz_id);
+            $quiz_data['slide_counter_position'] = get_field('slide_counter_position', $quiz_id);
+            $quiz_data['limited_time'] = get_field('limited_time', $quiz_id);
+            $quiz_data['duration'] = get_field('duration', $quiz_id);
+            $quiz_data['progress_bar'] = get_field('progress_bar', $quiz_id);
+            $quiz_data['use_question_title_nav'] = get_field('use_question_title_nav', $quiz_id);
+            $quiz_data['randomize_slides_on_load'] = get_field('randomize_slides_on_load', $quiz_id);
+            $quiz_data['slide_counter_style'] = get_field('slide_counter_style', $quiz_id);
+            $quiz_data['questions'] = !empty(get_field('questions', $quiz_id)) ? get_field('questions', $quiz_id) : [];
+        }
+
+        $quiz_data = apply_filters('growtype_quiz_get_quiz_data', $quiz_data, $quiz_id);
+
+        if (empty($quiz_data)) {
+            throw new Exception('Quiz data is empty. Please setup quiz data in admin panel.');
+        }
 
         if ($quiz_data['randomize_slides_on_load'] && !empty($quiz_data['questions'])) {
             $questions_without_success = array_filter($quiz_data['questions'], function ($question) {
@@ -421,6 +527,6 @@ if (!function_exists('growtype_quiz_format_option_value')) {
 if (!function_exists('growtype_quiz_save_empty_answers')) {
     function growtype_quiz_save_empty_answers($quiz_id)
     {
-        return get_field('save_empty_answers', $quiz_id) ? true : false;
+        return class_exists('ACF') && get_field('save_empty_answers', $quiz_id) ? true : false;
     }
 }
