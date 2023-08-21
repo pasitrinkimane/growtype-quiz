@@ -1,3 +1,5 @@
+import {validateQuestion} from "../listeners/validation/validateQuestion";
+
 export function input() {
     /**
      * File
@@ -23,7 +25,7 @@ export function input() {
         let selectedPlaceholderMultiple = $(this).attr('data-selected-placeholder-multiple');
         let filesAmount = e.target.files.length;
 
-        $(this).closest('.growtype-quiz-file-input-wrapper')
+        $(this).closest('.growtype-quiz-input-wrapper')
             .find('.growtype-quiz-input-label')
             .removeClass('is-active')
             .text($(this).attr('data-placeholder'))
@@ -36,10 +38,18 @@ export function input() {
                 selectedPlaceholder = selectedPlaceholderMultiple.replace(':nr', filesAmount)
             }
 
-            $(this).closest('.growtype-quiz-file-input-wrapper')
+            $(this).closest('.growtype-quiz-input-wrapper')
                 .find('.growtype-quiz-input-label')
                 .addClass('is-active')
                 .text(selectedPlaceholder)
         }
+    });
+
+    $('.growtype-quiz-input-wrapper input').on('keyup', function () {
+        validateQuestion();
+    });
+
+    $('.growtype-quiz-input-wrapper input[type="checkbox"]').on('click', function () {
+        validateQuestion();
     });
 }

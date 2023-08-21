@@ -12,8 +12,6 @@ export function nextQuestionTrigger() {
         if (!isValidQuestion) {
             document.dispatchEvent(validateQuestionEvent())
 
-            console.log(window.growtype_quiz_global.is_valid)
-
             if (!window.growtype_quiz_global.is_valid) {
                 return
             }

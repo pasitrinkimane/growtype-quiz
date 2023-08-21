@@ -51,7 +51,7 @@ msgid "Created at"
 msgstr "Sukurta"
 
 #. Description of the plugin
-msgid "Creates CPT with advanced quiz functionality. Requires ACF."
+msgid "Ads ability to create advanced quizzes."
 msgstr "Sukuria CPT su pažangiomis viktorinos funkcijomis. Reikalingas ACF."
 
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:127

@@ -29,10 +29,15 @@ export function showPreviousQuestion() {
     window.quizLastQuestion = currentQuestion;
     window.growtype_quiz_global.current_question_nr--;
 
+    if (currentQuestion.attr('data-question-type') !== 'info') {
+        window.growtype_quiz_global.current_question_counter_nr--;
+    }
+
     if (currentQuestion.length === 0) {
         initQuestion(currentQuestion, previousQuestion)
     } else {
         currentQuestion.removeClass('is-active').fadeOut(300, function () {
+            $('.growtype-quiz-wrapper').addClass('is-valid');
             initQuestion(currentQuestion, previousQuestion)
         });
     }

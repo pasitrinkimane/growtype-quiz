@@ -95,6 +95,7 @@ class Growtype_Quiz_Ajax
                     'success' => true,
                     'updated' => true,
                     'redirect_url' => $success_url,
+                    'results_url' => growtype_quiz_results_page_url($existing_record['unique_hash']),
                     'unique_hash' => $existing_record['unique_hash'],
                 ]);
             }
@@ -111,6 +112,7 @@ class Growtype_Quiz_Ajax
             return wp_send_json([
                 'success' => true,
                 'redirect_url' => $success_url,
+                'results_url' => growtype_quiz_results_page_url($updated_quiz_data['unique_hash']),
                 'unique_hash' => $updated_quiz_data['unique_hash'],
             ]);
         }

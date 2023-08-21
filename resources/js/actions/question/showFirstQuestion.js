@@ -1,19 +1,15 @@
-import {hideProgressIndicators, showProgressIndicators} from "../../actions/progress/general";
+import {showProgressIndicators} from "../../actions/progress/general";
 import {updateProgressCounter} from "../progress/counter/updateProgressCounter";
 import {updateQuizComponents} from "./updateQuizComponents";
 
 /**
  * Show last slide
  */
-export function showFirstQuestion(initialLoad = false) {
+export function showFirstQuestion() {
     let firstQuestion = $('.growtype-quiz-question.first-question');
 
     if (firstQuestion.hasClass('is-always-visible')) {
         firstQuestion = $('.growtype-quiz-question:not(.is-always-visible):first');
-    }
-
-    if (initialLoad) {
-        firstQuestion.addClass('is-active');
     }
 
     updateQuizComponents(firstQuestion);
@@ -34,9 +30,10 @@ export function showFirstQuestion(initialLoad = false) {
         }
     }, 500)
 
-    if (!initialLoad && !firstQuestion.hasClass('is-active')) {
+    if (!firstQuestion.hasClass('is-active')) {
         $('.growtype-quiz-question').removeClass('is-active').fadeOut().promise().done(function () {
             window.growtype_quiz_global.current_question_nr = 1;
+            window.growtype_quiz_global.current_question_counter_nr = 1;
             updateProgressCounter();
             firstQuestion.addClass('is-active').fadeIn();
             showProgressIndicators();

@@ -1,1 +1,1 @@
-<h2>Results page</h2>
+<h2><?php echo __('Results page', 'growtype-quiz') ?></h2>

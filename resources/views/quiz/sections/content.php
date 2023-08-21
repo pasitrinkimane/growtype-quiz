@@ -1,18 +1,12 @@
 <?php
-$iframe_hide_header_footer = get_option('growtype_quiz_iframe_hide_header_footer') && isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe';
-
-if ($iframe_hide_header_footer) {
+if ($quiz_data['iframe_hide_header_footer']) {
     echo '<style>header { display: none; } footer { display: none; } .growtype-quiz-wrapper { margin: 0; } .growtype-quiz-wrapper .s-quiz {padding: 0;} </style>';
 }
 ?>
 
-<div class="growtype-quiz-wrapper" data-quiz-id="<?php echo $post->ID ?>" data-quiz-type="<?php echo $quiz_data['quiz_type'] ?>">
-    <?php
-    $intro_content = apply_filters('the_content', get_the_content());
-    $intro_f_img = isset(wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'single-post-thumbnail')[0]) ? wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'single-post-thumbnail')[0] : '';
-    ?>
-    <?php if ($intro_content || $intro_f_img) { ?>
-        <section class="s-intro" style="background:url(<?php echo $intro_f_img; ?>);background-size: cover;background-position: center;background-repeat: no-repeat;">
+<div class="growtype-quiz-wrapper" data-quiz-id="<?php echo $quiz_data['quiz_id'] ?>" data-quiz-type="<?php echo $quiz_data['quiz_type'] ?>">
+    <?php if (!empty($quiz_data['intro_content']) || !empty($quiz_data['intro_f_img'])) { ?>
+        <section class="s-intro" style="background:url(<?php echo $quiz_data['intro_f_img']; ?>);background-size: cover;background-position: center;background-repeat: no-repeat;">
             <div class="container">
                 <?php echo apply_filters('the_content', get_the_content()); ?>
             </div>
@@ -46,16 +40,18 @@ if ($iframe_hide_header_footer) {
 
                     <?php $index = 0; ?>
 
-                    <?php foreach ($quiz_data['questions'] as $question) { ?>
+                    <?php foreach ($quiz_data['questions'] as $key => $question) { ?>
 
                         <?php $disabled = $question['disabled'] ?? false; ?>
 
                         <?php if (!$disabled) { ?>
                             <div class="growtype-quiz-question <?php echo $index === 0 ? 'first-question' : '' ?> <?php echo ($question['is_visible'] && $question['always_visible']) ? 'is-always-visible' : '' ?> <?php echo $question['is_visible'] ? 'is-visible' : '' ?> <?php echo $question['custom_class']; ?>"
                                  data-key="<?php echo !empty($question['key']) ? $question['key'] : 'question_' . ($index + 1) ?>"
+                                 data-question-nr="<?php echo $key + 1 ?>"
                                  data-question-type="<?php echo $question['question_type'] ?>"
                                  data-question-style="<?php echo $question['question_style'] ?>"
                                  data-answer-type="<?php echo !is_array($question['answer_type']) ? $question['answer_type'] : '' ?>"
+                                 data-answers-limit="<?php echo isset($question['answers_limit']) && !empty($question['answers_limit']) ? $question['answers_limit'] : '' ?>"
                                  data-answer-style="<?php echo $question['answer_style'] ?>"
                                  data-funnel="<?php echo $question['funnel'] ?>"
                                  data-hint="<?php echo $question['has_a_hint'] ?>"
@@ -64,6 +60,7 @@ if ($iframe_hide_header_footer) {
                                  data-answer-required="<?php echo $question['not_required'] ? 'false' : 'true' ?>"
                                  data-hide-back-button="<?php echo $question['hide_back_button'] ? 'true' : 'false' ?>"
                                  data-hide-next-button="<?php echo $question['hide_next_button'] ? 'true' : 'false' ?>"
+                                 data-hide-progressbar="<?php echo $question['hide_progress_bar'] ? 'true' : 'false' ?>"
                             >
                                 <div class="growtype-quiz-question-inner">
                                     <?php if (!empty($question['featured_image'])) { ?>
@@ -99,7 +96,6 @@ if ($iframe_hide_header_footer) {
                     <?php echo growtype_quiz_include_view('quiz.partials.components.quiz-nav', ['quiz_data' => $quiz_data]); ?>
                 </div>
             </div>
-
         </div>
     </section>
 </div>

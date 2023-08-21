@@ -1,6 +1,7 @@
 import {hideProgressIndicators} from "../actions/progress/general";
 import {evaluateQuizData} from "../actions/crud/evaluateQuizData";
 import {restartQuizTrigger} from "../components/restartQuizTrigger";
+import {loader} from "../actions/progress/loader/loader";
 
 /**
  * Show success question
@@ -24,6 +25,7 @@ function showSuccessQuestionListener() {
             $('body').attr('data-current-question-type', 'success')
             $('.growtype-quiz-question[data-question-type="success"]').fadeIn();
 
+            loader();
             restartQuizTrigger();
         });
 }

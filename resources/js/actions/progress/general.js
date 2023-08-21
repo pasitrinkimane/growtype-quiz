@@ -10,7 +10,6 @@ export function hideProgressIndicators() {
 }
 
 export function showProgressIndicators() {
-    $('.growtype-quiz-progressbar').show();
     $('.growtype-quiz-header').show();
     $('.growtype-quiz-nav').show();
 

@@ -11,8 +11,8 @@ export function updateProgressBar() {
     }
 
     let progressbarWidth = progressBar.width();
-    let progressbarStep = progressbarWidth / (window.quizQuestionsAmount);
-    progressbarIndicatorWidth = window.growtype_quiz_global.current_question_nr * progressbarStep;
+    let progressbarStep = progressbarWidth / (window.quizCountedQuestionsAmount);
+    progressbarIndicatorWidth = window.growtype_quiz_global.current_question_counter_nr * progressbarStep;
 
     $('.growtype-quiz-progressbar-inner').width(progressbarIndicatorWidth);
 }

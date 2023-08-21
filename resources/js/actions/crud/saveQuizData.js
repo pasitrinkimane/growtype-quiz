@@ -63,6 +63,14 @@ function saveQuizData(data) {
                 if (data.redirect_url !== null && data.redirect_url.length > 0) {
                     window.location.replace(data.redirect_url);
                 }
+
+                /**
+                 * Update loader
+                 */
+                if ($('.growtype-quiz-loader-wrapper').length > 0) {
+                    $('.growtype-quiz-loader-wrapper').attr('data-redirect-url', data.results_url);
+                    $('.growtype-quiz-loader-wrapper .btn-continue').attr('href', data.results_url);
+                }
             } else {
                 if (showLastQuestionOnError) {
                     showLastQuestion(answers);

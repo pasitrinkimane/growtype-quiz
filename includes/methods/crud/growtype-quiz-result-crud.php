@@ -163,14 +163,14 @@ class Growtype_Quiz_Result_Crud
         $unique_hash = isset($quiz_data['unique_hash']) && !empty($quiz_data['unique_hash']) ? $quiz_data['unique_hash'] : bin2hex(random_bytes(12) . time());
         $questions_amount = growtype_quiz_get_quiz_data($quiz_id)['questions_available_amount'] ?? null;
         $evaluate_specific_quiz_answers = $this->evaluate_specific_quiz_answers($quiz_id, $quiz_data['answers']);
-        $correct_answers_amount = $evaluate_specific_quiz_answers['correct_answers_amount'] ?? null;
-        $wrong_answers_amount = $evaluate_specific_quiz_answers['wrong_answers_amount'] ?? null;
-        $questions_answered = $evaluate_specific_quiz_answers['questions_answered'] ?? null;
+        $correct_answers_amount = isset($evaluate_specific_quiz_answers['correct_answers_amount']) ? $evaluate_specific_quiz_answers['correct_answers_amount'] : null;
+        $wrong_answers_amount = isset($evaluate_specific_quiz_answers['wrong_answers_amount']) ? $evaluate_specific_quiz_answers['wrong_answers_amount'] : null;
+        $questions_answered = isset($evaluate_specific_quiz_answers['questions_answered']) ? $evaluate_specific_quiz_answers['questions_answered'] : null;
         $extra_details = isset($quiz_data['extra_details']) && !empty($quiz_data['extra_details']) ? json_encode($quiz_data['extra_details']) : null;
-        $ip_address = $quiz_data['ip_address'] ?? null;
+        $ip_address = isset($quiz_data['ip_address']) ? $quiz_data['ip_address'] : null;
         $answers = is_array($quiz_data['answers']) ? json_encode($quiz_data['answers']) : $quiz_data['answers'];
-        $user_id = $quiz_data['user_id'] ?? null;
-        $duration = $quiz_data['duration'] ?? null;
+        $user_id = isset($quiz_data['user_id']) ? $quiz_data['user_id'] : null;
+        $duration = isset($quiz_data['duration']) ? $quiz_data['duration'] : null;
 
         return [
             'user_id' => $user_id,
@@ -307,7 +307,7 @@ class Growtype_Quiz_Result_Crud
         $wrong_answers_amount = 0;
         $wrong_answers = [];
 
-        if (!empty($answers)) {
+        if (!empty($answers) && $quiz_data['quiz_type'] === Growtype_Quiz::TYPE_SCORED) {
             if (!is_array($answers)) {
                 $answers = json_decode($answers, true);
             }
@@ -327,9 +327,9 @@ class Growtype_Quiz_Result_Crud
                     continue;
                 }
 
-                $answer_is_wrong = false;
+                if (isset($question['options_all']) && !empty($question['options_all'])) {
+                    $answer_is_wrong = false;
 
-                if (isset($question['options_all'])) {
                     foreach ($question['options_all'] as $option) {
                         if ($option['correct']) {
                             $option_value = !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']);
@@ -342,14 +342,14 @@ class Growtype_Quiz_Result_Crud
                             }
                         }
                     }
-                }
 
-                if ($answer_is_wrong) {
-                    array_push($wrong_answers, $user_answer[0] . '_#_' . $user_answer_key);
-                    $wrong_answers_amount++;
-                } else {
-                    array_push($correct_answers, $user_answer[0] . '_#_' . $user_answer_key);
-                    $correct_answers_amount++;
+                    if ($answer_is_wrong) {
+                        array_push($wrong_answers, $user_answer[0] . '_#_' . $user_answer_key);
+                        $wrong_answers_amount++;
+                    } else {
+                        array_push($correct_answers, $user_answer[0] . '_#_' . $user_answer_key);
+                        $correct_answers_amount++;
+                    }
                 }
             }
         }

@@ -22,7 +22,7 @@
                                 $ext = pathinfo($f_img, PATHINFO_EXTENSION);
                                 if ($ext === 'svg') { ?>
                                     <div class="e-img">
-                                        <?php echo file_get_contents($f_img); ?>
+                                        <?php echo growtype_quiz_render_svg($f_img); ?>
                                     </div>
                                 <?php } else { ?>
                                     <div class="e-img" style="background:url(<?php echo $f_img ?>);background-position: center;background-size: cover;background-repeat: no-repeat;"></div>

@@ -34,12 +34,6 @@ export function radio(currentQuestion) {
         if (currentQuestion.attr('data-hint')) {
             currentQuestion.find('.growtype-quiz-hint').fadeIn();
         }
-
-        currentQuestion.find('.growtype-quiz-question-answers').addClass('anim-wrong-selection');
-
-        setTimeout(function () {
-            currentQuestion.find('.growtype-quiz-question-answers').removeClass('anim-wrong-selection');
-        }, 500);
     }
 
     return isValid;

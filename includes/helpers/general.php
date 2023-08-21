@@ -6,10 +6,8 @@ use function App\sage;
  *
  */
 if (!function_exists('growtype_quiz_render_svg')) {
-    function growtype_quiz_render_svg($path)
+    function growtype_quiz_render_svg($url)
     {
-        $url = GROWTYPE_QUIZ_URL_PUBLIC . $path;
-
         $arrContextOptions = [
             "ssl" => array (
                 "verify_peer" => false,
@@ -69,10 +67,11 @@ if (!function_exists('growtype_quiz_include_resource')) {
 if (!function_exists('growtype_quiz_include_view')) {
     function growtype_quiz_include_view($file_path, $variables = array (), $only_template_path = false)
     {
+        $stylesheet_dir = strpos(get_stylesheet_directory(), 'resources') !== false ? get_stylesheet_directory() : get_stylesheet_directory() . '/resources';
         $fallback_view = GROWTYPE_QUIZ_PATH . 'resources/views/' . str_replace('.', '/', $file_path) . '.php';
         $fallback_blade_view = GROWTYPE_QUIZ_PATH . 'resources/views/' . str_replace('.', '/', $file_path) . '.blade.php';
-        $child_blade_view = get_stylesheet_directory() . '/views/' . GROWTYPE_QUIZ_TEXT_DOMAIN . '/' . str_replace('.', '/', $file_path) . '.blade.php';
-        $child_view = get_stylesheet_directory() . '/views/' . GROWTYPE_QUIZ_TEXT_DOMAIN . '/' . str_replace('.', '/', $file_path) . '.php';
+        $child_blade_view = $stylesheet_dir . '/views/' . GROWTYPE_QUIZ_TEXT_DOMAIN . '/' . str_replace('.', '/', $file_path) . '.blade.php';
+        $child_view = $stylesheet_dir . '/views/' . GROWTYPE_QUIZ_TEXT_DOMAIN . '/' . str_replace('.', '/', $file_path) . '.php';
 
         $template_path = $fallback_view;
 
@@ -114,11 +113,28 @@ if (!function_exists('growtype_quiz_include_view')) {
 if (!function_exists('growtype_quiz_get_quiz_data')) {
     function growtype_quiz_get_quiz_data($quiz_id)
     {
+        /**
+         * Check post type
+         */
+        if (get_post_type($quiz_id) !== 'quiz') {
+            return null;
+        }
+
+        /**
+         * Get post content
+         */
+        $content_post = get_post($quiz_id);
+
         $quiz_data = [
-            'quiz_type' => 'poll',
+            'quiz_id' => $quiz_id,
+            'intro_content' => apply_filters('the_content', $content_post->post_content),
+            'intro_f_img' => isset(wp_get_attachment_image_src(get_post_thumbnail_id($quiz_id), 'single-post-thumbnail')[0]) ? wp_get_attachment_image_src(get_post_thumbnail_id($quiz_id), 'single-post-thumbnail')[0] : '',
+            'iframe_hide_header_footer' => get_option('growtype_quiz_iframe_hide_header_footer') && isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe',
+            'quiz_type' => Growtype_Quiz::TYPE_POLL,
             'is_enabled' => true,
             'save_answers' => true,
             'show_correct_answer' => false,
+            'show_question_nr_in_url' => false,
             'correct_answer_trigger' => false,
             'slide_counter' => true,
             'slide_counter_position' => 'top',
@@ -151,6 +167,7 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
                     'not_required' => false,
                     'hide_back_button' => false,
                     'hide_next_button' => false,
+                    'hide_progress_bar' => false,
                     'has_url' => false,
                     'options_all' => [
                         [
@@ -189,6 +206,7 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
                     'hide_back_button' => false,
                     'hide_next_button' => false,
                     'has_url' => false,
+                    'hide_progress_bar' => false,
                     'options_all' => [
                         [
                             'value' => 1,
@@ -226,6 +244,8 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
             $quiz_data['randomize_slides_on_load'] = get_field('randomize_slides_on_load', $quiz_id);
             $quiz_data['slide_counter_style'] = get_field('slide_counter_style', $quiz_id);
             $quiz_data['questions'] = !empty(get_field('questions', $quiz_id)) ? get_field('questions', $quiz_id) : [];
+            $quiz_data['hide_progress_bar'] = !empty(get_field('hide_progress_bar', $quiz_id)) ? get_field('hide_progress_bar', $quiz_id) : false;
+            $quiz_data['show_question_nr_in_url'] = !empty(get_field('show_question_nr_in_url', $quiz_id)) ? get_field('show_question_nr_in_url', $quiz_id) : false;
         }
 
         $quiz_data = apply_filters('growtype_quiz_get_quiz_data', $quiz_data, $quiz_id);
@@ -449,7 +469,7 @@ function growtype_quiz_map_quiz_results($quiz_result_data)
             'question_intro' => $question['intro'],
         ];
 
-        if ($quiz_type === 'scored') {
+        if ($quiz_type === Growtype_Quiz::TYPE_SCORED) {
             $correct_answers = [];
             foreach ($answers_values as $answer) {
                 $correct_answer = array_filter($answer_options, function ($option) use ($answer) {
@@ -517,7 +537,7 @@ if (!function_exists('growtype_quiz_get_question_by_title')) {
 if (!function_exists('growtype_quiz_format_option_value')) {
     function growtype_quiz_format_option_value($label)
     {
-        return str_replace(' ', '_', strtolower($label));
+        return str_replace(array ('(', ')'), '', str_replace(array (' '), '_', strip_tags(strtolower($label))));
     }
 }
 
@@ -528,5 +548,16 @@ if (!function_exists('growtype_quiz_save_empty_answers')) {
     function growtype_quiz_save_empty_answers($quiz_id)
     {
         return class_exists('ACF') && get_field('save_empty_answers', $quiz_id) ? true : false;
+    }
+}
+
+/**
+ * Quiz results url
+ */
+if (!function_exists('growtype_quiz_results_page_url')) {
+    function growtype_quiz_results_page_url($unique_hash = '')
+    {
+        $results_page = get_option('growtype_quiz_results_page');
+        return !empty($results_page) ? get_permalink($results_page) . '?code=' . $unique_hash : '';
     }
 }

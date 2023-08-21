@@ -7,6 +7,13 @@ export function collectQuizData(currentQuestion) {
     let currentQuestionType = currentQuestion.attr('data-question-type');
 
     /**
+     * Skip info questions
+     */
+    if (currentQuestionType === 'info') {
+        return;
+    }
+
+    /**
      * Collect answers
      */
     if (!answers[currentQuestionKey]) {
@@ -42,13 +49,19 @@ export function collectQuizData(currentQuestion) {
     /**
      * Collect file inputs data
      */
-    if (currentQuestion.find('input[type="file"][required]').length > 0) {
+    if (currentQuestion.find('input[required]').length > 0) {
         let formData = new FormData();
-        currentQuestion.find('input[type="file"][required]').each(function (index, element) {
-            formData.append($(element).attr('name') + '-' + currentQuestionKey + '-' + index, $(element)[0].files[0]);
+        currentQuestion.find('input[required]').each(function (index, element) {
+            if ($(element).attr('type') === 'file') {
+                formData.append($(element).attr('name') + '-' + currentQuestionKey + '-' + index, $(element)[0].files[0]);
+                window.growtype_quiz_global.files = formData
+            } else {
+                answers[currentQuestionKey].push({
+                    name: $(element).attr('name'),
+                    value: $(element).val()
+                });
+            }
         })
-
-        window.growtype_quiz_global.files = formData
     }
 
     saveQuizDataEvent().answers = answers;

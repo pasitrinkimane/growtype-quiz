@@ -6,12 +6,5 @@ export function open(currentQuestion) {
         isValid = false;
     }
 
-    if (!isValid) {
-        currentQuestion.find('.growtype-quiz-question-answers-wrapper').addClass('anim-wrong-selection');
-        setTimeout(function () {
-            currentQuestion.find('.growtype-quiz-question-answers-wrapper').removeClass('anim-wrong-selection');
-        }, 500);
-    }
-
     return isValid;
 }

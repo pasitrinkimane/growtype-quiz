@@ -29,6 +29,8 @@
  */
 class Growtype_Quiz
 {
+    const TYPE_SCORED = 'scored';
+    const TYPE_POLL = 'poll';
 
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
@@ -175,8 +177,11 @@ class Growtype_Quiz
         /**
          * Shortcode
          */
-        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/shortcodes/class-growtype-quiz-input.php';
-        $this->loader = new Growtype_Quiz_Input();
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/shortcodes/class-growtype-quiz-input-shortcode.php';
+        $this->loader = new Growtype_Quiz_Input_Shortcode();
+
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/shortcodes/class-growtype-quiz-loader-shortcode.php';
+        $this->loader = new Growtype_Quiz_Loader_Shortcode();
 
         /**
          * Load

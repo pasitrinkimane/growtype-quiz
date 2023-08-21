@@ -85,14 +85,14 @@ class Growtype_Quiz_Admin_General_Setting
 
         add_settings_field(
             'growtype_quiz_theme',
-            'Quiz Theme',
+            'Quiz Style',
             array ($this, 'growtype_quiz_theme_callback'),
             'growtype-quiz-settings',
             'growtype_quiz_settings_general'
         );
 
         /**
-         *
+         * Theme header
          */
         register_setting(
             'growtype_quiz_settings_general', // settings group name
@@ -101,8 +101,24 @@ class Growtype_Quiz_Admin_General_Setting
 
         add_settings_field(
             'growtype_quiz_theme_header',
-            'Theme Header',
+            'Theme Header File Name',
             array ($this, 'growtype_quiz_theme_header_callback'),
+            'growtype-quiz-settings',
+            'growtype_quiz_settings_general'
+        );
+
+        /**
+         * Theme footer
+         */
+        register_setting(
+            'growtype_quiz_settings_general', // settings group name
+            'growtype_quiz_theme_footer' // option name
+        );
+
+        add_settings_field(
+            'growtype_quiz_theme_footer',
+            'Theme Footer File Name',
+            array ($this, 'growtype_quiz_theme_footer_callback'),
             'growtype-quiz-settings',
             'growtype_quiz_settings_general'
         );
@@ -119,6 +135,22 @@ class Growtype_Quiz_Admin_General_Setting
             'growtype_quiz_iframe_hide_header_footer',
             'If Iframe hide Header and Hooter',
             array ($this, 'growtype_quiz_iframe_hide_header_footer_callback'),
+            'growtype-quiz-settings',
+            'growtype_quiz_settings_general'
+        );
+
+        /**
+         *
+         */
+        register_setting(
+            'growtype_quiz_settings_general', // settings group name
+            'growtype_quiz_results_page' // option name
+        );
+
+        add_settings_field(
+            'growtype_quiz_results_page',
+            'Results Page',
+            array ($this, 'growtype_quiz_results_page_callback'),
             'growtype-quiz-settings',
             'growtype_quiz_settings_general'
         );
@@ -196,11 +228,38 @@ class Growtype_Quiz_Admin_General_Setting
     /**
      *
      */
+    function growtype_quiz_theme_footer_callback()
+    {
+        $value = get_option('growtype_quiz_theme_footer');
+        ?>
+        <input type="text" name="growtype_quiz_theme_footer" value="<?php echo $value ?>"/>
+        <?php
+    }
+
+    /**
+     *
+     */
     function growtype_quiz_iframe_hide_header_footer_callback()
     {
         $value = get_option('growtype_quiz_iframe_hide_header_footer');
         ?>
         <input type="checkbox" id="growtype_quiz_iframe_hide_header_footer" name="growtype_quiz_iframe_hide_header_footer" value="1" <?php echo checked(1, $value, false) ?>/>
+        <?php
+    }
+
+    /**
+     *
+     */
+    function growtype_quiz_results_page_callback()
+    {
+        $pages = get_pages();
+        $selected = get_option('growtype_quiz_results_page');
+        ?>
+        <select name='growtype_quiz_results_page'>
+            <?php foreach ($pages as $page) { ?>
+                <option value='<?php echo $page->ID ?>' <?php selected($page->ID === (int)$selected); ?>><?php echo $page->post_title ?> - <?php echo $page->ID ?></option>
+            <?php } ?>
+        </select>
         <?php
     }
 }

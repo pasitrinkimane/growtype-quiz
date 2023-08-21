@@ -7,12 +7,5 @@ export function general(currentQuestion) {
         isValid = false;
     }
 
-    if (!isValid) {
-        currentQuestion.find('.growtype-quiz-question-answers').addClass('anim-wrong-selection');
-        setTimeout(function () {
-            currentQuestion.find('.growtype-quiz-question-answers').removeClass('anim-wrong-selection');
-        }, 500);
-    }
-
     return isValid;
 }

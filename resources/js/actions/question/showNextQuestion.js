@@ -6,6 +6,7 @@ import {showProgressIndicators} from "../../actions/progress/general";
 import {updateQuizComponents} from "./updateQuizComponents";
 import {showSuccessQuestionEvent} from "../../events/showSuccessQuestionEvent";
 import {showNextQuestionEvent} from "../../events/showNextQuestionEvent";
+import {validateQuestion} from "../../listeners/validation/validateQuestion";
 
 /**
  * Show next slide
@@ -26,6 +27,11 @@ export function showNextQuestion(currentQuestion) {
     window.growtype_quiz_global.already_visited_questions_funnels.push(currentQuestion.attr('data-funnel'))
 
     window.quizLastQuestion = currentQuestion;
+
+    if ($(nextQuestion).attr('data-question-type') !== 'info') {
+        window.growtype_quiz_global.current_question_counter_nr++;
+    }
+
     window.growtype_quiz_global.current_question_nr++;
 
     showProgressIndicators();
@@ -48,6 +54,7 @@ export function showNextQuestion(currentQuestion) {
      * Show new question
      */
     currentQuestion.delay(submitDelay).removeClass('is-active').not('.is-always-visible').fadeOut(300, function () {
+        $('.growtype-quiz-wrapper').removeClass('is-valid is-half-valid');
     }).promise().done(function () {
 
         /**
@@ -90,6 +97,14 @@ export function showNextQuestion(currentQuestion) {
             updateProgressCounter();
             updateProgressBar();
             nextQuestion.addClass('is-active').fadeIn(300).promise().done(function () {
+
+                /**
+                 * Validate question if it was filled already
+                 */
+                if (nextQuestion.find('input').val() !== undefined && nextQuestion.find('input').val().length > 0) {
+                    validateQuestion();
+                }
+
                 $('.growtype-quiz-nav .btn').attr('disabled', false);
             });
             window.scrollTo(0, 0);

@@ -143,12 +143,10 @@ class Growtype_Quiz_Cpt
      */
     public static function page_template_loader($template)
     {
-        if (current_user_can('manage_options')) {
-            $results_page = get_page_by_path('results');
+        $results_page_id = get_option('growtype_quiz_results_page');
 
-            if ((empty($results_page) && strpos($_SERVER['REQUEST_URI'], self::CUSTOM_SLUG) === 0) || (!empty($results_page) && $results_page->ID === get_the_ID())) {
-                $template = growtype_quiz_include_view('result.index', [], true);
-            }
+        if (!empty($results_page_id) && (int)$results_page_id === get_the_ID()) {
+            $template = growtype_quiz_include_view('result.index', [], true);
         }
 
         return $template;

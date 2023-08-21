@@ -30,7 +30,18 @@ export function updateQuizComponents(question) {
     }
 
     /**
+     * Progress bar
+     */
+    if (question.attr('data-hide-progressbar') === 'true') {
+        $('.growtype-quiz-progressbar').hide();
+    } else {
+        $('.growtype-quiz-progressbar').fadeIn();
+    }
+
+    /**
      * Set question type attribute to highest dom element
      */
-    $('body').attr('data-current-question-type', question.attr('data-question-type'))
+    $('body')
+        .attr('data-current-question-type', question.attr('data-question-type'))
+        .attr('data-current-answer-type', question.attr('data-answer-type'))
 }
