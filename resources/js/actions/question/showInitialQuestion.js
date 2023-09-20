@@ -15,7 +15,7 @@ export function showInitialQuestion() {
         let previousQuestion = $('.growtype-quiz-question[data-question-nr="' + (questionNr - 1) + '"]')
         window.growtype_quiz_global.current_question_nr = questionNr;
         window.growtype_quiz_global.already_visited_questions_keys = [previousQuestion.attr('data-key')];
-        window.growtype_quiz_global.already_visited_questions_funnels = ['a'];
+        window.growtype_quiz_global.already_visited_questions_funnels = [window.growtype_quiz_global.initial_funnel];
     }
 
     question.addClass('is-active').show();

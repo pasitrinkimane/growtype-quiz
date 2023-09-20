@@ -14,6 +14,12 @@ export function showPreviousQuestion() {
 
     var previousQuestion = currentQuestion.prevAll(".growtype-quiz-question[data-key='" + lastVisitedQuestionKey + "'][data-funnel='" + lastVisitedQuestionFunnel + "']:first");
 
+    if (previousQuestion.attr('data-answer-type') === 'multiple' && previousQuestion.attr('data-has-funnel') === 'true') {
+        window.growtype_quiz_global.additional_questions_amount = 0;
+        $('.growtype-quiz-question.is-conditionally-cloned').remove();
+        $('.growtype-quiz-question.is-conditionally-skipped').removeClass('is-conditionally-skipped');
+    }
+
     /**
      * If active class doesn't exist, get last question
      */
@@ -27,7 +33,7 @@ export function showPreviousQuestion() {
     delete saveQuizDataEvent().answers[lastVisitedQuestionKey]
 
     window.quizLastQuestion = currentQuestion;
-    window.growtype_quiz_global.current_question_nr--;
+    window.growtype_quiz_global.current_question_nr = previousQuestion.attr('data-question-nr');
 
     if (currentQuestion.attr('data-question-type') !== 'info') {
         window.growtype_quiz_global.current_question_counter_nr--;

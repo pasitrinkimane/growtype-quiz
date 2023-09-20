@@ -42,7 +42,7 @@ if ($quiz_data['iframe_hide_header_footer']) {
 
                     <?php foreach ($quiz_data['questions'] as $key => $question) { ?>
 
-                        <?php $disabled = $question['disabled'] ?? false; ?>
+                        <?php $disabled = growtype_quiz_question_is_disabled($question); ?>
 
                         <?php if (!$disabled) { ?>
                             <div class="growtype-quiz-question <?php echo $index === 0 ? 'first-question' : '' ?> <?php echo ($question['is_visible'] && $question['always_visible']) ? 'is-always-visible' : '' ?> <?php echo $question['is_visible'] ? 'is-visible' : '' ?> <?php echo $question['custom_class']; ?>"
@@ -54,6 +54,7 @@ if ($quiz_data['iframe_hide_header_footer']) {
                                  data-answers-limit="<?php echo isset($question['answers_limit']) && !empty($question['answers_limit']) ? $question['answers_limit'] : '' ?>"
                                  data-answer-style="<?php echo $question['answer_style'] ?>"
                                  data-funnel="<?php echo $question['funnel'] ?>"
+                                 data-funnel-conditional="<?php echo $question['funnel_conditional'] ?>"
                                  data-hint="<?php echo $question['has_a_hint'] ?>"
                                  data-hide-footer="<?php echo $question['hide_footer'] ? 'true' : 'false' ?>"
                                  data-question-title="<?php echo $question['question_title'] ?>"
@@ -61,6 +62,7 @@ if ($quiz_data['iframe_hide_header_footer']) {
                                  data-hide-back-button="<?php echo $question['hide_back_button'] ? 'true' : 'false' ?>"
                                  data-hide-next-button="<?php echo $question['hide_next_button'] ? 'true' : 'false' ?>"
                                  data-hide-progressbar="<?php echo $question['hide_progress_bar'] ? 'true' : 'false' ?>"
+                                 data-disabled-if="<?php echo $question['disabled_if'] ?>"
                             >
                                 <div class="growtype-quiz-question-inner">
                                     <?php if (!empty($question['featured_image'])) { ?>

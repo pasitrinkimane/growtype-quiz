@@ -18,7 +18,7 @@
                         >
                             <?php if (isset($question['option_featured_image_as_main']) && !$question['option_featured_image_as_main'] && !empty($option['featured_image'])) { ?>
                                 <?php
-                                $f_img = isset($option['featured_image']['url']) ? $option['featured_image']['url'] : '';
+                                $f_img = $question['options_has_featured_images'] && isset($option['featured_image']['url']) ? $option['featured_image']['url'] : '';
                                 if (!empty($f_img)) {
                                     $ext = pathinfo($f_img, PATHINFO_EXTENSION);
                                     if ($ext === 'svg') { ?>

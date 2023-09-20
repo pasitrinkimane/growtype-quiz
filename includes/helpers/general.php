@@ -287,7 +287,7 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
         }
 
         $quiz_data['questions_available'] = isset($quiz_data['questions']) && !empty($quiz_data['questions']) ? array_filter($quiz_data['questions'], function ($question) {
-            $disabled = $question['disabled'] ?? false;
+            $disabled = growtype_quiz_question_is_disabled($question);
             return $question['question_type'] !== 'info' && $question['question_type'] !== 'success' && !$disabled;
         }) : '';
 
@@ -578,5 +578,15 @@ if (!function_exists('growtype_quiz_results_page_url')) {
     {
         $results_page = get_option('growtype_quiz_results_page');
         return !empty($results_page) ? get_permalink($results_page) . '?code=' . $unique_hash : '';
+    }
+}
+
+/**
+ * Quiz results url
+ */
+if (!function_exists('growtype_quiz_question_is_disabled')) {
+    function growtype_quiz_question_is_disabled($question)
+    {
+        return $question['disabled'] && empty($question['disabled_if']) ? true : false;;
     }
 }

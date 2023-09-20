@@ -18,19 +18,21 @@ import "./listeners/loaderFinishedListener";
 import "./listeners/validation/validateQuestion";
 
 $(document).ready(function () {
+    if (window.growtype_quiz_global) {
+        if (growtype_quiz_local.save_data_on_load) {
+            document.dispatchEvent(saveQuizDataEvent());
+        }
 
-    if (growtype_quiz_local.save_data_on_load) {
-        document.dispatchEvent(saveQuizDataEvent());
+        new answerTrigger().init();
+
+        input();
+        showInitialQuestion();
+        nextQuestionTrigger();
+        previousQuestionTrigger();
+        updateQuestionsCounter();
+        updateProgressBar();
+        updateProgressCounter();
+        duration();
+        countDownTimer();
     }
-
-    input();
-    showInitialQuestion();
-    answerTrigger();
-    nextQuestionTrigger();
-    previousQuestionTrigger();
-    updateQuestionsCounter();
-    updateProgressBar();
-    updateProgressCounter();
-    duration();
-    countDownTimer();
 });

@@ -7,6 +7,7 @@ import {updateQuizComponents} from "./updateQuizComponents";
 import {showSuccessQuestionEvent} from "../../events/showSuccessQuestionEvent";
 import {showNextQuestionEvent} from "../../events/showNextQuestionEvent";
 import {validateQuestion} from "../../listeners/validation/validateQuestion";
+import {answerTrigger} from "../../components/answerTrigger";
 
 /**
  * Show next slide
@@ -17,11 +18,134 @@ export function showNextQuestion(currentQuestion) {
 
     window.growtype_quiz_global.current_funnel = nextFunnel;
 
-    if (nextFunnel === undefined) {
-        nextFunnel = 'a';
+    /**
+     * If questions has multiple answers and funnels are enabled, adjust next question to follow answers funnels
+     */
+    if (currentQuestion.attr('data-answer-type') === 'multiple' && currentQuestion.attr('data-has-funnel') === 'true') {
+        let selectedFunnels = [];
+        let additionalQuestions = 0;
+        currentQuestion.find('.growtype-quiz-question-answer.is-active').map(function (index, element) {
+            if ($(element).attr('data-funnel') !== window.growtype_quiz_global.initial_funnel) {
+                selectedFunnels.push($(element).attr('data-funnel'))
+            }
+        })
+
+        if (selectedFunnels.length > 0) {
+            let funnelQuestionsGrouped = [];
+            selectedFunnels.map(function (funnelKey, funnelIndex) {
+                let funnelQuestions = currentQuestion.nextAll('.growtype-quiz-question[data-has-funnel="true"][data-funnel-conditional="' + funnelKey + '"]')
+
+                if (funnelQuestions.length !== 0) {
+                    additionalQuestions += funnelQuestions.length;
+
+                    funnelQuestions.map(function (funnelQuestionIndex, funnelQuestion) {
+
+                        let adjustedFunnelKey = funnelKey
+
+                        if (funnelQuestions.length === funnelQuestionIndex + 1) {
+                            if (selectedFunnels.length === funnelIndex + 1) {
+                                adjustedFunnelKey = window.growtype_quiz_global.initial_funnel
+
+                                console.info('Last same funnel conditional question has answer with next funnel - ' + adjustedFunnelKey)
+                            } else {
+                                adjustedFunnelKey = selectedFunnels[funnelIndex + 1]
+                            }
+                        }
+
+                        let clonedQuestion = $(funnelQuestion).clone().addClass('is-conditionally-cloned')
+                        $(funnelQuestion).addClass('is-conditionally-skipped')
+
+                        $(clonedQuestion).attr('data-funnel', funnelKey)
+                        $(clonedQuestion).find('.growtype-quiz-question-answer').attr('data-funnel', adjustedFunnelKey)
+
+                        /**
+                         * Init answer trigger
+                         */
+                        clonedQuestion.find('.growtype-quiz-question-answer').click(function () {
+                            new answerTrigger().clickInit($(this));
+                        });
+
+                        if (!funnelQuestionsGrouped[funnelKey]) {
+                            funnelQuestionsGrouped[funnelKey] = [clonedQuestion]
+                        } else {
+                            funnelQuestionsGrouped[funnelKey].push(clonedQuestion)
+                        }
+                    })
+                }
+            });
+
+            let funnelQuestionsGroupedOrdered = [];
+            Object.entries(funnelQuestionsGrouped).map(function (funnelQuestionsGroup) {
+                funnelQuestionsGroup[1].map(function (funnelQuestion) {
+                    funnelQuestionsGroupedOrdered.push(funnelQuestion)
+                })
+            })
+
+            if (funnelQuestionsGroupedOrdered.length > 0) {
+                nextFunnel = funnelQuestionsGroupedOrdered[0].attr('data-funnel');
+            }
+
+            funnelQuestionsGroupedOrdered.reverse();
+
+            funnelQuestionsGroupedOrdered.map(function (funnelQuestion) {
+                $(funnelQuestion).insertAfter(currentQuestion)
+            });
+        }
+
+        window.growtype_quiz_global.additional_questions_amount = additionalQuestions;
     }
 
-    let nextQuestion = currentQuestion.nextAll('.growtype-quiz-question[data-funnel="' + nextFunnel + '"]:first');
+    if (nextFunnel === undefined) {
+        nextFunnel = window.growtype_quiz_global.initial_funnel;
+    }
+
+    let nextQuestion = currentQuestion.nextAll('.growtype-quiz-question[data-funnel="' + nextFunnel + '"]:not([class*="skipped"]):first');
+
+    /**
+     * Check if next question is disabled
+     */
+    if (nextQuestion.attr('data-disabled-if') && nextQuestion.attr('data-disabled-if').length > 0) {
+
+        let availableQuestions = currentQuestion.nextAll('.growtype-quiz-question[data-funnel="' + nextFunnel + '"]:not([class*="skipped"])');
+
+        for (var i = 0; i < availableQuestions.length; i++) {
+            let question = availableQuestions[i];
+
+            let disabledIf = $(question).attr('data-disabled-if')
+
+            if (disabledIf.length > 0) {
+                let key = disabledIf.split(":")[0];
+                let values = disabledIf.split(":")[1].split("|");
+
+                if (window.growtype_quiz_data.answers[key] !== undefined) {
+                    let includes = false;
+                    values.map(function (value) {
+                        if (window.growtype_quiz_data.answers[key].includes(value)) {
+                            includes = true;
+                        }
+                    })
+
+                    if (!includes) {
+                        console.warn('Question found among answers but ignored answers not found.')
+                        nextQuestion = $(question);
+                        break;
+                    }
+
+                    console.warn('Question  ' + i + '  is skipped.')
+                } else {
+                    console.warn('Question key not found among answers')
+                    nextQuestion = $(question);
+                    break;
+                }
+            } else {
+                nextQuestion = $(question);
+
+                console.warn('Nex question "Disabled If" value is empty, so next question is taken.')
+
+                break;
+            }
+        }
+    }
 
     window.growtype_quiz_global.already_visited_questions_keys.push(currentQuestion.attr('data-key'))
     window.growtype_quiz_global.already_visited_questions_funnels.push(currentQuestion.attr('data-funnel'))
@@ -32,7 +156,7 @@ export function showNextQuestion(currentQuestion) {
         window.growtype_quiz_global.current_question_counter_nr++;
     }
 
-    window.growtype_quiz_global.current_question_nr++;
+    window.growtype_quiz_global.current_question_nr = nextQuestion.attr('data-question-nr');
 
     showProgressIndicators();
 

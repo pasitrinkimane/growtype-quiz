@@ -995,6 +995,35 @@
                     "parent_repeater": "field_612fd1d367718"
                 },
                 {
+                    "key": "field_64f468356b842",
+                    "label": "Funnel (Conditional)",
+                    "name": "funnel_conditional",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_62e1811b4d6af",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "10",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "a",
+                    "maxlength": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "parent_repeater": "field_612fd1d367718"
+                },
+                {
                     "key": "field_6131124408ead",
                     "label": "Has a Hint",
                     "name": "has_a_hint",
@@ -1777,5 +1806,5 @@
     "active": true,
     "description": "",
     "show_in_rest": 0,
-    "modified": 1693228412
+    "modified": 1693739098
 }
