@@ -2,7 +2,6 @@
 
 class Growtype_Quiz_Cpt
 {
-    const CUSTOM_SLUG = 'results';
 
     public function __construct()
     {

@@ -5,7 +5,7 @@ import {updateQuizComponents} from "./updateQuizComponents";
  */
 export function showInitialQuestion() {
     let questionNr = new URLSearchParams(window.location.search).get('question');
-    questionNr = questionNr === null || !growtype_quiz_local.show_question_nr_in_url ? 1 : parseInt(questionNr);
+    questionNr = questionNr === null || growtype_quiz_local.show_question_nr_in_url !== 'true' ? 1 : parseInt(questionNr);
 
     let question = $('.growtype-quiz-question[data-question-nr="' + questionNr + '"]')
 
