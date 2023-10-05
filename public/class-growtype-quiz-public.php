@@ -85,7 +85,7 @@ class Growtype_Quiz_Public
 
         $localize_data = array (
             'ajax_url' => admin_url('admin-ajax.php'),
-            'unique_hash' => bin2hex(random_bytes(12) . time()),
+            'unique_hash' => wp_generate_password(44, false, false),
         );
 
         $post = get_post();
