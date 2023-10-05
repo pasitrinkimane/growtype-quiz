@@ -32,6 +32,8 @@ export function showPreviousQuestion() {
 
     delete saveQuizDataEvent().answers[lastVisitedQuestionKey]
 
+    sessionStorage.setItem('growtype_quiz_answers', JSON.stringify(saveQuizDataEvent().answers));
+
     window.quizLastQuestion = currentQuestion;
     window.growtype_quiz_global.current_question_nr = previousQuestion.attr('data-question-nr');
 

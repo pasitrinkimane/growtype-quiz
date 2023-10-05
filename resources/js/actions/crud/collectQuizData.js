@@ -14,12 +14,13 @@ export function collectQuizData(currentQuestion) {
     }
 
     /**
+     * Init answers array
+     */
+    answers[currentQuestionKey] = [];
+
+    /**
      * Collect answers
      */
-    if (!answers[currentQuestionKey]) {
-        answers[currentQuestionKey] = [];
-    }
-
     if (currentQuestionType === 'open') {
         answers[currentQuestionKey].push(currentQuestion.find('textarea').val())
     } else {
@@ -63,6 +64,19 @@ export function collectQuizData(currentQuestion) {
             }
         })
     }
+
+    let keyExists = false;
+    Object.entries(answers).map(function (element) {
+        if (keyExists) {
+            delete answers[element[0]];
+        }
+
+        if (element[0] === currentQuestionKey) {
+            keyExists = true;
+        }
+    })
+
+    sessionStorage.setItem('growtype_quiz_answers', JSON.stringify(answers));
 
     saveQuizDataEvent().answers = answers;
 }
