@@ -1,5 +1,5 @@
 <script>
-    if (new URLSearchParams(window.location.search).get('question') === '1') {
+    if (new URLSearchParams(window.location.search).get('question') === '1' || new URLSearchParams(window.location.search).get('question') === null) {
         sessionStorage.setItem('growtype_quiz_global', JSON.stringify({}));
 
         window.growtype_quiz_data.answers = {};
