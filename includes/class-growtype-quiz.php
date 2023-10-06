@@ -247,9 +247,11 @@ class Growtype_Quiz
     {
         $posts = Growtype_Quiz::get_growtype_quiz_post_types();
 
-        foreach ($posts as $post_type) {
-            if (strpos($_SERVER['REQUEST_URI'], '/' . $post_type) > -1) {
-                return true;
+        if (!is_admin() && !empty($posts)) {
+            foreach ($posts as $post_type) {
+                if (strpos($_SERVER['REQUEST_URI'], '/' . $post_type) > -1 || isset($_GET['post_type']) && $_GET['post_type'] === $post_type) {
+                    return true;
+                }
             }
         }
 
