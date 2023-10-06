@@ -6,14 +6,15 @@ let progressbarStepWidth = 0;
  */
 export function updateProgressBar() {
     let progressBar = $('.growtype-quiz-progressbar');
+    let questionsAmount = window.quizCountedQuestionsAmount;
+    let questionsCounterNr = window.growtype_quiz_global.current_question_counter_nr;
+    let chapters = $('.growtype-quiz-question.chapter-start').length
 
-    if (progressBar.length === 0) {
-        return false;
+    if (progressBar.length === 0 || questionsCounterNr === 0) {
+        $('.growtype-quiz-progressbar-inner').width(0);
     }
 
     let progressbarWidth = progressBar.width();
-    let questionsAmount = window.quizCountedQuestionsAmount;
-    let chapters = $('.growtype-quiz-question.chapter-start').length
 
     if (chapters > 0) {
         chapters = chapters + 1;
@@ -65,10 +66,10 @@ export function updateProgressBar() {
 
         let currentStepsLength = 0;
         separatorsStepSize.map(function (element, index) {
-            if (element['chapter_start'] < window.growtype_quiz_global.current_question_counter_nr) {
-                let stepSize = element['chapter_end'] - window.growtype_quiz_global.current_question_counter_nr === 0 ? 1 : element['chapter_end'] - window.growtype_quiz_global.current_question_counter_nr;
+            if (element['chapter_start'] < questionsCounterNr) {
+                let stepSize = element['chapter_end'] - questionsCounterNr === 0 ? 1 : element['chapter_end'] - questionsCounterNr;
 
-                progressbarStepWidth = (chapterLength / element['steps_difference']) * (window.growtype_quiz_global.current_question_counter_nr - element['chapter_start']);
+                progressbarStepWidth = (chapterLength / element['steps_difference']) * (questionsCounterNr - element['chapter_start']);
 
                 if (progressbarStepWidth > chapterLength) {
                     progressbarStepWidth = chapterLength;
@@ -81,7 +82,7 @@ export function updateProgressBar() {
         progressbarIndicatorWidth = currentStepsLength;
     } else {
         progressbarStepWidth = progressbarWidth / questionsAmount;
-        progressbarIndicatorWidth = window.growtype_quiz_global.current_question_counter_nr * progressbarStepWidth;
+        progressbarIndicatorWidth = questionsCounterNr * progressbarStepWidth;
     }
 
     $('.growtype-quiz-progressbar-inner').width(progressbarIndicatorWidth);

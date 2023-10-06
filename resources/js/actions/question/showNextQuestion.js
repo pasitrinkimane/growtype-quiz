@@ -152,7 +152,7 @@ export function showNextQuestion(currentQuestion) {
 
     window.quizLastQuestion = currentQuestion;
 
-    if ($(nextQuestion).attr('data-question-type') !== 'info') {
+    if ($(currentQuestion).attr('data-question-type') !== 'info') {
         window.growtype_quiz_global.current_question_counter_nr++;
     }
 

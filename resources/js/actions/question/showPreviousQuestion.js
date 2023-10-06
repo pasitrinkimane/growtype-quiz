@@ -37,7 +37,7 @@ export function showPreviousQuestion() {
     window.quizLastQuestion = currentQuestion;
     window.growtype_quiz_global.current_question_nr = previousQuestion.attr('data-question-nr');
 
-    if (currentQuestion.attr('data-question-type') !== 'info') {
+    if (previousQuestion.attr('data-question-type') !== 'info') {
         window.growtype_quiz_global.current_question_counter_nr--;
     }
 

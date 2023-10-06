@@ -33,7 +33,7 @@ export function updateQuizComponents(question) {
      * Progress bar
      */
     if (question.attr('data-hide-progressbar') === 'true') {
-        $('.growtype-quiz-progressbar').hide();
+        $('.growtype-quiz-progressbar').fadeOut(200);
     } else {
         $('.growtype-quiz-progressbar').fadeIn();
     }
