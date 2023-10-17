@@ -5,14 +5,14 @@
             <div class="growtype-quiz-question-answers">
                 <?php foreach ($question['options_all'] as $option) { ?>
                     <div class="growtype-quiz-question-answer-wrapper">
-                        <div class="growtype-quiz-question-answer <?php echo $option['default'] ? 'is-active' : '' ?>"
+                        <div class="growtype-quiz-question-answer <?php echo isset($option['default']) && $option['default'] ? 'is-active' : '' ?>"
                              data-value="<?php echo isset($option['value']) && !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']) ?>"
-                             data-extra-value="<?php echo $option['extra_value'] ?>"
-                             data-cor="<?php echo $quiz_data['show_correct_answer'] ? $option['correct'] : '' ?>"
+                             data-extra-value="<?php echo isset($option['extra_value']) ? $option['extra_value'] : '' ?>"
+                             data-cor="<?php echo isset($quiz_data['show_correct_answer']) && $quiz_data['show_correct_answer'] ? $option['correct'] : '' ?>"
                              data-cor-trigger="<?php echo $quiz_data['correct_answer_trigger'] ?>"
-                             data-default-belongs-to="<?php echo $option['default_belongs_to'] ?>"
-                             data-url="<?php echo $question['has_url'] && !empty($option['url']) ? $option['url'] : '' ?>"
-                             data-funnel="<?php echo $option['next_funnel'] ?>"
+                             data-default-belongs-to="<?php echo isset($option['default_belongs_to']) ? $option['default_belongs_to'] : '' ?>"
+                             data-url="<?php echo isset($question['has_url']) && $question['has_url'] && !empty($option['url']) ? $option['url'] : '' ?>"
+                             data-funnel="<?php echo isset($option['next_funnel']) ? $option['next_funnel'] : '' ?>"
                              data-img-url="<?php echo isset($option['featured_image']['sizes']['large']) ? $option['featured_image']['sizes']['large'] : '' ?>"
                              data-option-featured-img-main="<?php echo isset($question['option_featured_image_as_main']) && $question['option_featured_image_as_main'] ? 'true' : 'false' ?>"
                         >

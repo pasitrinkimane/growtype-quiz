@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Growtype - Quiz\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-08 11:47+0000\n"
+"POT-Creation-Date: 2023-10-17 14:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -17,57 +17,77 @@ msgstr ""
 "X-Domain: growtype-quiz"
 
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/growtype-quiz-admin-result.php:92
-#, php-format
 msgid "%d items were deleted."
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:31
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input-shortcode.php:30
 msgid ":nr image is selected"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:32
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input-shortcode.php:31
 msgid ":nr images are selected"
-msgstr ""
-
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/partials/components/question-nr.php:12
-msgid "Answered:"
-msgstr ""
-
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:101
-msgid "Answers"
-msgstr ""
-
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:103
-msgid "Back"
-msgstr ""
-
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:104
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:105
-msgid "Correct answers amount"
-msgstr ""
-
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:107
-msgid "Created at"
 msgstr ""
 
 #. Description of the plugin
 msgid "Ads ability to create advanced quizzes."
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:127
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:186
-msgid "Delete"
+#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/partials/components/question-nr.php:12
+msgid "Answered:"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:99
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:99
+msgid "Answers"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/helpers/general.php:151
+msgid "Back"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-loader-shortcode.php:23
+msgid "Calculating"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-loader-shortcode.php:27
+msgid "Continue"
 msgstr ""
 
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:102
-msgid "Duration"
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:103
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:102
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:103
+msgid "Correct answers amount"
 msgstr ""
 
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:106
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:106
+msgid "Created at"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:126
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:185
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:126
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:185
+msgid "Delete"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:100
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:100
+msgid "Duration"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:104
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:104
 msgid "Evaluated"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:111
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:105
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:105
+msgid "Extra details"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/helpers/general.php:149
 msgid "Finish"
 msgstr ""
 
@@ -89,20 +109,20 @@ msgstr ""
 msgid "http://newcoolstudio.com/"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:98
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:96
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:96
 msgid "ID"
 msgstr ""
 
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/growtype-quiz-admin-result.php:90
-#, php-format
 msgid "ID %d was deleted."
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:30
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input-shortcode.php:29
 msgid "Image :image_name size is too big. Allowed size :max_size."
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:37
+#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:33
 msgid "Liko:"
 msgstr ""
 
@@ -110,31 +130,55 @@ msgstr ""
 msgid "Maximum characters amount"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:41
+#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:37
 msgid "min."
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:111
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/ajax/class-growtype-quiz-ajax.php:47
+msgid "Missing answers"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/ajax/class-growtype-quiz-ajax.php:122
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/ajax/class-growtype-quiz-ajax.php:134
+msgid "Missing data"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/ajax/class-growtype-quiz-ajax.php:146
+msgid "Missing hash"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/ajax/class-growtype-quiz-ajax.php:35
+msgid "Missing quiz id"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/growtype-quiz-admin-statistic.php:51
+msgid "Most popular answers"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/helpers/general.php:150
 msgid "Next question"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:138
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:137
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:137
 msgid "No items found."
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:103
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:101
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:101
 msgid "Questions amount"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:328
+#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:353
 msgid "Quiz"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:100
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:98
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:98
 msgid "Quiz ID"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:318
+#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:343
 msgid "Quizes"
 msgstr ""
 
@@ -144,22 +188,30 @@ msgstr ""
 msgid "Results"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:29
-msgid "Select an image"
+#: ../../../../../../packages/plugins/growtype-quiz/resources/views/result/index.php:1
+msgid "Results page"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:111
+#: ../../../../../../packages/plugins/growtype-quiz/includes/helpers/general.php:148
 msgid "Start"
+msgstr ""
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/growtype-quiz-admin-statistic.php:27
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/growtype-quiz-admin-statistic.php:28
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/growtype-quiz-admin-statistic.php:56
+msgid "Statistics"
 msgstr ""
 
 #: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/partials/components/question-nr.php:6
 msgid "steps"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:108
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:107
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:107
 msgid "Updated at"
 msgstr ""
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:99
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:97
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:97
 msgid "User ID"
 msgstr ""

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Growtype - Quiz\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-08 14:01+0000\n"
-"PO-Revision-Date: 2023-01-08 11:55+0000\n"
+"PO-Revision-Date: 2023-10-17 14:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: Lithuanian\n"
 "Language: lt_LT\n"
@@ -13,61 +13,81 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.6.3; wp-6.1.1\n"
+"X-Loco-Version: 2.6.6; wp-6.3.2\n"
 "X-Domain: growtype-quiz"
 
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/growtype-quiz-admin-result.php:92
-#, php-format
 msgid "%d items were deleted."
 msgstr "%d elementai buvo ištrinti."
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:31
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input-shortcode.php:30
 msgid ":nr image is selected"
 msgstr "Nuotrauka pasirinkta"
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:32
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input-shortcode.php:31
 msgid ":nr images are selected"
 msgstr ":nr nuotraukos pasirinktos"
-
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/partials/components/question-nr.php:12
-msgid "Answered:"
-msgstr "Atsakyta:"
-
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:101
-msgid "Answers"
-msgstr "Atsakymai"
-
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:103
-msgid "Back"
-msgstr " Grįžti"
-
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:104
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:105
-msgid "Correct answers amount"
-msgstr "Teisingu atsakymu skaičius"
-
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:107
-msgid "Created at"
-msgstr "Sukurta"
 
 #. Description of the plugin
 msgid "Ads ability to create advanced quizzes."
 msgstr "Sukuria CPT su pažangiomis viktorinos funkcijomis. Reikalingas ACF."
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:127
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:186
+#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/partials/components/question-nr.php:12
+msgid "Answered:"
+msgstr "Atsakyta:"
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:99
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:99
+msgid "Answers"
+msgstr "Atsakymai"
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/helpers/general.php:151
+msgid "Back"
+msgstr " Grįžti"
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-loader-shortcode.php:23
+msgid "Calculating"
+msgstr "Skaičiuojama"
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-loader-shortcode.php:27
+msgid "Continue"
+msgstr "Tęsti"
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:102
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:103
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:102
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:103
+msgid "Correct answers amount"
+msgstr "Teisingu atsakymu skaičius"
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:106
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:106
+msgid "Created at"
+msgstr "Sukurta"
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:126
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:185
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:126
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:185
 msgid "Delete"
 msgstr "Ištrinti"
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:102
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:100
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:100
 msgid "Duration"
 msgstr "Trukmė"
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:106
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:104
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:104
 msgid "Evaluated"
 msgstr "Įvertinta"
 
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:111
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:105
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:105
+msgid "Extra details"
+msgstr "Extra details"
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/helpers/general.php:149
 msgid "Finish"
 msgstr "Baigti"
 
@@ -90,20 +110,20 @@ msgstr "Growtype - Quiz"
 msgid "http://newcoolstudio.com/"
 msgstr "http://newcoolstudio.com/"
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:98
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:96
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:96
 msgid "ID"
 msgstr "ID"
 
 #: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/growtype-quiz-admin-result.php:90
-#, php-format
 msgid "ID %d was deleted."
 msgstr "ID %d buvo ištrintas."
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:30
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input-shortcode.php:29
 msgid "Image :image_name size is too big. Allowed size :max_size."
 msgstr "Nuotraukos :image_name dydis yra per didelis. Galimas dydis :max_size."
 
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:37
+#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:33
 msgid "Liko:"
 msgstr "Liko:"
 
@@ -111,31 +131,55 @@ msgstr "Liko:"
 msgid "Maximum characters amount"
 msgstr "Maksimalus simbolių skaičius"
 
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:41
+#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:37
 msgid "min."
 msgstr "min."
 
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:111
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/ajax/class-growtype-quiz-ajax.php:47
+msgid "Missing answers"
+msgstr "Missing answers"
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/ajax/class-growtype-quiz-ajax.php:122
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/ajax/class-growtype-quiz-ajax.php:134
+msgid "Missing data"
+msgstr "Missing data"
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/ajax/class-growtype-quiz-ajax.php:146
+msgid "Missing hash"
+msgstr "Missing hash"
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/ajax/class-growtype-quiz-ajax.php:35
+msgid "Missing quiz id"
+msgstr "Trūkstamas ID"
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/growtype-quiz-admin-statistic.php:51
+msgid "Most popular answers"
+msgstr "Populiariausias atsakymas"
+
+#: ../../../../../../packages/plugins/growtype-quiz/includes/helpers/general.php:150
 msgid "Next question"
 msgstr "Toliau"
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:138
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:137
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:137
 msgid "No items found."
 msgstr "Elementų nerasta."
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:103
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:101
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:101
 msgid "Questions amount"
 msgstr "Klausimų kiekis"
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:328
+#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:353
 msgid "Quiz"
 msgstr "Viktorina"
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:100
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:98
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:98
 msgid "Quiz ID"
 msgstr "Viktorinos ID"
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:318
+#: ../../../../../../packages/plugins/growtype-quiz/includes/class-growtype-quiz.php:343
 msgid "Quizes"
 msgstr "Viktorinos"
 
@@ -145,22 +189,30 @@ msgstr "Viktorinos"
 msgid "Results"
 msgstr "Rezultatai"
 
-#: ../../../../../../packages/plugins/growtype-quiz/includes/methods/shortcodes/class-growtype-quiz-input.php:29
-msgid "Select an image"
-msgstr "Įkelti nuotrauką"
+#: ../../../../../../packages/plugins/growtype-quiz/resources/views/result/index.php:1
+msgid "Results page"
+msgstr "Rezultatų puslapis"
 
-#: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/sections/content.php:111
+#: ../../../../../../packages/plugins/growtype-quiz/includes/helpers/general.php:148
 msgid "Start"
 msgstr "Pradėti"
+
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/growtype-quiz-admin-statistic.php:27
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/growtype-quiz-admin-statistic.php:28
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/growtype-quiz-admin-statistic.php:56
+msgid "Statistics"
+msgstr "Statistika"
 
 #: ../../../../../../packages/plugins/growtype-quiz/resources/views/quiz/partials/components/question-nr.php:6
 msgid "steps"
 msgstr "žingsniai"
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:108
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:107
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:107
 msgid "Updated at"
 msgstr "Atnaujinta"
 
-#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:99
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/result/table/growtype-quiz-admin-result-list-table.php:97
+#: ../../../../../../packages/plugins/growtype-quiz/admin/methods/statistic/table/growtype-quiz-admin-result-list-table.php:97
 msgid "User ID"
 msgstr "Vartotojo ID"

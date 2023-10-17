@@ -45,24 +45,24 @@ if ($quiz_data['iframe_hide_header_footer']) {
                         <?php $disabled = growtype_quiz_question_is_disabled($question); ?>
 
                         <?php if (!$disabled) { ?>
-                            <div class="growtype-quiz-question <?php echo $index === 0 ? 'first-question' : '' ?> <?php echo ($question['is_visible'] && $question['always_visible']) ? 'is-always-visible' : '' ?> <?php echo $question['is_visible'] ? 'is-visible' : '' ?> <?php echo $question['has_custom_class'] ? $question['custom_class'] : '' ?>"
+                            <div class="growtype-quiz-question <?php echo $index === 0 ? 'first-question' : '' ?> <?php echo isset($question['is_visible']) && $question['is_visible'] && $question['always_visible'] ? 'is-always-visible' : '' ?> <?php echo isset($question['is_visible']) && $question['is_visible'] ? 'is-visible' : '' ?> <?php echo isset($question['has_custom_class']) && $question['has_custom_class'] ? $question['custom_class'] : '' ?>"
                                  data-key="<?php echo !empty($question['key']) ? $question['key'] : 'question_' . ($index + 1) ?>"
                                  data-question-nr="<?php echo $key + 1 ?>"
                                  data-question-type="<?php echo $question['question_type'] ?>"
-                                 data-question-style="<?php echo $question['question_style'] ?>"
+                                 data-question-style="<?php echo isset($question['question_style']) ? $question['question_style'] : '' ?>"
                                  data-answer-type="<?php echo !is_array($question['answer_type']) ? $question['answer_type'] : '' ?>"
                                  data-answers-limit="<?php echo isset($question['answers_limit']) && !empty($question['answers_limit']) ? $question['answers_limit'] : '' ?>"
-                                 data-answer-style="<?php echo $question['answer_style'] ?>"
+                                 data-answer-style="<?php echo isset($question['answer_style']) ? $question['answer_style'] : '' ?>"
                                  data-funnel="<?php echo $question['funnel'] ?>"
-                                 data-funnel-conditional="<?php echo $question['funnel_conditional'] ?>"
+                                 data-funnel-conditional="<?php echo isset($question['funnel_conditional']) ? $question['funnel_conditional'] : '' ?>"
                                  data-hint="<?php echo $question['has_a_hint'] ?>"
-                                 data-hide-footer="<?php echo $question['hide_footer'] ? 'true' : 'false' ?>"
-                                 data-question-title="<?php echo $question['question_title'] ?>"
-                                 data-answer-required="<?php echo $question['not_required'] ? 'false' : 'true' ?>"
-                                 data-hide-back-button="<?php echo $question['hide_back_button'] ? 'true' : 'false' ?>"
-                                 data-hide-next-button="<?php echo $question['hide_next_button'] ? 'true' : 'false' ?>"
-                                 data-hide-progressbar="<?php echo $question['hide_progress_bar'] ? 'true' : 'false' ?>"
-                                 data-disabled-if="<?php echo $question['disabled_if'] ?>"
+                                 data-hide-footer="<?php echo isset($question['hide_footer']) && $question['hide_footer'] ? 'true' : 'false' ?>"
+                                 data-question-title="<?php echo isset($question['question_title']) ? $question['question_title'] : '' ?>"
+                                 data-answer-required="<?php echo isset($question['not_required']) && $question['not_required'] ? 'false' : 'true' ?>"
+                                 data-hide-back-button="<?php echo isset($question['hide_back_button']) && $question['hide_back_button'] ? 'true' : 'false' ?>"
+                                 data-hide-next-button="<?php echo isset($question['hide_next_button']) && $question['hide_next_button'] ? 'true' : 'false' ?>"
+                                 data-hide-progressbar="<?php echo isset($question['hide_progress_bar']) && $question['hide_progress_bar'] ? 'true' : 'false' ?>"
+                                 data-disabled-if="<?php echo isset($question['disabled_if']) && $question['disabled_if'] ?>"
                             >
                                 <div class="growtype-quiz-question-inner">
                                     <?php if (!empty($question['featured_image'])) { ?>
@@ -74,7 +74,9 @@ if ($quiz_data['iframe_hide_header_footer']) {
                                         </div>
                                     <?php } ?>
                                     <div class="growtype-quiz-main-content-wrapper">
-                                        <?php if ($question['has_intro'] && isset($question['intro'])) { ?>
+                                        <?php
+                                        $has_intro = isset($question['has_intro']) ? $question['has_intro'] : true;
+                                        if ($has_intro && isset($question['intro'])) { ?>
                                             <div class="growtype-quiz-question-intro">
                                                 <?php echo $question['intro'] ?>
                                             </div>
