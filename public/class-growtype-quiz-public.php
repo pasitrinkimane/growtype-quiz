@@ -100,8 +100,8 @@ class Growtype_Quiz_Public
                     }
                 }
 
-                $localize_data['show_correct_answer'] = $quiz_data['show_correct_answer'] === false ? 'false' : 'true';
-                $localize_data['show_question_nr_in_url'] = $quiz_data['show_question_nr_in_url'] === false ? 'false' : 'true';
+                $localize_data['show_correct_answer'] = $quiz_data['show_correct_answer'] ? true : false;
+                $localize_data['show_question_nr_in_url'] = $quiz_data['show_question_nr_in_url'] ? true : false;
                 $localize_data['correct_answer_trigger'] = $quiz_data['correct_answer_trigger'];
                 $localize_data['save_data_on_load'] = $quiz_data['save_data_on_load'];
                 $localize_data['save_answers'] = $quiz_data['save_answers'] === false ? 'false' : 'true';

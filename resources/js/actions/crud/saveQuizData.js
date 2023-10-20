@@ -80,7 +80,7 @@ function saveQuizData(data) {
         error: function (data) {
             if (showLastQuestionOnError) {
                 showLastQuestion(answers, false);
-            } else if (data['responseJSON']['message'] !== undefined) {
+            } else if (data['responseJSON'] && data['responseJSON']['message'] !== undefined) {
                 console.error(data['responseJSON']['message']);
             }
 

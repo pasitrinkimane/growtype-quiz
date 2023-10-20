@@ -193,7 +193,7 @@ export function showNextQuestion(currentQuestion) {
          */
         let finishLabel = $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-finish');
 
-        if (window.growtype_quiz_global.current_question_nr === window.quizQuestionsAmount - 1 && finishLabel.length > 0) {
+        if (parseInt(window.growtype_quiz_global.current_question_nr) === parseInt(window.quizQuestionsAmount) && finishLabel.length > 0) {
             $(this).closest('.growtype-quiz').find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(finishLabel);
         }
 
@@ -231,7 +231,10 @@ export function showNextQuestion(currentQuestion) {
 
                 $('.growtype-quiz-nav .btn').attr('disabled', false);
             });
-            window.scrollTo(0, 0);
+
+            // $([document.documentElement, document.body]).animate({
+            //     scrollTop: $(".growtype-quiz").offset().top
+            // }, 100);
         }
 
         updateQuizComponents(nextQuestion);

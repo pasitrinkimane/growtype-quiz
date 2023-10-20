@@ -1,7 +1,6 @@
 .growtype-quiz-question[data-question-style="horizontal"] {
   margin-bottom: 40px;
   border-radius: 10px;
-  overflow: hidden;
   position: relative;
   z-index: 1;
 
@@ -11,15 +10,7 @@
 
   .growtype-quiz-main-content-wrapper {
     flex-direction: column;
-    padding-top: 45px;
-    padding-left: 30px;
-    padding-bottom: 40px;
     width: 100%;
-    @include bp-phone-xl() {
-      padding-left: 20px;
-      padding-right: 20px;
-      padding-top: 20px;
-    }
   }
 
   &[data-question-type="success"] {

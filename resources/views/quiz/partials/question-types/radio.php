@@ -9,7 +9,6 @@
                              data-value="<?php echo isset($option['value']) && !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']) ?>"
                              data-extra-value="<?php echo isset($option['extra_value']) ? $option['extra_value'] : '' ?>"
                              data-cor="<?php echo isset($quiz_data['show_correct_answer']) && $quiz_data['show_correct_answer'] ? $option['correct'] : '' ?>"
-                             data-cor-trigger="<?php echo $quiz_data['correct_answer_trigger'] ?>"
                              data-default-belongs-to="<?php echo isset($option['default_belongs_to']) ? $option['default_belongs_to'] : '' ?>"
                              data-url="<?php echo isset($question['has_url']) && $question['has_url'] && !empty($option['url']) ? $option['url'] : '' ?>"
                              data-funnel="<?php echo isset($option['next_funnel']) ? $option['next_funnel'] : '' ?>"

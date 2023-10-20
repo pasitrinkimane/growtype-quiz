@@ -30,7 +30,7 @@ export function collectQuizData(currentQuestion) {
     }
 
     /**
-     * Collect correctly answered
+     * Collect correct answers
      */
     if ($('.growtype-quiz-wrapper[data-quiz-type="scored"]').length > 0 && currentQuestionType !== 'open') {
         let correctAnswer = true;

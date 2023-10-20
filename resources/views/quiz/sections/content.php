@@ -4,7 +4,11 @@ if ($quiz_data['iframe_hide_header_footer']) {
 }
 ?>
 
-<div class="growtype-quiz-wrapper" data-quiz-id="<?php echo $quiz_data['quiz_id'] ?>" data-quiz-type="<?php echo $quiz_data['quiz_type'] ?>">
+<div class="growtype-quiz-wrapper"
+     data-quiz-id="<?php echo $quiz_data['quiz_id'] ?>"
+     data-quiz-type="<?php echo $quiz_data['quiz_type'] ?>"
+     data-cor-trigger="<?php echo $quiz_data['correct_answer_trigger'] ?>"
+>
     <?php if (!empty($quiz_data['intro_content']) || !empty($quiz_data['intro_f_img'])) { ?>
         <section class="s-intro" style="background:url(<?php echo $quiz_data['intro_f_img']; ?>);background-size: cover;background-position: center;background-repeat: no-repeat;">
             <div class="container">

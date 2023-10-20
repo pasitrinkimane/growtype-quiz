@@ -87,5 +87,7 @@ function initQuestion(currentQuestion, previousQuestion) {
         window.quizBackBtnWasClicked = false;
     });
 
-    window.scrollTo(0, 0);
+    // $([document.documentElement, document.body]).animate({
+    //     scrollTop: $(".growtype-quiz").offset().top
+    // }, 100);
 }

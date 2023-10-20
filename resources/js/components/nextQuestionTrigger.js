@@ -4,8 +4,14 @@ import {validateQuestionEvent} from './../events/validateQuestionEvent';
 import {collectQuizData} from "../actions/crud/collectQuizData";
 
 export function nextQuestionTrigger() {
+    let defaultInitialQuestion = $('.growtype-quiz-question.first-question')
+
     $('.growtype-quiz .growtype-quiz-btn-go-next').click(function () {
         let currentQuestion = $('.growtype-quiz-question.is-active');
+
+        if (currentQuestion.length === 0) {
+            currentQuestion = defaultInitialQuestion;
+        }
 
         let isValidQuestion = currentQuestion.attr('data-answer-required') === 'false';
 

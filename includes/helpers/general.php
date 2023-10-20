@@ -233,7 +233,7 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
             $quiz_data['quiz_type'] = get_field('quiz_type', $quiz_id);
             $quiz_data['is_enabled'] = get_field('is_enabled', $quiz_id) ?? false;
             $quiz_data['save_answers'] = get_field('save_answers', $quiz_id);
-            $quiz_data['show_correct_answer'] = get_field('show_correct_answer', $quiz_id);
+            $quiz_data['show_correct_answer'] = get_field('show_correct_answer', $quiz_id) ? true : false;
             $quiz_data['correct_answer_trigger'] = get_field('correct_answer_trigger', $quiz_id);
             $quiz_data['slide_counter'] = get_field('slide_counter', $quiz_id);
             $quiz_data['slide_counter_position'] = get_field('slide_counter_position', $quiz_id);
@@ -250,8 +250,8 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
             $quiz_data['hide_progress_bar'] = get_field('hide_progress_bar', $quiz_id);
             $quiz_data['hide_progress_bar'] = !empty($quiz_data['hide_progress_bar']) ? $quiz_data['hide_progress_bar'] : false;
 
-            $quiz_data['show_question_nr_in_url'] = get_field('show_question_nr_in_url', $quiz_id);
-            $quiz_data['show_question_nr_in_url'] = !empty($quiz_data['show_question_nr_in_url']) ? $quiz_data['show_question_nr_in_url'] : false;
+            $quiz_data['show_question_nr_in_url'] = get_field('show_question_nr_in_url', $quiz_id) ? true : false;
+            $quiz_data['show_question_nr_in_url'] = !empty($quiz_data['show_question_nr_in_url']) && $quiz_data['show_question_nr_in_url'] ? true : false;
         }
 
         $quiz_data = apply_filters('growtype_quiz_get_quiz_data', $quiz_data, $quiz_id);

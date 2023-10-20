@@ -5,6 +5,22 @@ export function restartQuizTrigger() {
         event.preventDefault();
 
         window.growtype_quiz_global.is_finished = false;
+        window.growtype_quiz_global.was_restarted = true;
+
+        /**
+         * Show correct answers
+         */
+        if (growtype_quiz_local.show_correct_answer && growtype_quiz_local.correct_answer_trigger === 'on_restart') {
+            $('.growtype-quiz-question').map(function (index, element) {
+                $(element).find('.growtype-quiz-question-answer').map(function (index, element) {
+                    if ($(element).attr('data-cor') !== '1') {
+                        $(element).addClass('is-wrong')
+                    } else {
+                        $(element).addClass('is-correct')
+                    }
+                });
+            })
+        }
 
         $('.growtype-quiz-nav .btn').attr('disabled', false)
 

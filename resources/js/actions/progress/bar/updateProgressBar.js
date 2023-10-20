@@ -7,7 +7,7 @@ let progressbarStepWidth = 0;
 export function updateProgressBar() {
     let progressBar = $('.growtype-quiz-progressbar');
     let questionsAmount = window.quizCountedQuestionsAmount;
-    let questionsCounterNr = window.growtype_quiz_global.current_question_counter_nr;
+    let questionsCounterNr = window.growtype_quiz_global.current_question_counter_nr - 1;
     let chapters = $('.growtype-quiz-question.chapter-start').length
 
     if (progressBar.length === 0 || questionsCounterNr === 0) {
