@@ -50,7 +50,7 @@ if ($quiz_data['iframe_hide_header_footer']) {
 
                         <?php if (!$disabled) { ?>
                             <div class="growtype-quiz-question <?php echo $index === 0 ? 'first-question' : '' ?> <?php echo isset($question['is_visible']) && $question['is_visible'] && $question['always_visible'] ? 'is-always-visible' : '' ?> <?php echo isset($question['is_visible']) && $question['is_visible'] ? 'is-visible' : '' ?> <?php echo isset($question['has_custom_class']) && $question['has_custom_class'] ? $question['custom_class'] : '' ?>"
-                                 data-key="<?php echo !empty($question['key']) ? $question['key'] : 'question_' . ($index + 1) ?>"
+                                 data-key="<?php echo $question['key'] ?>"
                                  data-question-nr="<?php echo $key + 1 ?>"
                                  data-question-type="<?php echo $question['question_type'] ?>"
                                  data-question-style="<?php echo isset($question['question_style']) ? $question['question_style'] : '' ?>"

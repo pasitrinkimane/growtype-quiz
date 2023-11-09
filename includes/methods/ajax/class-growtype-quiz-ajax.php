@@ -20,6 +20,12 @@ class Growtype_Quiz_Ajax
          */
         add_action('wp_ajax_growtype_quiz_update_extra_details', array ($this, 'growtype_quiz_update_extra_details_handler'));
         add_action('wp_ajax_nopriv_growtype_quiz_update_extra_details', array ($this, 'growtype_quiz_update_extra_details_handler'));
+
+        /**
+         * Ajax evaluate quiz open question
+         */
+        add_action('wp_ajax_growtype_quiz_evaluate_open_question', array ($this, 'growtype_quiz_evaluate_open_question_handler'));
+        add_action('wp_ajax_nopriv_growtype_quiz_evaluate_open_question', array ($this, 'growtype_quiz_evaluate_open_question_handler'));
     }
 
     /**
@@ -106,9 +112,9 @@ class Growtype_Quiz_Ajax
          */
         $updated_quiz_data = $this->result_crud->save_quiz_results_data($quiz_data);
 
-        $success_url = class_exists('ACF') ? get_field('success_url', $quiz_data['quiz_id']) : '';
-
         if (!empty($updated_quiz_data)) {
+            $success_url = class_exists('ACF') ? get_field('success_url', $quiz_data['quiz_id']) : '';
+
             return wp_send_json([
                 'success' => true,
                 'redirect_url' => $success_url,
@@ -150,7 +156,9 @@ class Growtype_Quiz_Ajax
         $quiz_result = Growtype_Quiz_Result_Crud::get_quiz_single_result_data_by_unique_hash($unique_hash);
 
         if (empty($quiz_result)) {
-            return false;
+            return wp_send_json([
+                'success' => false,
+            ]);
         }
 
         if (!empty($quiz_result['extra_details'])) {
@@ -164,5 +172,42 @@ class Growtype_Quiz_Ajax
         return wp_send_json([
             'success' => true,
         ]);
+    }
+
+    /**
+     * @return null
+     */
+    function growtype_quiz_evaluate_open_question_handler()
+    {
+        $answers = isset($_POST['answers']) ? $_POST['answers'] : null;
+        $quiz_id = isset($_POST['quiz_id']) ? $_POST['quiz_id'] : null;
+
+        if (empty($quiz_id) || empty($answers)) {
+            return wp_send_json([
+                'success' => false
+            ], 400);
+        }
+
+        foreach ($answers as $id => $answer) {
+            $results_data = Growtype_Quiz_Result_Crud::get_quiz_single_result_data($id);
+            $correct_answers_amount = $results_data['correct_answers_amount'];
+            $wrong_answers_amount = $results_data['wrong_answers_amount'];
+
+            if ($answer === 'true') {
+                $correct_answers_amount = $correct_answers_amount + 1;
+            } else {
+                $wrong_answers_amount = $wrong_answers_amount + 1;
+            }
+
+            Growtype_Quiz_Result_Crud::update_quiz_single_result($id, [
+                'correct_answers_amount' => $correct_answers_amount,
+                'wrong_answers_amount' => $wrong_answers_amount,
+                'evaluated' => true,
+            ]);
+        }
+
+        return wp_send_json([
+            'success' => true
+        ], 200);
     }
 }

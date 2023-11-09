@@ -602,23 +602,20 @@
                         "class": "",
                         "id": ""
                     },
-                    "aria-label": "",
-                    "wpml_cf_preferences": 1,
                     "choices": {
                         "general": "Basic (for basic option)",
                         "radio": "Checkbox (for checklist)",
-                        "open": "Textarea (for open question)",
+                        "open": "Open (text input)",
                         "info": "Info (for general content)",
                         "success": "Success (for success message)"
                     },
                     "default_value": false,
-                    "return_format": "value",
-                    "multiple": 0,
                     "allow_null": 0,
+                    "multiple": 0,
                     "ui": 0,
+                    "return_format": "value",
                     "ajax": 0,
-                    "placeholder": "",
-                    "parent_repeater": "field_612fd1d367718"
+                    "placeholder": ""
                 },
                 {
                     "key": "field_62e174c033739",
@@ -657,32 +654,17 @@
                     "type": "true_false",
                     "instructions": "",
                     "required": 0,
-                    "conditional_logic": [
-                        [
-                            {
-                                "field": "field_61311541308e6",
-                                "operator": "!=",
-                                "value": "success"
-                            },
-                            {
-                                "field": "field_61311541308e6",
-                                "operator": "!=",
-                                "value": "open"
-                            }
-                        ]
-                    ],
+                    "conditional_logic": 0,
                     "wrapper": {
                         "width": "10",
                         "class": "",
                         "id": ""
                     },
-                    "aria-label": "",
                     "message": "",
                     "default_value": 0,
                     "ui": 0,
                     "ui_on_text": "",
-                    "ui_off_text": "",
-                    "parent_repeater": "field_612fd1d367718"
+                    "ui_off_text": ""
                 },
                 {
                     "key": "field_612fd1e367719",
@@ -1805,5 +1787,5 @@
     ],
     "active": true,
     "description": "",
-    "modified": 1697551675
+    "modified": 1698303005
 }

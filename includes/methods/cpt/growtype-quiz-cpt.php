@@ -81,6 +81,8 @@ class Growtype_Quiz_Cpt
         $quiz_results_table_name = Growtype_Quiz_Result_Crud::table_name();
 
         if ($wpdb->get_var("SHOW TABLES LIKE '$quiz_results_table_name'") != $quiz_results_table_name) {
+            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
             $charset_collate = $wpdb->get_charset_collate();
 
             $sql = "CREATE TABLE IF NOT EXISTS $quiz_results_table_name (
@@ -99,10 +101,11 @@ class Growtype_Quiz_Cpt
       ip_address TEXT DEFAULT NULL,
       created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      PRIMARY KEY id (id)
+      PRIMARY KEY id (id),
+      UNIQUE KEY user_id (user_id),
+      UNIQUE KEY quiz_id (quiz_id)
     ) $charset_collate;";
 
-            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
             dbDelta($sql);
         }
     }
@@ -118,13 +121,9 @@ class Growtype_Quiz_Cpt
      */
     public static function single_template_loader($template)
     {
-        if (get_post_type() === Growtype_Quiz::get_growtype_quiz_post_type()) {
-            $template = growtype_quiz_include_view('quiz.index', [], true);
-        }
-
         $extra_post_types = Growtype_Quiz::get_growtype_extra_post_types();
 
-        if (in_array(get_post_type(), $extra_post_types)) {
+        if (get_post_type() === Growtype_Quiz::get_growtype_quiz_post_type() || in_array(get_post_type(), $extra_post_types)) {
             $template = growtype_quiz_include_view('quiz.index', [], true);
         }
 

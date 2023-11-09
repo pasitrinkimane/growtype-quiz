@@ -93,8 +93,7 @@ class Growtype_Quiz_Result_Crud
         $table_name = self::table_name();
 
         if (is_user_logged_in()) {
-            $current_user = wp_get_current_user();
-            $quiz_data['user_id'] = $current_user->ID;
+            $quiz_data['user_id'] = get_current_user_id();
         }
 
         $quiz_id = isset($quiz_data['quiz_id']) ? $quiz_data['quiz_id'] : null;
@@ -113,7 +112,7 @@ class Growtype_Quiz_Result_Crud
         $insert_values = $this->get_insert_values_from_quiz_data($quiz_data);
 
         $insert_data = [
-            'user_id' => $insert_values['user_id'],
+            'user_id' => isset($insert_values['user_id']) && !empty($insert_values['user_id']) ? $insert_values['user_id'] : 0,
             'quiz_id' => $insert_values['quiz_id'],
             'answers' => $insert_values['answers'],
             'duration' => $insert_values['duration'],
@@ -130,8 +129,10 @@ class Growtype_Quiz_Result_Crud
 
         $data_insert = $wpdb->insert($table_name, $insert_data);
 
-        if (is_wp_error($data_insert)) {
-            return false;
+        if (!$data_insert || is_wp_error($data_insert)) {
+            //        $wpdb->print_error();
+
+            return null;
         }
 
         return $insert_data;
@@ -363,5 +364,3 @@ class Growtype_Quiz_Result_Crud
         ];
     }
 }
-
-

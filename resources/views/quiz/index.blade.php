@@ -7,7 +7,11 @@
 @endsection
 
 @section('content')
-    <?php include(GROWTYPE_QUIZ_PATH . 'resources/views/quiz/sections/content.php') ?>
+    <?php if (growtype_quiz_is_enabled()) {
+        echo growtype_quiz_include_view('quiz.sections.content', ['quiz_data' => $quiz_data]);
+    } else {
+        echo growtype_quiz_include_view('quiz.sections.content-disabled', ['quiz_data' => $quiz_data]);
+    } ?>
 @endsection
 
 @section('footer')
