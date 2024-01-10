@@ -3,7 +3,7 @@ import {open} from "./type/open";
 import {general} from "./type/general";
 import {input} from "./type/input";
 
-document.addEventListener('validateQuestion', validateQuestion)
+document.addEventListener('growtypeQuizValidateQuestion', validateQuestion)
 
 export function validateQuestion() {
     let isValid = true;

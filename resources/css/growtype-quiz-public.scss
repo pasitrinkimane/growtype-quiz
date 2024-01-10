@@ -8,7 +8,9 @@
   @import "components/timer";
   @import "components/input";
   @import "components/btn";
+  @import "components/answer";
   @import "components/loader";
+  @import "components/measurements";
 
   @import "question-types/open";
   @import "question-types/radio";
@@ -17,7 +19,7 @@
 
   @import "question-styles/horizontal-intro-select";
   @import "question-styles/horizontal-featured-select";
-  @import "question-styles/horizontal";
+  @import "question-styles/general";
 
   .s-intro {
     width: 100%;
@@ -62,6 +64,9 @@
     width: 100%;
     max-width: 1200px;
     margin: auto;
+    @include bp-phone-xl() {
+      padding-top: 0;
+    }
 
     .growtype-quiz-question-intro {
       p {
@@ -89,7 +94,7 @@
     box-shadow: 0px 0px 54px -30px rgb(0 0 0 / 35%);
     min-height: 300px;
     @include bp-phone-xl() {
-      padding: 30px 25px;
+      padding: 20px 15px;
     }
 
     .growtype-quiz-question-answers {
@@ -98,8 +103,13 @@
     }
 
     .growtype-quiz-header {
-      padding-bottom: 20px;
+      padding-bottom: 50px;
       display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      @include bp-phone-xl() {
+        padding-bottom: 25px;
+      }
 
       .growtype-quiz-question-nr {
         margin-left: auto;
@@ -140,7 +150,7 @@
       }
     }
 
-    &[data-question-style="horizontal"] {
+    &[data-question-style="general"] {
       .growtype-quiz-question-answers {
         display: flex;
         justify-content: center;
@@ -211,6 +221,10 @@
       }
 
       .growtype-quiz-btn-go-back {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
         .icon-arrow {
           transform: rotate(180deg);
           margin-right: 10px;
@@ -246,9 +260,19 @@
     }
   }
 
+  .growtype-quiz-header {
+    .growtype-quiz-nav-inner {
+      margin-top: 0;
+    }
+  }
+
   .anim-wrong-selection {
     animation: growtype-quiz-wrong-answer 0.5s infinite;
   }
+}
+
+.growtype-quiz-wrapper .growtype-quiz-nav[data-first-question-answer-type="single_instant"] .growtype-quiz-nav-inner .btn {
+  display: none;
 }
 
 @keyframes growtype-quiz-wrong-answer {

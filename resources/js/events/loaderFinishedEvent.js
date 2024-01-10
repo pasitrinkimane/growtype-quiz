@@ -1,5 +1,5 @@
-let loaderFinished = new Event('loaderFinished');
-
-export function loaderFinishedEvent() {
-    return loaderFinished;
+export function loaderFinishedEvent(params) {
+    return new CustomEvent("growtypeQuizLoaderFinished", {
+        detail: params
+    });
 }

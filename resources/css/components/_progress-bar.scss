@@ -1,5 +1,5 @@
 .growtype-quiz-progressbar {
-  height: 10px;
+  height: 6px;
   width: 100%;
   background: grey;
   position: relative;
@@ -7,7 +7,7 @@
   overflow: hidden;
 
   .growtype-quiz-progressbar-inner {
-    background: blue;
+    background: var(--theme-color);
     position: absolute;
     left: 0;
     top: 0;

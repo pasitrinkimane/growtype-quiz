@@ -1,6 +1,7 @@
 import {validateQuestion} from "../listeners/validation/validateQuestion";
 
 export function input() {
+
     /**
      * File
      */
@@ -45,7 +46,7 @@ export function input() {
         }
     });
 
-    $('.growtype-quiz-input-wrapper input').on('keyup', function () {
+    $('.growtype-quiz-input-wrapper input, .growtype-quiz-input-wrapper textarea').on('keyup', function () {
         validateQuestion();
     });
 

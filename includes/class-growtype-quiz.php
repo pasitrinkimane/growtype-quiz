@@ -31,6 +31,8 @@ class Growtype_Quiz
 {
     const TYPE_SCORED = 'scored';
     const TYPE_POLL = 'poll';
+    const TYPE_GENERAL = 'general';
+    const STYLE_GENERAL = 'general';
 
     /**
      * The loader that's responsible for maintaining and registering all hooks that power

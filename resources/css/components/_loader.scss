@@ -1,0 +1,80 @@
+.growtype-quiz-loader-wrapper {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &[data-redirect="true"] {
+    .btn-continue {
+      display: none;
+    }
+  }
+
+  .growtype-quiz-loader-bar {
+    background: white;
+    height: 7px;
+    min-width: 300px;
+    margin-bottom: 20px;
+
+    .growtype-quiz-loader-bar-inner {
+      background: black;
+      height: 7px;
+      width: 0;
+    }
+  }
+
+  .growtype-quiz-loader-content {
+    .e-heading {
+      margin-bottom: 20px;
+      font-size: 34px;
+    }
+
+    .e-content {
+      max-width: 400px;
+      margin-bottom: 30px;
+
+      &:empty {
+        display: none;
+      }
+    }
+  }
+
+  /*Required CSS*/
+  svg.radial-progress {
+    height: auto;
+    max-width: 240px;
+    padding: 0;
+    transform: rotate(-90deg);
+    width: 100%;
+    //background-image: linear-gradient(-225deg, #FF057C 0%, var(--theme-color) 50%, #321575 100%);
+    background: var(--theme-color);
+    border-radius: 50%;
+  }
+
+  svg.radial-progress circle {
+    fill: transparent;
+    stroke: #fff;
+  }
+
+  svg.radial-progress circle.bar-static {
+    stroke: #fafafa !important;
+  }
+
+  svg.radial-progress circle.bar--animated {
+    stroke-dasharray: 219.91148575129;
+    stroke: #ffffff;
+    stroke-dashoffset: 219.91148575129;
+    stroke-width: 4px;
+    stroke-linecap: round;
+  }
+
+  svg.radial-progress text {
+    fill: #fafafa;
+    font-size: 16px;
+    font-weight: 700;
+    text-anchor: middle;
+    text-shadow: 0 0 5px #0000007a;
+  }
+}

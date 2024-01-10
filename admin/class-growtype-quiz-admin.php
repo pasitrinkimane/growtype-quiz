@@ -81,6 +81,11 @@ class Growtype_Quiz_Admin
     private function load_settings()
     {
         /**
+         * Appearance
+         */
+        require_once GROWTYPE_QUIZ_PATH . 'admin/appearance/customizer/index.php';
+
+        /**
          * Settings
          */
         require_once GROWTYPE_QUIZ_PATH . 'admin/methods/setting/growtype-quiz-admin-setting.php';

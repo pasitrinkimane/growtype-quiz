@@ -48,11 +48,11 @@ export function collectQuizData(currentQuestion) {
     }
 
     /**
-     * Collect file inputs data
+     * Collect inputs data
      */
-    if (currentQuestion.find('input[required]').length > 0) {
+    if (currentQuestion.find('input:visible,textarea:visible').length > 0) {
         let formData = new FormData();
-        currentQuestion.find('input[required]').each(function (index, element) {
+        currentQuestion.find('input:visible,textarea:visible').each(function (index, element) {
             if ($(element).attr('type') === 'file') {
                 formData.append($(element).attr('name') + '-' + currentQuestionKey + '-' + index, $(element)[0].files[0]);
                 window.growtype_quiz_global.files = formData
@@ -75,6 +75,13 @@ export function collectQuizData(currentQuestion) {
             keyExists = true;
         }
     })
+
+    /**
+     * Save unit system
+     */
+    if (currentQuestion.find('.unitsystem-selector-item.is-active:visible').length > 0) {
+        answers['unit_system'] = currentQuestion.find('.unitsystem-selector-item.is-active').attr('data-type');
+    }
 
     sessionStorage.setItem('growtype_quiz_answers', JSON.stringify(answers));
 

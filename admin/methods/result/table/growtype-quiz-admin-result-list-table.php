@@ -103,6 +103,7 @@ class Growtype_Quiz_Admin_Result_List_Table extends WP_List_Table
             'wrong_answers_amount' => __('Correct answers amount', 'growtype-quiz'),
             'evaluated' => __('Evaluated', 'growtype-quiz'),
             'extra_details' => __('Extra details', 'growtype-quiz'),
+            'unique_hash' => __('Unique hash', 'growtype-quiz'),
             'created_at' => __('Created at', 'growtype-quiz'),
             'updated_at' => __('Updated at', 'growtype-quiz'),
         ));
@@ -207,6 +208,15 @@ class Growtype_Quiz_Admin_Result_List_Table extends WP_List_Table
     public function column_answers($row = null)
     {
         echo $row['answers'];
+    }
+
+    /**
+     * @param $row
+     * @return void
+     */
+    public function column_quiz_id($row = null)
+    {
+        echo $row['quiz_id'] . ' (' . get_the_title($row['quiz_id']) . ')';
     }
 
     /**

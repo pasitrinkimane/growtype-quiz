@@ -3,10 +3,23 @@
     <?php if (!empty($question['options_all'])) { ?>
         <div class="growtype-quiz-question-answers-wrapper">
             <div class="growtype-quiz-question-answers">
-                <?php foreach ($question['options_all'] as $option) { ?>
+                <?php foreach ($question['options_all'] as $option) {
+                    $question_value = isset($option['value']) && !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']);
+                    $classes = ['growtype-quiz-question-answer'];
+
+                    if (isset($option['default']) && $option['default']) {
+                        $classes[] = 'is-active';
+                    }
+
+                    if (isset($option['class']) && !empty($option['class'])) {
+                        $classes[] = $option['class'];
+                    }
+
+                    $classes = implode(' ', $classes);
+                    ?>
                     <div class="growtype-quiz-question-answer-wrapper">
-                        <div class="growtype-quiz-question-answer <?php echo isset($option['default']) && $option['default'] ? 'is-active' : '' ?>"
-                             data-value="<?php echo isset($option['value']) && !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']) ?>"
+                        <div class="<?php echo $classes ?>"
+                             data-value="<?php echo $question_value ?>"
                              data-extra-value="<?php echo isset($option['extra_value']) ? $option['extra_value'] : '' ?>"
                              data-cor="<?php echo isset($quiz_data['show_correct_answer']) && $quiz_data['show_correct_answer'] ? $option['correct'] : '' ?>"
                              data-default-belongs-to="<?php echo isset($option['default_belongs_to']) ? $option['default_belongs_to'] : '' ?>"
@@ -15,24 +28,47 @@
                              data-img-url="<?php echo isset($option['featured_image']['sizes']['large']) ? $option['featured_image']['sizes']['large'] : '' ?>"
                              data-option-featured-img-main="<?php echo isset($question['option_featured_image_as_main']) && $question['option_featured_image_as_main'] ? 'true' : 'false' ?>"
                         >
-                            <?php if (isset($question['option_featured_image_as_main']) && !$question['option_featured_image_as_main'] && !empty($option['featured_image'])) { ?>
-                                <?php
-                                $f_img = $question['options_has_featured_images'] && isset($option['featured_image']['url']) ? $option['featured_image']['url'] : '';
-                                if (!empty($f_img)) {
-                                    $ext = pathinfo($f_img, PATHINFO_EXTENSION);
-                                    if ($ext === 'svg') { ?>
-                                        <div class="e-img">
-                                            <?php echo growtype_quiz_render_svg($f_img); ?>
-                                        </div>
-                                    <?php } else { ?>
-                                        <div class="e-img" style="background:url(<?php echo $f_img ?>);background-position: center;background-size: cover;background-repeat: no-repeat;"></div>
+                            <div class="growtype-quiz-question-answer-content">
+                                <?php if (isset($question['option_featured_image_as_main']) && !$question['option_featured_image_as_main'] && !empty($option['featured_image'])) { ?>
+                                    <?php
+                                    $f_img = $question['options_has_featured_images'] && isset($option['featured_image']['url']) ? $option['featured_image']['url'] : '';
+                                    if (!empty($f_img)) {
+                                        $ext = pathinfo($f_img, PATHINFO_EXTENSION);
+                                        if ($ext === 'svg') { ?>
+                                            <div class="e-img">
+                                                <?php echo growtype_quiz_render_svg($f_img); ?>
+                                            </div>
+                                        <?php } else { ?>
+                                            <div class="e-img" style="background:url(<?php echo $f_img ?>);background-position: center;background-size: cover;background-repeat: no-repeat;"></div>
+                                        <?php } ?>
                                     <?php } ?>
                                 <?php } ?>
-                            <?php } ?>
-                            <div class="e-radio-wrapper">
-                                <div class="e-radio"></div>
+                                <div class="e-radio-wrapper">
+                                    <div class="e-radio"></div>
+                                </div>
+                                <div class="e-label">
+                                    <span><?php echo $option['label'] ?></span>
+                                    <?php if (isset($option['sub_label']) && !empty($option['sub_label'])) { ?>
+                                        <p class="e-sublabel"><?php echo $option['sub_label'] ?></p>
+                                    <?php } ?>
+                                </div>
+                                <div class="e-icon-check">
+                                    <span class="dashicons dashicons-saved"></span>
+                                </div>
                             </div>
-                            <label><?php echo $option['label'] ?></label>
+                            <?php if (isset($option['answer_input']) && !empty($option['answer_input'])) { ?>
+                                <div class="input-wrapper input-other">
+                                    <textarea
+                                        class="input"
+                                        type="<?php echo isset($option['answer_input']['type']) ? $option['answer_input']['type'] : 'text' ?>"
+                                        name="<?php echo isset($option['answer_input']['name']) && !empty($option['answer_input']['name']) ? $option['answer_input']['name'] : $question_value ?>"
+                                        placeholder="<?php echo isset($option['answer_input']['placeholder']) ? $option['answer_input']['placeholder'] : '' ?>"
+                                        required
+                                        rows="2"
+                                        cols="10"
+                                    ></textarea>
+                                </div>
+                            <?php } ?>
                         </div>
                     </div>
                 <?php } ?>

@@ -1,4 +1,12 @@
 .growtype-quiz-question {
+  &[data-answer-style="radio"] {
+    .growtype-quiz-question-answer {
+      &.is-active {
+        border-color: black;
+      }
+    }
+  }
+
   &[data-question-type="radio"] {
     .growtype-quiz-question-answer-wrapper {
       display: flex;
@@ -43,9 +51,12 @@
         cursor: pointer;
       }
 
+      .e-label {
+        margin-left: 10px;
+      }
+
       label {
         margin: 0;
-        margin-left: 10px;
         position: relative;
         top: 0;
         font-size: 16px;

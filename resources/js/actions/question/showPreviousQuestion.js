@@ -3,6 +3,7 @@ import {updateProgressBar} from "../../actions/progress/bar/updateProgressBar";
 import {updateQuestionsCounter} from "../progress/counter/updateQuestionsCounter";
 import {saveQuizDataEvent} from "../../events/saveQuizDataEvent";
 import {updateQuizComponents} from "./updateQuizComponents";
+import {showQuestionEvent} from "../../events/showQuestionEvent";
 
 /**
  * Show next slide
@@ -25,6 +26,13 @@ export function showPreviousQuestion() {
      */
     if (currentQuestion.length === 0) {
         previousQuestion = $('.growtype-quiz-question:last');
+    }
+
+    /**
+     * Skip loader
+     */
+    if (previousQuestion.find('.growtype-quiz-loader-wrapper').length > 0) {
+        previousQuestion = previousQuestion.prev()
     }
 
     window.growtype_quiz_global.already_visited_questions_keys.splice(-1)
@@ -90,4 +98,12 @@ function initQuestion(currentQuestion, previousQuestion) {
     // $([document.documentElement, document.body]).animate({
     //     scrollTop: $(".growtype-quiz").offset().top
     // }, 100);
+
+    /**
+     * Show question general event
+     */
+    document.dispatchEvent(showQuestionEvent({
+        currentQuestion: previousQuestion,
+        nextQuestion: currentQuestion,
+    }));
 }

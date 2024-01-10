@@ -2,12 +2,14 @@ import {updateProgressCounter} from "../../actions/progress/counter/updateProgre
 import {updateQuestionsCounter} from "../../actions/progress/counter/updateQuestionsCounter.js";
 import {updateProgressBar} from "../../actions/progress/bar/updateProgressBar";
 import {saveQuizDataEvent} from "../../events/saveQuizDataEvent";
-import {showProgressIndicators} from "../../actions/progress/general";
+import {disabledValueIsIncluded, showProgressIndicators} from "../../actions/progress/general";
 import {updateQuizComponents} from "./updateQuizComponents";
 import {showSuccessQuestionEvent} from "../../events/showSuccessQuestionEvent";
 import {showNextQuestionEvent} from "../../events/showNextQuestionEvent";
 import {validateQuestion} from "../../listeners/validation/validateQuestion";
 import {answerTrigger} from "../../components/answerTrigger";
+import {loader} from "../progress/loader/loader";
+import {showQuestionEvent} from "../../events/showQuestionEvent";
 
 /**
  * Show next slide
@@ -105,43 +107,23 @@ export function showNextQuestion(currentQuestion) {
      * Check if next question is disabled
      */
     if (nextQuestion.attr('data-disabled-if') && nextQuestion.attr('data-disabled-if').length > 0) {
-
         let availableQuestions = currentQuestion.nextAll('.growtype-quiz-question[data-funnel="' + nextFunnel + '"]:not([class*="skipped"])');
 
         for (var i = 0; i < availableQuestions.length; i++) {
             let question = availableQuestions[i];
-
             let disabledIf = $(question).attr('data-disabled-if')
 
             if (disabledIf.length > 0) {
-                let key = disabledIf.split(":")[0];
-                let values = disabledIf.split(":")[1].split("|");
-
-                if (window.growtype_quiz_data.answers[key] !== undefined) {
-                    let includes = false;
-                    values.map(function (value) {
-                        if (window.growtype_quiz_data.answers[key].includes(value)) {
-                            includes = true;
-                        }
-                    })
-
-                    if (!includes) {
-                        console.warn('Question found among answers but ignored answers not found.')
-                        nextQuestion = $(question);
-                        break;
-                    }
-
-                    console.warn('Question  ' + i + '  is skipped.')
-                } else {
-                    console.warn('Question key not found among answers')
+                if (!disabledValueIsIncluded(disabledIf)) {
+                    console.warn('Question found among answers but ignored answers not found.')
                     nextQuestion = $(question);
                     break;
+                } else {
+                    console.warn('Question key not found among answers')
                 }
             } else {
                 nextQuestion = $(question);
-
-                console.warn('Nex question "Disabled If" value is empty, so next question is taken.')
-
+                console.warn('Next question "Disabled If" value is empty, so next question is taken.')
                 break;
             }
         }
@@ -217,7 +199,7 @@ export function showNextQuestion(currentQuestion) {
         }
 
         if (nextQuestion.length > 0) {
-            updateQuestionsCounter();
+            updateQuestionsCounter(nextQuestion);
             updateProgressCounter();
             updateProgressBar();
             nextQuestion.addClass('is-active').fadeIn(300).promise().done(function () {
@@ -231,13 +213,11 @@ export function showNextQuestion(currentQuestion) {
 
                 $('.growtype-quiz-nav .btn').attr('disabled', false);
             });
-
-            // $([document.documentElement, document.body]).animate({
-            //     scrollTop: $(".growtype-quiz").offset().top
-            // }, 100);
         }
 
         updateQuizComponents(nextQuestion);
+
+        loader();
 
         if (nextQuestion.length === 0 || nextQuestion.attr('data-question-type') === 'success') {
             $('.growtype-quiz-btn-go-back').attr('disabled', false).hide();
@@ -245,6 +225,17 @@ export function showNextQuestion(currentQuestion) {
             document.dispatchEvent(saveQuizDataEvent());
             document.dispatchEvent(showSuccessQuestionEvent());
         } else {
+            /**
+             * Show question general event
+             */
+            document.dispatchEvent(showQuestionEvent({
+                currentQuestion: nextQuestion,
+                previousQuestion: currentQuestion,
+            }));
+
+            /**
+             * Show next question
+             */
             document.dispatchEvent(showNextQuestionEvent({
                 currentQuestion: currentQuestion,
                 nextQuestion: nextQuestion,

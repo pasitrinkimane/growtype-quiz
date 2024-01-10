@@ -7,12 +7,28 @@ export function input(currentQuestion) {
             );
     };
 
+    currentQuestion.find('input:visible[required],textarea:visible[required]').removeClass('is-invalid');
+
     let isValid = true;
-    currentQuestion.find('input[required]').each(function (index, element) {
+    currentQuestion.find('input:visible[required],textarea:visible[required]').each(function (index, element) {
         if (
-            $(element).val().length === 0 ||
-            ($(element).attr('type') === 'email' && !validateEmail($(element).val()))
+            (
+                $(element).attr('min') !== undefined && parseInt($(element).val()) < parseInt($(element).attr('min'))
+            )
+            ||
+            (
+                $(element).attr('max') !== undefined && parseInt($(element).val()) > parseInt($(element).attr('max'))
+            )
+            ||
+            (
+                $(element).val().length === 0
+            )
+            ||
+            (
+                $(element).attr('type') === 'email' && !validateEmail($(element).val())
+            )
         ) {
+            $(element).addClass('is-invalid');
             isValid = false;
         }
     })

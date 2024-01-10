@@ -25,7 +25,6 @@ function showSuccessQuestionListener() {
             $('body').attr('data-current-question-type', 'success')
             $('.growtype-quiz-question[data-question-type="success"]').fadeIn();
 
-            loader();
             restartQuizTrigger();
         });
 }

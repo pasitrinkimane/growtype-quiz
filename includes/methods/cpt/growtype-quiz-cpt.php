@@ -102,8 +102,8 @@ class Growtype_Quiz_Cpt
       created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
       updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY id (id),
-      UNIQUE KEY user_id (user_id),
-      UNIQUE KEY quiz_id (quiz_id)
+      INDEX user_id (user_id),
+      INDEX quiz_id (quiz_id)
     ) $charset_collate;";
 
             dbDelta($sql);

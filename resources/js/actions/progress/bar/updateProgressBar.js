@@ -7,14 +7,22 @@ let progressbarStepWidth = 0;
 export function updateProgressBar() {
     let progressBar = $('.growtype-quiz-progressbar');
     let questionsAmount = window.quizCountedQuestionsAmount;
-    let questionsCounterNr = window.growtype_quiz_global.current_question_counter_nr - 1;
+    let questionsCounterNr = window.growtype_quiz_global.current_question_counter_nr;
     let chapters = $('.growtype-quiz-question.chapter-start').length
+
+    if ($('.growtype-quiz-question.first-question').attr('data-question-type') !== 'general') {
+        questionsCounterNr = questionsCounterNr - 1;
+    }
 
     if (progressBar.length === 0 || questionsCounterNr === 0) {
         $('.growtype-quiz-progressbar-inner').width(0);
     }
 
     let progressbarWidth = progressBar.width();
+
+    if (progressbarWidth === 0) {
+        return;
+    }
 
     if (chapters > 0) {
         chapters = chapters + 1;

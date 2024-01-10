@@ -1,4 +1,4 @@
-.growtype-quiz-question[data-question-style="horizontal"] {
+.growtype-quiz-question[data-question-style="general"] {
   margin-bottom: 40px;
   border-radius: 10px;
   position: relative;
@@ -46,6 +46,15 @@
 
   .growtype-quiz-question-answer {
     margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    width: 100%;
+
+    .growtype-quiz-question-answer-content {
+      display: flex;
+      width: 100%;
+    }
   }
 
   .wpcf7-form {

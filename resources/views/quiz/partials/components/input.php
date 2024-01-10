@@ -1,8 +1,16 @@
-<div class="growtype-quiz-input-wrapper" data-type="<?php echo $input_details['type'] ?>">
+<?php
+$input_classes = ['growtype-quiz-input-wrapper'];
+if (!empty($input_details['class'])) {
+    $input_classes = array_merge($input_classes, explode(' ', $input_details['class']));
+}
+?>
+
+<div class="<?php echo implode(' ', $input_classes) ?>" data-type="<?php echo $input_details['type'] ?>" data-style="<?php echo $input_details['style'] ?>">
     <?php
     if ($input_details['type'] === 'file') { ?>
         <input
             id="<?php echo $input_details['id'] ?>"
+            class="input input-file"
             type="<?php echo $input_details['type'] ?>"
             name="<?php echo $input_details['name'] ?>"
             accept="<?php echo $input_details['accept'] ?>"
@@ -16,6 +24,7 @@
     <?php } else { ?>
         <input
             id="<?php echo $input_details['id'] ?>"
+            class="input"
             type="<?php echo $input_details['type'] ?>"
             name="<?php echo $input_details['name'] ?>"
             <?php echo $input_details['required'] === 'true' ? 'required' : '' ?>

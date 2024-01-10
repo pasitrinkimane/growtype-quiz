@@ -156,7 +156,7 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
                     'is_visible' => false,
                     'always_visible' => false,
                     'custom_class' => null,
-                    'question_style' => 'horizontal',
+                    'question_style' => 'general',
                     'question_type' => 'basic',
                     'answer_type' => 'single',
                     'answer_style' => 'radio',
@@ -194,7 +194,7 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
                     'is_visible' => false,
                     'always_visible' => false,
                     'custom_class' => null,
-                    'question_style' => 'horizontal',
+                    'question_style' => 'general',
                     'question_type' => 'basic',
                     'answer_type' => 'single',
                     'answer_style' => 'radio',
@@ -266,9 +266,13 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
         $quiz_data = apply_filters('growtype_quiz_get_quiz_data', $quiz_data, $quiz_id);
 
         /**
+         * Set first question answer type
+         */
+        $quiz_data['first_question_answer_type'] = isset($quiz_data['questions'][0]['answer_type']) ? $quiz_data['questions'][0]['answer_type'] : 'single';
+
+        /**
          * Prevent duplicate keys
          */
-
         $existing_keys = [];
         foreach ($quiz_data['questions'] as $key => $question) {
             if (in_array($question['key'], $existing_keys)) {
@@ -281,6 +285,35 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
             throw new Exception('Quiz data is empty. Please setup quiz data in admin panel.');
         }
 
+        /**
+         * Set missing question keys
+         */
+        foreach ($quiz_data['questions'] as $key => $question) {
+            if (!isset($question['question_type'])) {
+                $quiz_data['questions'][$key]['question_type'] = Growtype_Quiz::TYPE_GENERAL;
+            }
+            if (!isset($question['question_style'])) {
+                $quiz_data['questions'][$key]['question_style'] = Growtype_Quiz::STYLE_GENERAL;
+            }
+            if (!isset($question['answer_style'])) {
+                $quiz_data['questions'][$key]['answer_style'] = 'radio';
+            }
+            if (!isset($question['funnel'])) {
+                $quiz_data['questions'][$key]['funnel'] = 'a';
+            }
+
+            if (isset($question['options_all']) && !empty($question['options_all'])) {
+                foreach ($question['options_all'] as $option_key => $option) {
+                    if (!isset($option['value'])) {
+                        $quiz_data['questions'][$key]['options_all'][$option_key]['next_funnel'] = 'a';
+                    }
+                }
+            }
+        }
+
+        /**
+         * Adjust questions
+         */
         if ($quiz_data['randomize_slides_on_load'] && !empty($quiz_data['questions'])) {
             $questions_without_success = array_filter($quiz_data['questions'], function ($question) {
                 return $question['question_type'] !== 'success';
@@ -296,7 +329,7 @@ if (!function_exists('growtype_quiz_get_quiz_data')) {
         }
 
         $has_success_question = array_filter($quiz_data['questions'], function ($question) {
-            return $question['question_type'] === 'success';
+            return isset($question['question_type']) && $question['question_type'] === 'success';
         });
 
         if (empty($has_success_question)) {
@@ -348,12 +381,12 @@ if (!function_exists('growtype_quiz_get_user_results_by_id')) {
  * @return array|bool|object|null
  * Get quiz data
  */
-if (!function_exists('growtype_quiz_get_user_results_by_hash')) {
-    function growtype_quiz_get_user_results_by_hash($hash)
+if (!function_exists('growtype_quiz_get_user_single_result_by_hash')) {
+    function growtype_quiz_get_user_single_result_by_hash($hash)
     {
         $growtype_quiz_loader = new Growtype_Quiz_Result_Crud();
 
-        return $growtype_quiz_loader->get_quiz_results_by_hash($hash);
+        return $growtype_quiz_loader->get_quiz_single_result_data_by_unique_hash($hash);
     }
 }
 
@@ -618,7 +651,7 @@ if (!function_exists('growtype_quiz_results_page_url')) {
     function growtype_quiz_results_page_url($unique_hash = '')
     {
         $results_page = get_option('growtype_quiz_results_page');
-        return !empty($results_page) ? get_permalink($results_page) . '?code=' . $unique_hash : '';
+        return !empty($results_page) ? get_permalink($results_page) . '?token=' . $unique_hash : '';
     }
 }
 
@@ -628,7 +661,7 @@ if (!function_exists('growtype_quiz_results_page_url')) {
 if (!function_exists('growtype_quiz_question_is_disabled')) {
     function growtype_quiz_question_is_disabled($question)
     {
-        return $question['disabled'] && empty($question['disabled_if']) ? true : false;;
+        return isset($question['disabled']) && $question['disabled'] && empty($question['disabled_if']) ? true : false;;
     }
 }
 

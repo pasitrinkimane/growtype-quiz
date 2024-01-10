@@ -6,7 +6,7 @@ class Growtype_Quiz_Result_Crud
     {
         global $wpdb;
 
-        return $wpdb->prefix . 'quiz_results';
+        return $wpdb->prefix . 'growtype_quiz_results';
     }
 
     public static function delete_record($id)
@@ -307,6 +307,7 @@ class Growtype_Quiz_Result_Crud
         $correct_answers = [];
         $wrong_answers_amount = 0;
         $wrong_answers = [];
+        $detailed_results = [];
 
         if (!empty($answers) && $quiz_data['quiz_type'] === Growtype_Quiz::TYPE_SCORED) {
             if (!is_array($answers)) {
@@ -316,9 +317,17 @@ class Growtype_Quiz_Result_Crud
             foreach ($answers as $user_answer_key => $user_answer) {
                 $question = null;
                 foreach ($questions as $index => $single_question) {
-                    $question_key = !empty($single_question['key']) ? $single_question['key'] : 'question_' . ((int)$index + 1);
+                    $possible_keys = ['question', 'question_' . ((int)$index + 1)];
+                    if (!empty($single_question['key'])) {
+                        $possible_keys = [$single_question['key'], 'question', 'question_' . ((int)$index + 1)];
+                    }
 
-                    if ($user_answer_key === $question_key) {
+                    if (in_array($user_answer_key, $possible_keys)) {
+                        $detailed_results[$user_answer_key] = [
+                            'question_title' => trim(strip_tags($single_question['intro'])),
+                            'answer_is_correct' => true,
+                        ];
+
                         $question = $single_question;
                         break;
                     }
@@ -334,9 +343,21 @@ class Growtype_Quiz_Result_Crud
                     foreach ($question['options_all'] as $option) {
                         if ($option['correct']) {
                             $option_value = !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']);
+                            $detailed_results[$user_answer_key]['correct_answer'] = $option['label'];
 
                             foreach ($user_answer as $user_answer_single) {
                                 if ($option_value !== $user_answer_single) {
+                                    $detailed_results[$user_answer_key]['answer_is_correct'] = false;
+
+                                    /**
+                                     * Find user answer
+                                     */
+                                    foreach ($question['options_all'] as $option) {
+                                        if ($option['value'] === $user_answer_single) {
+                                            $detailed_results[$user_answer_key]['user_answer'] = $option['label'];
+                                        }
+                                    }
+
                                     $answer_is_wrong = true;
                                     break;
                                 }
@@ -361,6 +382,7 @@ class Growtype_Quiz_Result_Crud
             'wrong_answers_amount' => $wrong_answers_amount,
             'wrong_answers' => $wrong_answers,
             'questions_answered' => !empty($answers) ? count($answers) : 0,
+            'detailed_results' => $detailed_results,
         ];
     }
 }

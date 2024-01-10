@@ -42,7 +42,7 @@ var measurementsValidation = {
  */
 function validateMeasurements($this, showErrors) {
 
-    $('.b-form-measurements .e-message-error').remove();
+    $('.growtype-quiz-measurements-form .e-message-error').remove();
 
     if (typeof showErrors === 'undefined') {
         showErrors = true;
@@ -50,7 +50,7 @@ function validateMeasurements($this, showErrors) {
 
     var allInputsFilled = true;
     var failedValues = [];
-    $this.find('input:visible').each(function () {
+    $this.find('input:visible,textarea:visible').each(function () {
         $(this).removeClass('is-invalid')
 
         if ($(this).is(":visible") && $(this).attr('required') && $(this).val().length === 0
@@ -268,8 +268,8 @@ function validateMeasurements($this, showErrors) {
         }
     });
 
-    var currentWeight = $this.find('.b-form-measurements-data:visible').find('input[name="current_weight"]');
-    var desiredWeight = $this.find('.b-form-measurements-data:visible').find('input[name="target_weight"]');
+    var currentWeight = $this.find('.growtype-quiz-measurements-form-data:visible').find('input[name="current_weight"]');
+    var desiredWeight = $this.find('.growtype-quiz-measurements-form-data:visible').find('input[name="target_weight"]');
 
     if (
         (typeof window.answers_data.measurements_weight !== 'undefined' && (parseInt(window.answers_data.measurements_weight.current_weight) < parseInt(desiredWeight.val())))
@@ -284,8 +284,8 @@ function validateMeasurements($this, showErrors) {
 
     if (showErrors && !allInputsFilled) {
         failedValues.reverse().map(function (value, index) {
-            $('.b-form-measurements').prepend('<div class="col-12 e-message-error"><div class="alert alert-danger" role="alert" style="margin-bottom: 10px;margin-top: 3px;">' + value + '</div></div>');
-            $('.b-form-measurements:visible .form-control:first').focus();
+            $('.growtype-quiz-measurements-form').prepend('<div class="col-12 e-message-error"><div class="alert alert-danger" role="alert" style="margin-bottom: 10px;margin-top: 3px;">' + value + '</div></div>');
+            $('.growtype-quiz-measurements-form:visible .form-control:first').focus();
         });
     }
 
@@ -299,7 +299,7 @@ function validateMeasurementsOnEnter() {
     /**
      * On enter check
      */
-    $('.b-form-measurements .form-control[type="tel"]').on('keypress', function (key) {
+    $('.growtype-quiz-measurements-form .form-control[type="tel"]').on('keypress', function (key) {
         var inputVal = $(this).val().replace(/\s+/g, '');
         var inputName = $(this).attr('name');
         var charactersAmount = inputVal.length + 1;
@@ -323,7 +323,7 @@ function validateMeasurementsOnEnter() {
     /**
      * Check values after entered
      */
-    $('.b-form-measurements .form-control').on('keyup', function (key) {
+    $('.growtype-quiz-measurements-form .form-control').on('keyup', function (key) {
         var inputVal = $(this).val().replace(/\s+/g, '');
         var inputName = $(this).attr('name');
 
@@ -365,25 +365,25 @@ function validateMeasurementsOnEnter() {
             }
         }
 
-        if (inputName === 'current_weight' && $(this).closest('.b-form-measurements-data').hasClass('m-imperial')) {
+        if (inputName === 'current_weight' && $(this).closest('.growtype-quiz-measurements-form-data').hasClass('m-imperial')) {
             if (parseInt(inputVal) === 0 || inputVal > measurementsValidation.current_weight.lb.max) {
                 return $(this).val(inputVal.substr(0, inputVal.length - 1));
             }
         }
 
-        if (inputName === 'current_weight' && $(this).closest('.b-form-measurements-data').hasClass('m-metric')) {
+        if (inputName === 'current_weight' && $(this).closest('.growtype-quiz-measurements-form-data').hasClass('m-metric')) {
             if (parseInt(inputVal) === 0 || inputVal > measurementsValidation.current_weight.kg.max) {
                 return $(this).val(inputVal.substr(0, inputVal.length - 1));
             }
         }
 
-        if (inputName === 'target_weight' && $(this).closest('.b-form-measurements-data').hasClass('m-imperial')) {
+        if (inputName === 'target_weight' && $(this).closest('.growtype-quiz-measurements-form-data').hasClass('m-imperial')) {
             if (parseInt(inputVal) === 0 || inputVal > measurementsValidation.target_weight.lb.max) {
                 return $(this).val(inputVal.substr(0, inputVal.length - 1));
             }
         }
 
-        if (inputName === 'target_weight' && $(this).closest('.b-form-measurements-data').hasClass('m-metric')) {
+        if (inputName === 'target_weight' && $(this).closest('.growtype-quiz-measurements-form-data').hasClass('m-metric')) {
             if (parseInt(inputVal) === 0 || inputVal > measurementsValidation.target_weight.kg.max) {
                 return $(this).val(inputVal.substr(0, inputVal.length - 1));
             }
@@ -393,7 +393,7 @@ function validateMeasurementsOnEnter() {
          * Go to next input if [feet]
          */
         if (inputName === 'feet' && inputVal.length !== 0) {
-            $(this).closest('.b-form-measurements').find('.form-control').each(function (index, element) {
+            $(this).closest('.growtype-quiz-measurements-form').find('.form-control').each(function (index, element) {
                 if ($(element).val() === '' && !$(element).is(":focus")) {
                     $(element).focus();
                     return false;
@@ -405,17 +405,15 @@ function validateMeasurementsOnEnter() {
     /**
      * On type check ab test
      */
-    if ($('body').hasClass('page-quiz-validation')) {
-        $('.b-form-measurements .form-control').on('input', function (key) {
-            if (validateMeasurements($(this).closest('.input-wrapper'), false)) {
-                $(this).closest('.form-group').removeClass('is-invalid');
-                $(this).closest('.form-group').addClass('is-valid');
-                $(this).closest('.quizslide').find('.growtype-quiz-btn-go-next').addClass('is-active');
-            } else {
-                $(this).closest('.form-group').removeClass('is-valid');
-                $(this).closest('.form-group').addClass('is-invalid');
-                $(this).closest('.quizslide').find('.growtype-quiz-btn-go-next').removeClass('is-active');
-            }
-        });
-    }
+    $('.growtype-quiz-measurements-form .form-control').on('input', function (key) {
+        if (validateMeasurements($(this).closest('.input-wrapper'), false)) {
+            $(this).closest('.form-group').removeClass('is-invalid');
+            $(this).closest('.form-group').addClass('is-valid');
+            $(this).closest('.quizslide').find('.growtype-quiz-btn-go-next').addClass('is-active');
+        } else {
+            $(this).closest('.form-group').removeClass('is-valid');
+            $(this).closest('.form-group').addClass('is-invalid');
+            $(this).closest('.quizslide').find('.growtype-quiz-btn-go-next').removeClass('is-active');
+        }
+    });
 }

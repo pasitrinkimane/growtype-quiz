@@ -1,6 +1,6 @@
 import {showLastQuestion} from "../question/showLastQuestion";
 
-document.addEventListener('saveQuizData', saveQuizData)
+document.addEventListener('growtypeQuizSaveQuizData', saveQuizData)
 
 function saveQuizData(data) {
     if (growtype_quiz_local.save_answers === 'false') {
@@ -48,14 +48,21 @@ function saveQuizData(data) {
         success: function (data) {
             if (data.success) {
                 /**
+                 * Save data to local storage
+                 */
+                localStorage.setItem("growtype_quiz_unique_hash", data.unique_hash);
+
+                /**
                  * Set unique hash if input exists
                  */
-                $('input[name="growtype_quiz_unique_hash"]').val(data.unique_hash);
+                if ($('input[name="growtype_quiz_unique_hash"]').length > 0) {
+                    $('input[name="growtype_quiz_unique_hash"]').val(data.unique_hash);
+                }
 
                 /**
                  * Save data to local storage
                  */
-                localStorage.setItem("quiz_answers", JSON.stringify(answers));
+                localStorage.setItem("growtype_quiz_answers", JSON.stringify(answers));
 
                 /**
                  * Redirect
@@ -68,8 +75,13 @@ function saveQuizData(data) {
                  * Update loader
                  */
                 if ($('.growtype-quiz-loader-wrapper').length > 0) {
-                    $('.growtype-quiz-loader-wrapper').attr('data-redirect-url', data.results_url);
-                    $('.growtype-quiz-loader-wrapper .btn-continue').attr('href', data.results_url);
+                    if (data.results_url !== null && data.results_url.length > 0) {
+                        if ($('.growtype-quiz-loader-wrapper').attr('data-redirect-url').length === 0) {
+                            $('.growtype-quiz-loader-wrapper').attr('data-redirect-url', data.results_url);
+                        }
+
+                        $('.growtype-quiz-loader-wrapper .btn-continue').attr('href', data.results_url);
+                    }
                 }
             } else {
                 if (showLastQuestionOnError) {

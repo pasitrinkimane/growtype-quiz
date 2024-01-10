@@ -22,6 +22,7 @@
  */
 class Growtype_Quiz_Public
 {
+    const DEFAULT_UNIT_SYSTEM = 'metric';
 
     /**
      * The ID of this plugin.
@@ -86,6 +87,7 @@ class Growtype_Quiz_Public
         $localize_data = array (
             'ajax_url' => admin_url('admin-ajax.php'),
             'unique_hash' => wp_generate_password(44, false, false),
+            'unit_system' => Growtype_Quiz_Public::DEFAULT_UNIT_SYSTEM,
         );
 
         $post = get_post();
