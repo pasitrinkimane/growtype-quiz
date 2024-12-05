@@ -1,5 +1,6 @@
 import {loaderFinishedEvent} from "../../../events/loaderFinishedEvent";
 import {loaderStartedEvent} from "../../../events/loaderStartedEvent";
+import {hideProgressIndicators} from "../general";
 
 export function loader() {
     let visibleLoader = $('.growtype-quiz-loader-wrapper:visible');
@@ -7,6 +8,11 @@ export function loader() {
     if (visibleLoader.length > 0) {
         let count = 0;
         let duration = visibleLoader.attr('data-duration');
+
+        /**
+         * Hide progress indicators
+         */
+        hideProgressIndicators();
 
         /**
          * Reset
@@ -40,7 +46,7 @@ export function loader() {
             }
         }
 
-        function radial_animate() {
+        function radialAnimate() {
             visibleLoader.find('svg.radial-progress').each(function (index, value) {
                 $(this).find($('circle.bar--animated')).removeAttr('style');
 
@@ -59,7 +65,7 @@ export function loader() {
             });
         }
 
-        function check_if_in_view() {
+        function checkIfInView() {
             visibleLoader.find('.countervalue').each(function () {
                 if ($(this).hasClass('start')) {
                     var elementTop = $(this).offset().top;
@@ -94,12 +100,12 @@ export function loader() {
                             });
                         }
 
-                        radial_animate();
+                        radialAnimate();
                     }
                 }
             });
         }
 
-        check_if_in_view();
+        checkIfInView();
     }
 }

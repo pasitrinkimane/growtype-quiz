@@ -23,6 +23,7 @@ class Growtype_Quiz_Loader_Shortcode
             'heading' => __('Calculating', 'growtype-quiz') . ' ' . '<span class="growtype-quiz-loader-percentage">0%</span>',
             'content' => isset($attr['content']) ? $attr['content'] : '',
             'redirect' => isset($attr['redirect']) ? $attr['redirect'] : 'true',
+            'default_redirect_url' => $this->format_done_url(isset($attr['default_redirect_url']) ? $attr['default_redirect_url'] : ''),
             'redirect_url' => $this->format_done_url(isset($attr['redirect_url']) ? $attr['redirect_url'] : ''),
             'continue_btn_text' => __('Continue', 'growtype-quiz'),
             'duration' => isset($attr['duration']) ? $attr['duration'] : '20',

@@ -1,6 +1,7 @@
 <div class="growtype-quiz-nav"
      data-first-question-answer-type="<?php echo isset($quiz_data['first_question_answer_type']) ? $quiz_data['first_question_answer_type'] : 'single' ?>"
      data-question-title-nav="<?php echo isset($quiz_data) && $quiz_data['use_question_title_nav'] ? 'true' : 'false' ?>"
+     data-type="footer"
 >
     <div class="growtype-quiz-nav-inner">
         <button class="btn btn-secondary growtype-quiz-btn-go-back" style="display: none;">
@@ -12,7 +13,7 @@
             <span class="e-label" data-label="<?php echo $quiz_data['back_btn_label'] ?>"><?php echo $quiz_data['back_btn_label'] ?></span>
         </button>
 
-        <?php if (isset($quiz_data) && ($quiz_data['slide_counter'] && ($quiz_data['slide_counter_position'] === 'bottom' || $quiz_data['slide_counter_position'] === 'both'))) { ?>
+        <?php if (isset($quiz_data) && $quiz_data['slide_counter'] && ($quiz_data['slide_counter_position'] === 'bottom' || $quiz_data['slide_counter_position'] === 'both')) { ?>
             <?php echo growtype_quiz_include_view('quiz.partials.components.question-nr', ['quiz_data' => $quiz_data]); ?>
         <?php } ?>
 

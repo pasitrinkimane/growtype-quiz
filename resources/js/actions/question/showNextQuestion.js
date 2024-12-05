@@ -10,11 +10,45 @@ import {validateQuestion} from "../../listeners/validation/validateQuestion";
 import {answerTrigger} from "../../components/answerTrigger";
 import {loader} from "../progress/loader/loader";
 import {showQuestionEvent} from "../../events/showQuestionEvent";
+import {textareaCharactersCounter} from "../../components/textareaCharactersCounter";
+import {input} from "../../components/input";
+import {updateBgImage} from "./updateBgImage";
+import {getQuizData} from "../../helpers/getQuizData";
 
 /**
- * Show next slide
+ * Show next question
+ * @param currentQuestion
  */
 export function showNextQuestion(currentQuestion) {
+
+    /**
+     * Prevent double click
+     */
+    if (window.showNextQuestionWasFired) {
+        return;
+    }
+
+    /**
+     * Check if answer has additional question, and show it
+     */
+    let additionalQuestionContent = '';
+    currentQuestion.find('.growtype-quiz-question-answer.is-active').map(function (index, element) {
+        if ($(element).attr('data-additional-question') === 'true' && !$(element).hasClass('skip-additional-question')) {
+            additionalQuestionContent = $(element).attr('data-additional-question-content');
+            return;
+        }
+    });
+
+    if (additionalQuestionContent.length > 0) {
+        $('.growtype-quiz-modal .growtype-quiz-modal-content-form').html(additionalQuestionContent);
+        $('.growtype-quiz-modal').fadeIn();
+        textareaCharactersCounter();
+        input();
+        return;
+    }
+
+    window.showNextQuestionWasFired = true;
+
     let nextFunnel = currentQuestion.find('.growtype-quiz-question-answer.is-active').attr('data-funnel');
     let submitDelay = 0;
 
@@ -35,7 +69,7 @@ export function showNextQuestion(currentQuestion) {
         if (selectedFunnels.length > 0) {
             let funnelQuestionsGrouped = [];
             selectedFunnels.map(function (funnelKey, funnelIndex) {
-                let funnelQuestions = currentQuestion.nextAll('.growtype-quiz-question[data-has-funnel="true"][data-funnel-conditional="' + funnelKey + '"]')
+                let funnelQuestions = currentQuestion.nextAll('.growtype-quiz-question[data-has-funnel="true"][data-funnel-conditional="' + funnelKey + '"]');
 
                 if (funnelQuestions.length !== 0) {
                     additionalQuestions += funnelQuestions.length;
@@ -115,8 +149,8 @@ export function showNextQuestion(currentQuestion) {
 
             if (disabledIf.length > 0) {
                 if (!disabledValueIsIncluded(disabledIf)) {
-                    console.warn('Question found among answers but ignored answers not found.')
                     nextQuestion = $(question);
+                    console.warn('Question found among answers but ignored answers not found.')
                     break;
                 } else {
                     console.warn('Question key not found among answers')
@@ -145,7 +179,7 @@ export function showNextQuestion(currentQuestion) {
     /**
      * Show correct answer
      */
-    if (growtype_quiz_local.show_correct_answer && growtype_quiz_local.correct_answer_trigger === 'after_submit') {
+    if ($('.growtype-quiz').attr('data-show-correct-answer') && $('.growtype-quiz').attr('data-correct-answers-trigger') === 'after_submit') {
         submitDelay = 1000;
         currentQuestion.find('.growtype-quiz-question-answer').map(function (index, element) {
             if ($(element).attr('data-cor') !== '1') {
@@ -157,12 +191,11 @@ export function showNextQuestion(currentQuestion) {
     }
 
     /**
-     * Show new question
+     * Show next question
      */
     currentQuestion.delay(submitDelay).removeClass('is-active').not('.is-always-visible').fadeOut(300, function () {
         $('.growtype-quiz-wrapper').removeClass('is-valid is-half-valid');
     }).promise().done(function () {
-
         /**
          * Check if success page event was fired and quiz is finished
          */
@@ -171,44 +204,52 @@ export function showNextQuestion(currentQuestion) {
         }
 
         /**
-         * Change next label
+         * Update next btn label
          */
         let finishLabel = $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-finish');
 
-        if (parseInt(window.growtype_quiz_global.current_question_nr) === parseInt(window.quizQuestionsAmount) && finishLabel.length > 0) {
+        if (finishLabel && finishLabel.length > 0 && (nextQuestion.next('.growtype-quiz-question') === undefined || nextQuestion.attr('data-question-type') === 'success')) {
             $(this).closest('.growtype-quiz').find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(finishLabel);
-        }
-
-        /**
-         * Reset next btn label
-         */
-        if (window.growtype_quiz_global.current_question_nr < window.quizQuestionsAmount - 1) {
+        } else if (parseInt(window.growtype_quiz_global.current_question_counter_nr) <= window.quizQuestionsAmount - 1) {
             let nextLabel = $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label');
 
-            let nextQuestionTitle = nextQuestion.nextAll('.growtype-quiz-question:first').attr('data-question-title');
+            if ($('.growtype-quiz-nav[data-type="footer"]').attr('data-question-title-nav') === 'true') {
+                let nextQuestionTitle = nextQuestion.nextAll('.growtype-quiz-question:first').attr('data-question-title');
 
-            if (nextQuestion.nextAll('.growtype-quiz-question[data-funnel="' + nextFunnel + '"]:first').length > 0) {
-                nextQuestionTitle = nextQuestion.nextAll('.growtype-quiz-question[data-funnel="' + nextFunnel + '"]:first').attr('data-question-title');
-            }
+                if (nextQuestion.nextAll('.growtype-quiz-question[data-funnel="' + nextFunnel + '"]:first').length > 0) {
+                    nextQuestionTitle = nextQuestion.nextAll('.growtype-quiz-question[data-funnel="' + nextFunnel + '"]:first').attr('data-question-title');
+                }
 
-            if ($('.growtype-quiz-nav').attr('data-question-title-nav') === 'true' && nextQuestionTitle.length > 0) {
-                nextLabel = nextQuestionTitle;
+                if (nextQuestionTitle && nextQuestionTitle.length > 0) {
+                    nextLabel = nextQuestionTitle;
+                }
             }
 
             $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label', nextLabel).text(nextLabel);
         }
 
+        /**
+         * Update components
+         */
         if (nextQuestion.length > 0) {
+            /**
+             * Update first answer bg image
+             */
+            // let answerBgImage = nextQuestion.find('.growtype-quiz-question-answer[data-option-featured-img-main="true"]').first();
+            //
+            // if (answerBgImage.length > 0) {
+            //     updateBgImage(answerBgImage);
+            // }
+
             updateQuestionsCounter(nextQuestion);
             updateProgressCounter();
             updateProgressBar();
             nextQuestion.addClass('is-active').fadeIn(300).promise().done(function () {
-
                 /**
                  * Validate question if it was filled already
                  */
                 if (nextQuestion.find('input').val() !== undefined && nextQuestion.find('input').val().length > 0) {
-                    validateQuestion();
+                    validateQuestion($(this));
                 }
 
                 $('.growtype-quiz-nav .btn').attr('disabled', false);
@@ -219,27 +260,43 @@ export function showNextQuestion(currentQuestion) {
 
         loader();
 
+        /**
+         * Show question general event
+         */
+        document.dispatchEvent(showQuestionEvent({
+            currentQuestion: nextQuestion, previousQuestion: currentQuestion, answer_details: {
+                'question_number': window.growtype_quiz_global.current_question_counter_nr - 1,
+                'question': $(currentQuestion).attr('data-key'),
+                'answer': window.growtype_quiz_data.answers[$(currentQuestion).attr('data-key')],
+            }
+        }));
+
         if (nextQuestion.length === 0 || nextQuestion.attr('data-question-type') === 'success') {
-            $('.growtype-quiz-btn-go-back').attr('disabled', false).hide();
-            $('.growtype-quiz-btn-go-next').hide();
-            document.dispatchEvent(saveQuizDataEvent());
-            document.dispatchEvent(showSuccessQuestionEvent());
-        } else {
-            /**
-             * Show question general event
-             */
-            document.dispatchEvent(showQuestionEvent({
-                currentQuestion: nextQuestion,
-                previousQuestion: currentQuestion,
-            }));
+            // $('.growtype-quiz-btn-go-back').attr('disabled', false).hide();
+            // $('.growtype-quiz-btn-go-next').hide();
 
             /**
-             * Show next question
+             * Save quiz data event
+             */
+            document.dispatchEvent(saveQuizDataEvent(getQuizData()));
+
+            /**
+             * Show success question event
+             */
+            document.dispatchEvent(showSuccessQuestionEvent({
+                currentQuestion: currentQuestion,
+                nextQuestion: nextQuestion
+            }));
+        } else {
+            /**
+             * Show next question event
              */
             document.dispatchEvent(showNextQuestionEvent({
                 currentQuestion: currentQuestion,
-                nextQuestion: nextQuestion,
+                nextQuestion: nextQuestion
             }));
         }
+
+        window.showNextQuestionWasFired = false;
     });
 }

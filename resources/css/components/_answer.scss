@@ -39,7 +39,7 @@
     color: white;
     position: absolute;
     right: 10px;
-    top: 10px;
+    top: 12px;
 
     span {
       color: white;
@@ -54,7 +54,7 @@
 }
 
 .growtype-quiz-question {
-  &[data-question-type="general"] {
+  &[data-answer-type="multiple"] {
     .growtype-quiz-question-answer {
       &.is-active {
         .e-icon-check {

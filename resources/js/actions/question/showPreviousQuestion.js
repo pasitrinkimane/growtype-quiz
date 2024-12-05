@@ -1,7 +1,7 @@
 import {updateProgressCounter} from "../../actions/progress/counter/updateProgressCounter.js";
 import {updateProgressBar} from "../../actions/progress/bar/updateProgressBar";
 import {updateQuestionsCounter} from "../progress/counter/updateQuestionsCounter";
-import {saveQuizDataEvent} from "../../events/saveQuizDataEvent";
+import {getQuizData} from "../../helpers/getQuizData";
 import {updateQuizComponents} from "./updateQuizComponents";
 import {showQuestionEvent} from "../../events/showQuestionEvent";
 
@@ -38,9 +38,13 @@ export function showPreviousQuestion() {
     window.growtype_quiz_global.already_visited_questions_keys.splice(-1)
     window.growtype_quiz_global.already_visited_questions_funnels.splice(-1)
 
-    delete saveQuizDataEvent().answers[lastVisitedQuestionKey]
+    Object.entries(getQuizData().answers).map(function (answer, key) {
+        if (answer[0].includes(lastVisitedQuestionKey)) {
+            delete getQuizData().answers[answer[0]]
+        }
+    });
 
-    sessionStorage.setItem('growtype_quiz_answers', JSON.stringify(saveQuizDataEvent().answers));
+    sessionStorage.setItem('growtype_quiz_answers', JSON.stringify(getQuizData().answers));
 
     window.quizLastQuestion = currentQuestion;
     window.growtype_quiz_global.current_question_nr = previousQuestion.attr('data-question-nr');
@@ -54,6 +58,9 @@ export function showPreviousQuestion() {
     } else {
         currentQuestion.removeClass('is-active').fadeOut(300, function () {
             $('.growtype-quiz-wrapper').addClass('is-valid');
+
+            window.growtype_quiz_global.is_finished = false;
+
             initQuestion(currentQuestion, previousQuestion)
         });
     }
@@ -76,9 +83,14 @@ function initQuestion(currentQuestion, previousQuestion) {
         nextLabel = $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-start');
     }
 
+    /**
+     * Remove skip additional question class
+     */
+    previousQuestion.find('.growtype-quiz-question-answer.is-active').removeClass('skip-additional-question');
+
     let nextQuestionTitle = currentQuestion.attr('data-question-title');
 
-    if ($('.growtype-quiz-nav').attr('data-question-title-nav') === 'true' && nextQuestionTitle.length > 0) {
+    if ($('.growtype-quiz-nav[data-type="footer"]').attr('data-question-title-nav') === 'true' && nextQuestionTitle && nextQuestionTitle.length > 0) {
         nextLabel = nextQuestionTitle;
     }
 
@@ -87,9 +99,7 @@ function initQuestion(currentQuestion, previousQuestion) {
     /**
      * Reset next label
      */
-    if (window.growtype_quiz_global.current_question_nr < window.quizQuestionsAmount - 1) {
-        previousQuestion.closest('.growtype-quiz').find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(nextLabel);
-    }
+    previousQuestion.closest('.growtype-quiz').find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(nextLabel);
 
     previousQuestion.addClass('is-active').fadeIn(300).promise().done(function () {
         window.quizBackBtnWasClicked = false;

@@ -62,16 +62,20 @@ class Growtype_Quiz_Public
      */
     public function enqueue_styles()
     {
-        /**
-         * Main
-         */
-        wp_enqueue_style($this->growtype_quiz, GROWTYPE_QUIZ_URL_PUBLIC . 'css/growtype-quiz-public.css', array (), $this->version, 'all');
+        $scripts_should_be_loaded = $this->scripts_should_be_loaded();
 
-        /**
-         * Themes
-         */
-        if (get_option('growtype_quiz_theme') === 'theme-1') {
-            wp_enqueue_style($this->growtype_quiz . '/theme-1', GROWTYPE_QUIZ_URL_PUBLIC . 'css/growtype-quiz-public-theme-1.css', array (), $this->version, 'all');
+        if ($scripts_should_be_loaded) {
+            /**
+             * Main
+             */
+            wp_enqueue_style($this->growtype_quiz, GROWTYPE_QUIZ_URL_PUBLIC . 'css/growtype-quiz-public.css', array (), $this->version, 'all');
+
+            /**
+             * Themes
+             */
+            if (get_option('growtype_quiz_theme') === 'theme-1') {
+                wp_enqueue_style($this->growtype_quiz . '/theme-1', GROWTYPE_QUIZ_URL_PUBLIC . 'css/growtype-quiz-public-theme-1.css', array (), $this->version, 'all');
+            }
         }
     }
 
@@ -82,36 +86,93 @@ class Growtype_Quiz_Public
      */
     public function enqueue_scripts()
     {
-        wp_enqueue_script($this->growtype_quiz, GROWTYPE_QUIZ_URL_PUBLIC . 'js/growtype-quiz-public.js', array ('jquery'), time(), false);
+        $scripts_should_be_loaded = $this->scripts_should_be_loaded();
 
-        $localize_data = array (
-            'ajax_url' => admin_url('admin-ajax.php'),
-            'unique_hash' => wp_generate_password(44, false, false),
-            'unit_system' => Growtype_Quiz_Public::DEFAULT_UNIT_SYSTEM,
-        );
+        if ($scripts_should_be_loaded) {
+            /**
+             * Add custom scripts to footer
+             */
+            add_action('wp_footer', array ($this, 'add_custom_scripts_to_footer'), 100);
 
-        $post = get_post();
+            /**
+             * Main
+             */
+            wp_enqueue_script($this->growtype_quiz, GROWTYPE_QUIZ_URL_PUBLIC . 'js/growtype-quiz-public.js', array ('jquery'), $this->version, true);
 
-        if (!empty($post)) {
-            $quiz_data = growtype_quiz_get_quiz_data($post->ID);
+            $unique_hash = wp_generate_password(44, false);
 
-            if (!empty($quiz_data)) {
-                if (!current_user_can('manage_options')) {
-                    if (!is_null($quiz_data['is_enabled']) && !$quiz_data['is_enabled']) {
-                        wp_redirect(get_home_url());
-                    }
+            /**
+             * Set local variables
+             */
+            $localize_data = array (
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'unique_hash' => $unique_hash,
+                'unit_system' => Growtype_Quiz_Public::DEFAULT_UNIT_SYSTEM,
+            );
+
+            if (isset($_GET[Growtype_Quiz::TOKEN_KEY]) && !empty($_GET[Growtype_Quiz::TOKEN_KEY])) {
+                $localize_data[Growtype_Quiz::TOKEN_KEY] = $_GET[Growtype_Quiz::TOKEN_KEY];
+            }
+
+            wp_localize_script(Growtype_Quiz::PLUGIN_KEY, 'growtype_quiz_local',
+                $localize_data
+            );
+        }
+    }
+
+    public function add_custom_scripts_to_footer()
+    {
+        ?>
+        <script type="text/javascript">
+            if (
+                new URLSearchParams(window.location.search).get('question') === '1'
+                || new URLSearchParams(window.location.search).get('question') === null
+                || !$('.growtype-quiz').attr('data-show-question-nr-in-url')
+            ) {
+                sessionStorage.setItem('growtype_quiz_global', JSON.stringify({}));
+
+                if (window.growtype_quiz_data === undefined) {
+                    window.growtype_quiz_data = {};
                 }
 
-                $localize_data['show_correct_answer'] = $quiz_data['show_correct_answer'] ? true : false;
-                $localize_data['show_question_nr_in_url'] = $quiz_data['show_question_nr_in_url'] ? true : false;
-                $localize_data['correct_answer_trigger'] = $quiz_data['correct_answer_trigger'];
-                $localize_data['save_data_on_load'] = $quiz_data['save_data_on_load'];
-                $localize_data['save_answers'] = $quiz_data['save_answers'] === false ? 'false' : 'true';
+                window.growtype_quiz_data.answers = {};
+                sessionStorage.setItem('growtype_quiz_answers', JSON.stringify(window.growtype_quiz_data.answers));
+            }
+
+            window.growtype_quiz_global = sessionStorage.getItem('growtype_quiz_global') !== null ? JSON.parse(sessionStorage.getItem('growtype_quiz_global')) : {};
+
+            window.growtype_quiz_global.files = window.growtype_quiz_global.files instanceof FormData ? window.growtype_quiz_global.files : new FormData();
+            window.growtype_quiz_global.already_visited_questions_keys = window.growtype_quiz_global.already_visited_questions_keys ? window.growtype_quiz_global.already_visited_questions_keys : [];
+            window.growtype_quiz_global.already_visited_questions_funnels = window.growtype_quiz_global.already_visited_questions_funnels ? window.growtype_quiz_global.already_visited_questions_funnels : [];
+            window.growtype_quiz_global.initial_funnel = window.growtype_quiz_global.initial_funnel ? window.growtype_quiz_global.initial_funnel : 'a';
+            window.growtype_quiz_global.current_funnel = window.growtype_quiz_global.current_funnel ? window.growtype_quiz_global.current_funnel : window.growtype_quiz_global.initial_funnel;
+            window.growtype_quiz_global.additional_questions_amount = window.growtype_quiz_global.additional_questions_amount ? window.growtype_quiz_global.additional_questions_amount : 0;
+            window.growtype_quiz_global.current_question_counter_nr = window.growtype_quiz_global.current_question_counter_nr ? window.growtype_quiz_global.current_question_counter_nr : 1;
+            window.growtype_quiz_global.unit_system = window.growtype_quiz_global.unit_system ? window.growtype_quiz_global.unit_system : window.growtype_quiz_local.unit_system;
+        </script>
+        <?php
+    }
+
+    /**
+     * @return bool
+     */
+    public function scripts_should_be_loaded()
+    {
+        $posts = Growtype_Quiz::get_growtype_quiz_post_types();
+
+        $scripts_should_be_loaded = apply_filters('growtype_quiz_scripts_should_be_loaded', false);
+
+        if (!$scripts_should_be_loaded) {
+            if (!is_admin() && !empty($posts)) {
+                foreach ($posts as $post_type) {
+                    if (get_post_type() === $post_type) {
+                        $scripts_should_be_loaded = true;
+                        break;
+                    }
+                }
             }
         }
 
-        wp_localize_script($this->growtype_quiz, 'growtype_quiz_local',
-            $localize_data
-        );
+        return $scripts_should_be_loaded;
     }
 }

@@ -41,7 +41,17 @@ export function unitSystem() {
     function updateUnitSystemSelectors(selector) {
         let unitSystem = selector.attr('data-type');
 
-        selector.closest('.growtype-quiz-question').nextAll().each(function (index, element) {
+        let currentQuestion = selector.closest('.growtype-quiz-question');
+
+        currentQuestion.find('.unitsystem-selector .unitsystem-selector-item').each(function (index, element) {
+            if ($(element).attr('data-type') === unitSystem) {
+                updateUnitSystemSelector($(element))
+            }
+        });
+
+        let nextQuestions = selector.closest('.growtype-quiz-question').nextAll();
+
+        nextQuestions.each(function (index, element) {
             if ($(element).find('.unitsystem-selector').length > 0) {
                 $(element).find('.unitsystem-selector').hide();
                 $(element).find('.unitsystem-selector .unitsystem-selector-item').each(function (index, element) {

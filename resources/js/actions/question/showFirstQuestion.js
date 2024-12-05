@@ -21,7 +21,7 @@ export function showFirstQuestion() {
         let nextQuestionTitle = $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-start');
 
         if (nextQuestionTitle !== undefined && nextQuestionTitle.length > 0) {
-            if ($('.growtype-quiz-nav').attr('data-question-title-nav') === 'true') {
+            if ($('.growtype-quiz-nav[data-type="footer"]').attr('data-question-title-nav') === 'true') {
                 nextQuestionTitle = firstQuestion.nextAll('.growtype-quiz-question:first').attr('data-question-title');
                 $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label', nextQuestionTitle).text(nextQuestionTitle)
             } else {

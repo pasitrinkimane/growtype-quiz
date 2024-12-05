@@ -2,6 +2,7 @@
 
 class Growtype_Quiz_Admin_Setting
 {
+    private $loader;
 
     public function __construct()
     {

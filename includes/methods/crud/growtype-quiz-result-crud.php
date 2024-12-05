@@ -2,6 +2,58 @@
 
 class Growtype_Quiz_Result_Crud
 {
+    public function __construct()
+    {
+        add_action('wp_login', array ($this, 'update_results_after_login'), 10, 2);
+        add_action('user_register', array ($this, 'update_results_after_user_register'), 10, 2);
+
+        /**
+         * Clear local storage after login
+         */
+        add_action('wp_footer', function () {
+            if (is_user_logged_in() && get_transient(self::user_logged_in_transient_name())) {
+                ?>
+                <script>
+                    localStorage.removeItem('growtype_quiz_unique_hash');
+                    localStorage.removeItem('growtype_quiz_answers');
+                </script>
+                <?php
+                delete_transient(self::user_logged_in_transient_name());
+            }
+        });
+    }
+
+    public static function user_logged_in_transient_name()
+    {
+        return 'growtype_quiz_user_id_' . get_current_user_id() . '_logged_in';
+    }
+
+    function update_results_after_login($user_email, $user)
+    {
+        self::update_user_id($user->ID);
+
+        set_transient(self::user_logged_in_transient_name(), true, HOUR_IN_SECONDS);
+    }
+
+    function update_results_after_user_register($user_id, $userdata)
+    {
+        self::update_user_id($user_id);
+    }
+
+    public static function update_user_id($user_id, $unique_hash = null)
+    {
+        $unique_hash = !empty($unique_hash) ? $unique_hash : growtype_quiz_get_unique_hash();
+
+        if (!empty($unique_hash)) {
+            $last_quiz_result = growtype_quiz_get_user_single_result_by_hash($unique_hash);
+            if (!empty($last_quiz_result) && empty($last_quiz_result['user_id'])) {
+                self::update_quiz_single_result($last_quiz_result['id'], [
+                    'user_id' => $user_id
+                ]);
+            }
+        }
+    }
+
     public static function table_name()
     {
         global $wpdb;
@@ -96,24 +148,24 @@ class Growtype_Quiz_Result_Crud
             $quiz_data['user_id'] = get_current_user_id();
         }
 
-        $quiz_id = isset($quiz_data['quiz_id']) ? $quiz_data['quiz_id'] : null;
-
-        if (empty($quiz_id)) {
-            return false;
-        }
+        $quiz_id = isset($quiz_data['quiz_id']) ? $quiz_data['quiz_id'] : 0;
 
         /**
          * Check if empty answers should be saved
          */
-        if (!growtype_quiz_save_empty_answers($quiz_data['quiz_id']) && empty($quiz_data['answers'])) {
+        if (!empty($quiz_id) && !growtype_quiz_save_empty_answers($quiz_data['quiz_id']) && empty($quiz_data['answers'])) {
             return false;
         }
 
         $insert_values = $this->get_insert_values_from_quiz_data($quiz_data);
 
+        if (empty($insert_values)) {
+            return null;
+        }
+
         $insert_data = [
             'user_id' => isset($insert_values['user_id']) && !empty($insert_values['user_id']) ? $insert_values['user_id'] : 0,
-            'quiz_id' => $insert_values['quiz_id'],
+            'quiz_id' => !empty($insert_values['quiz_id']) ? $insert_values['quiz_id'] : 0,
             'answers' => $insert_values['answers'],
             'duration' => $insert_values['duration'],
             'questions_amount' => $insert_values['questions_amount'],
@@ -130,43 +182,78 @@ class Growtype_Quiz_Result_Crud
         $data_insert = $wpdb->insert($table_name, $insert_data);
 
         if (!$data_insert || is_wp_error($data_insert)) {
-            //        $wpdb->print_error();
-
             return null;
         }
+
+        /**
+         * Set unique hash
+         */
+        set_transient('growtype_quiz_unique_hash', $insert_data['unique_hash'], WEEK_IN_SECONDS);
 
         return $insert_data;
     }
 
+    public static function organize_files($files)
+    {
+        $organized_files = [];
+
+        if (!empty($files)) {
+            foreach ($files as $file_key => $file) {
+                foreach ($file['name'] as $answer_key => $name) {
+                    $organized_files[$file_key][] = [
+                        'name' => $name,
+                        'type' => $file['type'][$answer_key],
+                        'tmp_name' => $file['tmp_name'][$answer_key],
+                        'error' => $file['error'][$answer_key],
+                        'size' => $file['size'][$answer_key],
+                    ];
+                }
+            }
+        }
+
+        return $organized_files;
+    }
+
     public function get_insert_values_from_quiz_data($quiz_data)
     {
-        $quiz_id = $quiz_data['quiz_id'] ?? null;
+        $quiz_id = isset($quiz_data['quiz_id']) ? $quiz_data['quiz_id'] : null;
 
+        $images_organized = [];
         if (isset($quiz_data['files']) && !empty($quiz_data['files'])) {
-            foreach ($quiz_data['files'] as $file_key => $file) {
-                foreach ($quiz_data['answers'] as $answer_key => $answer) {
-                    if (strpos($file_key, $answer_key) > -1) {
-                        $uploaded_file = $this->upload_file_to_media_library($file);
-                        $attachment_id = $uploaded_file['attachment_id'] ?? null;
-                        if (!empty($attachment_id)) {
-                            if (isset($quiz_data['answers'][$answer_key]['files'])) {
-                                array_push($quiz_data['answers'][$answer_key]['files'], $attachment_id);
-                            } else {
-                                $quiz_data['answers'][$answer_key]['files'] = [$attachment_id];
-                            }
-                        }
+            $images_organized = self::organize_files($quiz_data['files']);
+        }
 
+        /**
+         * Get files upload location
+         */
+        $files_upload_location = apply_filters('growtype_quiz_files_upload_location', 'local', $quiz_data);
+
+        /**
+         * Upload images and attach to questions
+         */
+        if ($files_upload_location === 'local' && !empty($images_organized)) {
+            foreach ($images_organized as $key => $images_group) {
+                $question_key = explode('#_#', $key)[0] ?? '';
+                foreach ($images_group as $file) {
+                    $uploaded_file = $this->upload_file_to_media_library($file);
+                    $attachment_id = $uploaded_file['attachment_id'] ?? null;
+                    if (!empty($attachment_id) && !empty($question_key)) {
+                        if (isset($quiz_data['answers'][$question_key]['files'])) {
+                            array_push($quiz_data['answers'][$question_key]['files'], $attachment_id);
+                        } else {
+                            $quiz_data['answers'][$question_key]['files'] = [$attachment_id];
+                        }
                     }
                 }
             }
         }
 
-        $unique_hash = isset($quiz_data['unique_hash']) && !empty($quiz_data['unique_hash']) ? $quiz_data['unique_hash'] : bin2hex(random_bytes(12) . time());
-        $questions_amount = growtype_quiz_get_quiz_data($quiz_id)['questions_available_amount'] ?? null;
-        $evaluate_specific_quiz_answers = $this->evaluate_specific_quiz_answers($quiz_id, $quiz_data['answers']);
+        $unique_hash = isset($quiz_data['unique_hash']) && !empty($quiz_data['unique_hash']) ? $quiz_data['unique_hash'] : wp_generate_password(48, false);
+        $questions_amount = !empty($quiz_id) && isset(growtype_quiz_get_quiz_data($quiz_id)['questions_available_amount']) ? growtype_quiz_get_quiz_data($quiz_id)['questions_available_amount'] : count($quiz_data['answers']);
+        $evaluate_specific_quiz_answers = !empty($quiz_id) ? $this->evaluate_specific_quiz_answers($quiz_id, $quiz_data['answers']) : null;
         $correct_answers_amount = isset($evaluate_specific_quiz_answers['correct_answers_amount']) ? $evaluate_specific_quiz_answers['correct_answers_amount'] : null;
         $wrong_answers_amount = isset($evaluate_specific_quiz_answers['wrong_answers_amount']) ? $evaluate_specific_quiz_answers['wrong_answers_amount'] : null;
-        $questions_answered = isset($evaluate_specific_quiz_answers['questions_answered']) ? $evaluate_specific_quiz_answers['questions_answered'] : null;
+        $questions_answered = isset($evaluate_specific_quiz_answers['questions_answered']) ? $evaluate_specific_quiz_answers['questions_answered'] : $questions_amount;
         $extra_details = isset($quiz_data['extra_details']) && !empty($quiz_data['extra_details']) ? json_encode($quiz_data['extra_details']) : null;
         $ip_address = isset($quiz_data['ip_address']) ? $quiz_data['ip_address'] : null;
         $answers = is_array($quiz_data['answers']) ? json_encode($quiz_data['answers']) : $quiz_data['answers'];
@@ -241,7 +328,7 @@ class Growtype_Quiz_Result_Crud
      * @param $fields
      * @return bool
      */
-    public function update_quiz_single_result($id, $fields)
+    public static function update_quiz_single_result($id, $fields)
     {
         global $wpdb;
 
@@ -301,15 +388,21 @@ class Growtype_Quiz_Result_Crud
     public function evaluate_specific_quiz_answers($quiz_id, $answers)
     {
         $quiz_data = growtype_quiz_get_quiz_data($quiz_id);
-        $questions = $quiz_data['questions'];
+        return self::evaluate_answers($answers, $quiz_data);
+    }
 
+    public static function evaluate_answers($answers, $quiz_data)
+    {
+        $evaluated_answers = [];
         $correct_answers_amount = 0;
         $correct_answers = [];
         $wrong_answers_amount = 0;
         $wrong_answers = [];
         $detailed_results = [];
 
-        if (!empty($answers) && $quiz_data['quiz_type'] === Growtype_Quiz::TYPE_SCORED) {
+        $questions = $quiz_data['questions'] ?? [];
+
+        if ($quiz_data['quiz_type'] === Growtype_Quiz::TYPE_SCORED) {
             if (!is_array($answers)) {
                 $answers = json_decode($answers, true);
             }
@@ -374,15 +467,42 @@ class Growtype_Quiz_Result_Crud
                     }
                 }
             }
+        } elseif ($quiz_data['quiz_type'] === Growtype_Quiz::TYPE_SCORED_MOST_COMMON_ANSWER) {
+            $values_counted = array_count_values(array_column($answers, 'value'));
+            $max_count = max($values_counted);
+            $most_active_value = array_search($max_count, $values_counted);
+
+            $evaluated_answers['most_active'] = $most_active_value;
         }
 
-        return [
-            'correct_answers_amount' => $correct_answers_amount,
-            'correct_answers' => $correct_answers,
-            'wrong_answers_amount' => $wrong_answers_amount,
-            'wrong_answers' => $wrong_answers,
-            'questions_answered' => !empty($answers) ? count($answers) : 0,
-            'detailed_results' => $detailed_results,
-        ];
+        $evaluated_answers['correct_answers_amount'] = $correct_answers_amount;
+        $evaluated_answers['correct_answers'] = $correct_answers;
+        $evaluated_answers['wrong_answers_amount'] = $wrong_answers_amount;
+        $evaluated_answers['wrong_answers'] = $wrong_answers;
+        $evaluated_answers['questions_answered'] = !empty($answers) ? count($answers) : 0;
+        $evaluated_answers['detailed_results'] = $detailed_results;
+
+        return $evaluated_answers;
+    }
+
+    public static function get_results_by_answers_params($params)
+    {
+        global $wpdb;
+
+        $table = Growtype_Quiz_Result_Crud::table_name();
+
+        $conditions = [];
+        $values = [];
+
+        foreach ($params as $key => $value) {
+            $conditions[] = "answers LIKE %s";
+            $values[] = '%"' . $key . '":["' . $value . '"]%';
+        }
+
+        $sql = "SELECT * FROM {$table} WHERE " . implode(" AND ", $conditions);
+
+        $query = $wpdb->prepare($sql, ...$values);
+
+        return $wpdb->get_results($query);
     }
 }

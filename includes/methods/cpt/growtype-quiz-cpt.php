@@ -8,7 +8,6 @@ class Growtype_Quiz_Cpt
         add_action('init', array ($this, 'register_post_types'), 5);
         add_action('after_setup_theme', array ($this, 'extend_theme_support'), 5);
         add_action('init', array ($this, 'register_taxonomy'), 5);
-        add_action('init', array ($this, 'create_tables'), 5);
         add_filter('single_template', array (__CLASS__, 'single_template_loader'));
         add_filter('page_template', array (__CLASS__, 'page_template_loader'));
     }
@@ -74,7 +73,7 @@ class Growtype_Quiz_Cpt
     /**
      * Create required table
      */
-    public function create_tables()
+    public static function create_tables()
     {
         global $wpdb;
 

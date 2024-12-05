@@ -2,6 +2,8 @@
 @import "common/mixins";
 @import "common/global";
 
+@import "components/modal";
+
 .growtype-quiz-wrapper {
 
   @import "components/progress-bar";
@@ -75,6 +77,9 @@
 
       & + .growtype-quiz-question-answers-wrapper {
         padding-top: 20px;
+        @include bp-phone-xl() {
+          padding-top: 10px;
+        }
       }
     }
   }
@@ -229,6 +234,8 @@
           transform: rotate(180deg);
           margin-right: 10px;
           position: relative;
+          float: left;
+          top: 1px;
 
           svg {
             path {

@@ -1,13 +1,27 @@
-import {saveQuizData} from './../actions/crud/saveQuizData';
 import {showNextQuestion} from './../actions/question/showNextQuestion';
 import {validateQuestionEvent} from './../events/validateQuestionEvent';
 import {collectQuizData} from "../actions/crud/collectQuizData";
+import {nextQuestionTriggerEvent} from "../events/nextQuestionTriggerEvent";
 
-export function nextQuestionTrigger() {
-    let defaultInitialQuestion = $('.growtype-quiz-question.first-question')
+export function nextQuestionTrigger(quizContainer = $('.growtype-quiz')) {
+    let defaultInitialQuestion = quizContainer.find('.growtype-quiz-question.first-question');
 
-    $('.growtype-quiz .growtype-quiz-btn-go-next').click(function () {
-        let currentQuestion = $('.growtype-quiz-question.is-active');
+    quizContainer.find('.growtype-quiz-btn-go-next').click(function () {
+        let currentQuestion = $(this).closest('.growtype-quiz').find('.growtype-quiz-question.is-active');
+
+        /**
+         * Show next question event
+         */
+        document.dispatchEvent(nextQuestionTriggerEvent({
+            currentQuestion: currentQuestion,
+        }));
+
+        /**
+         * Prevent execution
+         */
+        if (window.showNextQuestionWasFired) {
+            return;
+        }
 
         if (currentQuestion.length === 0) {
             currentQuestion = defaultInitialQuestion;
@@ -16,7 +30,9 @@ export function nextQuestionTrigger() {
         let isValidQuestion = currentQuestion.attr('data-answer-required') === 'false';
 
         if (!isValidQuestion) {
-            document.dispatchEvent(validateQuestionEvent())
+            document.dispatchEvent(validateQuestionEvent({
+                currentQuestion: currentQuestion,
+            }))
 
             if (!window.growtype_quiz_global.is_valid) {
                 return
@@ -28,14 +44,20 @@ export function nextQuestionTrigger() {
         /**
          * Colect answers for existing questions
          */
-        if ($('.growtype-quiz-question.is-visible').length > 0) {
-            $('.growtype-quiz-question.is-visible').each(function (index, element) {
+        if ($('.growtype-quiz-question.is-always-visible').length > 0) {
+            $('.growtype-quiz-question.is-always-visible').each(function (index, element) {
                 collectQuizData($(element));
             });
         }
 
+        /**
+         *
+         */
         collectQuizData(currentQuestion);
 
+        /**
+         *
+         */
         showNextQuestion(currentQuestion);
     });
 }

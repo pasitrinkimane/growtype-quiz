@@ -12,10 +12,10 @@ add_filter('growtype_customizer_extend_available_pages', function ($pages) {
 /**
  * Enabled pages
  */
-add_filter('growtype_page_is_among_enabled_pages', function ($status, $pages) {
-    if (in_array('quiz', $pages) && get_post_type() === 'quiz') {
-        $status = true;
+add_filter('growtype_page_is_among_enabled_pages', function ($page_enabled, $enabled_pages) {
+    if (in_array('quiz', $enabled_pages) && get_post_type() === 'quiz') {
+        $page_enabled = true;
     }
 
-    return $status;
+    return $page_enabled;
 }, 100, 2);

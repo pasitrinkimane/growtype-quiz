@@ -29,10 +29,14 @@
  */
 class Growtype_Quiz
 {
-    const TYPE_SCORED = 'scored';
+    const TYPE_SCORED = 'scored'; //caculates total results of correct answers
+    const TYPE_SCORED_MOST_COMMON_ANSWER = 'scored_most_common_answer';  //calculates most common answer
     const TYPE_POLL = 'poll';
     const TYPE_GENERAL = 'general';
     const STYLE_GENERAL = 'general';
+    const PLUGIN_KEY = 'growtype-quiz';
+
+    const TOKEN_KEY= 'gqtoken';
 
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
@@ -71,6 +75,8 @@ class Growtype_Quiz
      *
      * @since    1.0.0
      */
+    private $post_type;
+
     public function __construct()
     {
         if (defined('GROWTYPE_QUIZ_VERSION')) {
@@ -79,7 +85,7 @@ class Growtype_Quiz
             $this->version = '1.0.0';
         }
 
-        $this->growtype_quiz = 'growtype-quiz';
+        $this->growtype_quiz = self::PLUGIN_KEY;
 
         $this->load_admin_traits();
 
@@ -175,6 +181,8 @@ class Growtype_Quiz
          * The helper functions
          */
         require_once GROWTYPE_QUIZ_PATH . 'includes/helpers/general.php';
+        require_once GROWTYPE_QUIZ_PATH . 'includes/helpers/quiz.php';
+        require_once GROWTYPE_QUIZ_PATH . 'includes/helpers/results.php';
 
         /**
          * Shortcode
@@ -202,11 +210,9 @@ class Growtype_Quiz
      */
     private function set_locale()
     {
-
         $plugin_i18n = new Growtype_Quiz_i18n();
 
         $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
-
     }
 
     /**
@@ -236,28 +242,8 @@ class Growtype_Quiz
     {
         $plugin_public = new Growtype_Quiz_Public($this->get_growtype_quiz(), $this->get_version());
 
-        if ($this->is_quiz_page()) {
-            $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
-            $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    public function is_quiz_page()
-    {
-        $posts = Growtype_Quiz::get_growtype_quiz_post_types();
-
-        if (!is_admin() && !empty($posts)) {
-            foreach ($posts as $post_type) {
-                if (strpos($_SERVER['REQUEST_URI'], '/' . $post_type) > -1 || isset($_GET['post_type']) && $_GET['post_type'] === $post_type) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+        $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
     }
 
     /**

@@ -1,5 +1,5 @@
-let successQuestion = new Event('growtypeQuizShowSuccessQuestion');
-
-export function showSuccessQuestionEvent() {
-    return successQuestion;
+export function showSuccessQuestionEvent(params = {}) {
+    return new CustomEvent("growtypeQuizShowSuccessQuestion", {
+        detail: params
+    });
 }

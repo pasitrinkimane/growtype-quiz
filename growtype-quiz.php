@@ -35,7 +35,7 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('GROWTYPE_QUIZ_VERSION', '1.1.1.49');
+define('GROWTYPE_QUIZ_VERSION', '1.2.2');
 
 /**
  * Plugin text domain
@@ -75,6 +75,11 @@ function activate_growtype_quiz()
 {
     require_once plugin_dir_path(__FILE__) . 'includes/class-growtype-quiz-activator.php';
     Growtype_Quiz_Activator::activate();
+
+    /**
+     * Create tables
+     */
+    Growtype_Quiz_Cpt::create_tables();
 }
 
 /**

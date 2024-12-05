@@ -1,5 +1,5 @@
-let validateQuestion = new Event('growtypeQuizValidateQuestion');
-
-export function validateQuestionEvent() {
-    return validateQuestion;
+export function validateQuestionEvent(params) {
+    return new CustomEvent("growtypeQuizValidateQuestion", {
+        detail: params
+    });
 }

@@ -51,7 +51,7 @@ function validateMeasurements($this, showErrors) {
     var allInputsFilled = true;
     var failedValues = [];
     $this.find('input:visible,textarea:visible').each(function () {
-        $(this).removeClass('is-invalid')
+        $(this).removeClass('is-invalid');
 
         if ($(this).is(":visible") && $(this).attr('required') && $(this).val().length === 0
             || $(this).is(":visible") && $(this).attr('required') && isNaN(parseInt($(this).val()))) {

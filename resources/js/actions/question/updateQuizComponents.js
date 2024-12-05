@@ -14,7 +14,9 @@ export function updateQuizComponents(question) {
     /**
      * Back btn
      */
-    $('.growtype-quiz-nav .growtype-quiz-btn-go-back').show();
+    if (question.length > 0) {
+        $('.growtype-quiz-nav .growtype-quiz-btn-go-back').show();
+    }
 
     if (question.attr('data-hide-back-button') === 'true') {
         $('.growtype-quiz-nav .growtype-quiz-btn-go-back:not(.show-initially)').hide();
@@ -23,10 +25,12 @@ export function updateQuizComponents(question) {
     /**
      * Next btn
      */
-    if (question.attr('data-hide-next-button') === 'true') {
-        $('.growtype-quiz-nav .growtype-quiz-btn-go-next').hide();
-    } else {
-        $('.growtype-quiz-nav .growtype-quiz-btn-go-next').show();
+    if (question.length > 0) {
+        if (question.attr('data-hide-next-button') === 'true') {
+            $('.growtype-quiz-nav .growtype-quiz-btn-go-next').hide();
+        } else {
+            $('.growtype-quiz-nav .growtype-quiz-btn-go-next').show();
+        }
     }
 
     /**
@@ -43,6 +47,7 @@ export function updateQuizComponents(question) {
      */
     $('body')
         .attr('data-current-question-type', question.attr('data-question-type'))
+        .attr('data-current-question-style', question.attr('data-question-style'))
         .attr('data-current-answer-type', question.attr('data-answer-type'))
 
     /**

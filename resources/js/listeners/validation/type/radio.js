@@ -6,7 +6,7 @@ export function radio(currentQuestion) {
         isValid = false;
     }
 
-    if (isValid && $('.growtype-quiz-wrapper').attr('data-quiz-type') === 'scored' && growtype_quiz_local.show_correct_answer && growtype_quiz_local.correct_answer_trigger === 'on_submit') {
+    if (isValid && $('.growtype-quiz-wrapper').attr('data-quiz-type') === 'scored' && $('.growtype-quiz-wrapper').attr('data-show-correct-answer') && $('.growtype-quiz-wrapper').attr('data-correct-answers-trigger') === 'on_submit') {
         activeBtns.map(function (index, element) {
             if ($(element).attr('data-cor') !== '1') {
                 isValid = false;

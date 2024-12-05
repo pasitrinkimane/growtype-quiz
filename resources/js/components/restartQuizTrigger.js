@@ -10,7 +10,7 @@ export function restartQuizTrigger() {
         /**
          * Show correct answers
          */
-        if (growtype_quiz_local.show_correct_answer && growtype_quiz_local.correct_answer_trigger === 'on_restart') {
+        if ($('.growtype-quiz').attr('data-show-correct-answer') && $('.growtype-quiz').attr('data-correct-answers-trigger') === 'on_restart') {
             $('.growtype-quiz-question').map(function (index, element) {
                 $(element).find('.growtype-quiz-question-answer').map(function (index, element) {
                     if ($(element).attr('data-cor') !== '1') {

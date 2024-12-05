@@ -121,10 +121,11 @@ input[type="submit"] {
     label {
       right: 20px;
       left: initial;
-      bottom: 18px;
+      bottom: 17px;
       font-size: 16px;
-      text-transform: lowercase;
       color: rgba(28, 48, 53, 0.6);
+      background: white;
+      padding: 1px 5px;
     }
 
     input::-webkit-outer-spin-button,

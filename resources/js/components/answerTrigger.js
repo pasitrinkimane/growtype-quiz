@@ -1,9 +1,17 @@
 import {showNextQuestion} from "../actions/question/showNextQuestion";
 import {collectQuizData} from "../actions/crud/collectQuizData";
 import {validateQuestion} from "../listeners/validation/validateQuestion";
+import {updateBgImage} from "../actions/question/updateBgImage";
 
 export class answerTrigger {
     clickInit(answer) {
+        /**
+         * Prevent double click
+         */
+        if (window.showNextQuestionWasFired) {
+            return;
+        }
+
         let answersLimit = answer.closest('.growtype-quiz-question').attr('data-answers-limit');
         let answersAmount = answer.closest('.growtype-quiz-question').find('.growtype-quiz-question-answer.is-active').length;
 
@@ -57,27 +65,16 @@ export class answerTrigger {
             /**
              * Validate question
              */
-            validateQuestion();
+            validateQuestion($(this));
         }
     }
 
-    init() {
-        $('.growtype-quiz-question-answers .growtype-quiz-question-answer').click(function () {
+    init(trigger = $('.growtype-quiz-question-answers .growtype-quiz-question-answer')) {
+        trigger.click(function () {
             new answerTrigger().clickInit($(this));
-        });
 
-        $('.growtype-quiz-question-answers .growtype-quiz-question-answer[data-option-featured-img-main="true"]').click(function () {
-            var imgUrl = $(this).attr('data-img-url');
-            let imageHolder = $(this).closest('.growtype-quiz-question').find('.b-img .e-img')
-            let currentImgUrl = imageHolder.css('background-image').replace(/^url\(['"](.+)['"]\)/, '$1');
-
-            if (imgUrl.length > 0 && currentImgUrl !== imgUrl) {
-                imageHolder.fadeOut(100).promise().done(function () {
-                    imageHolder.css({
-                        "background-image": "url( " + imgUrl + " )"
-                    })
-                    imageHolder.fadeIn(100);
-                })
+            if ($(this).attr('data-option-featured-img-main') === 'true') {
+                updateBgImage($(this));
             }
         });
     }

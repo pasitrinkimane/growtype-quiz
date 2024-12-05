@@ -5,10 +5,14 @@ import {input} from "./type/input";
 
 document.addEventListener('growtypeQuizValidateQuestion', validateQuestion)
 
-export function validateQuestion() {
+export function validateQuestion($this) {
     let isValid = true;
 
-    $('.growtype-quiz-question:visible').each(function (index, element) {
+    if ($this.detail && $this.detail.currentQuestion) {
+        $this = $this.detail.currentQuestion
+    }
+
+    $($this).closest('.growtype-quiz').find('.growtype-quiz-question:visible').each(function (index, element) {
         let currentQuestion = $(element);
 
         /**
@@ -40,12 +44,12 @@ export function validateQuestion() {
             });
         }
 
-        $('.growtype-quiz-wrapper').removeClass('is-valid is-half-valid');
+        $($this).closest('.growtype-quiz').find('.growtype-quiz-wrapper').removeClass('is-valid is-half-valid');
 
         if ($(element).find('input:not([type="checkbox"])').val() !== undefined && $(element).find('input:not([type="checkbox"])').val().length > 0) {
-            $('.growtype-quiz-wrapper').addClass(isValid ? 'is-valid' : 'is-half-valid');
+            $($this).closest('.growtype-quiz').find('.growtype-quiz-wrapper').addClass(isValid ? 'is-valid' : 'is-half-valid');
         } else {
-            $('.growtype-quiz-wrapper').addClass(isValid ? 'is-valid' : '');
+            $($this).closest('.growtype-quiz').find('.growtype-quiz-wrapper').addClass(isValid ? 'is-valid' : '');
         }
 
         if (!isValid) {

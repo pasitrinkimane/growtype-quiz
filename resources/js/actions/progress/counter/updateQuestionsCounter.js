@@ -5,7 +5,7 @@ export function updateQuestionsCounter(nextQuestion = null) {
     /**
      * Update url quiz nr
      */
-    if (growtype_quiz_local.show_question_nr_in_url) {
+    if ($('.growtype-quiz').attr('data-show-question-nr-in-url')) {
         let updateUrlNr = true;
         if (nextQuestion && nextQuestion.attr('data-key') === 'final') {
             updateUrlNr = false;
@@ -22,12 +22,14 @@ export function updateQuestionsCounter(nextQuestion = null) {
     window.quizQuestionsAmount = $('.growtype-quiz-question[data-funnel="a"]:not(.growtype-quiz-question[data-question-type="success"]):not(.is-always-visible):not(.exclude-questions-amount)').length;
     window.quizCountedQuestionsAmount = $('.growtype-quiz-question[data-funnel="a"]:not(.growtype-quiz-question[data-question-type="success"]):not(.growtype-quiz-question[data-question-type="info"]):not([class*="skipped"]):not(.is-always-visible)').length + window.growtype_quiz_global.additional_questions_amount;
 
-    window.growtype_quiz_global.already_visited_questions_funnels.map(function (element) {
-        if (element !== window.growtype_quiz_global.initial_funnel) {
-            let extraSlides = $('.growtype-quiz-question[data-funnel="' + element + '"]:not(.growtype-quiz-question[data-question-type="success"]):not(.is-always-visible)').length;
-            window.quizQuestionsAmount = window.quizQuestionsAmount + extraSlides;
-        }
-    });
+    if (window.growtype_quiz_global.already_visited_questions_funnels) {
+        window.growtype_quiz_global.already_visited_questions_funnels.map(function (element) {
+            if (element !== window.growtype_quiz_global.initial_funnel) {
+                let extraSlides = $('.growtype-quiz-question[data-funnel="' + element + '"]:not(.growtype-quiz-question[data-question-type="success"]):not(.is-always-visible)').length;
+                window.quizQuestionsAmount = window.quizQuestionsAmount + extraSlides;
+            }
+        });
+    }
 
     /**
      * Check conditionally disabled questions and subtract them from questions amount
@@ -43,7 +45,7 @@ export function updateQuestionsCounter(nextQuestion = null) {
         });
     }
 
-    if ($('.growtype-quiz-question:visible').hasClass('is-visible')) {
+    if ($('.growtype-quiz-question.is-active:visible').hasClass('is-visible') && !$('.growtype-quiz-question.is-active:visible').prev().hasClass('is-always-visible')) {
         window.quizQuestionsAmount--;
     }
 }

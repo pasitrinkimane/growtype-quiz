@@ -37,6 +37,7 @@ class Growtype_Quiz_Input_Shortcode
             'cat' => isset($attr['cat']) ? $attr['cat'] : '', //height,weight
             'style' => isset($attr['style']) ? $attr['style'] : 'general', //height,weight
             'class' => isset($attr['class']) ? $attr['class'] : '', //height,weight
+            'group_label' => isset($attr['group_label']) ? $attr['group_label'] : '',
             'unit_system' => isset($attr['unitsystem']) ? $attr['unitsystem'] : Growtype_Quiz_Public::DEFAULT_UNIT_SYSTEM
         ];
 
@@ -127,6 +128,9 @@ class Growtype_Quiz_Input_Shortcode
                     <span class="unitsystem-selector-item <?php echo $input_details['unit_system'] === 'imperial' ? 'is-active' : '' ?>" data-type="imperial"><?php echo $measurements[$input_details['cat']]['imperial']['nav']['label'] ?></span>
                     <span class="unitsystem-selector-item <?php echo $input_details['unit_system'] === 'metric' ? 'is-active' : '' ?>" data-type="metric"><?php echo $measurements[$input_details['cat']]['metric']['nav']['label'] ?></span>
                 </div>
+                <?php if (isset($input_details['group_label']) && !empty($input_details['group_label'])) { ?>
+                    <p class="e-group-label"><?php echo $input_details['group_label'] ?></p>
+                <?php } ?>
                 <div class="unitsystem-group <?php echo $input_details['unit_system'] === 'imperial' ? 'is-active' : '' ?>" data-type="imperial">
                     <div class="unitsystem-group-inner">
                         <?php

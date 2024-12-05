@@ -75,6 +75,8 @@ class Growtype_Quiz_Admin
         wp_enqueue_script($this->growtype_quiz, plugin_dir_url(__FILE__) . 'js/growtype-quiz-admin.js', array ('jquery'), $this->version, false);
     }
 
+    private $loader;
+
     /**
      * @return void
      */

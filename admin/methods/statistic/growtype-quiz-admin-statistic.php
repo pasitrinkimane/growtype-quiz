@@ -157,7 +157,11 @@ class Growtype_Quiz_Admin_Statistic
                 ];
 
                 foreach ($quiz_answers as $quiz_answer) {
-                    $evaluation = $growtype_quiz_result_crud->evaluate_specific_quiz_answers($quiz_answer['quiz_id'], $quiz_answer['answers']);
+                    if (empty($quiz_answer['answers'])) {
+                        continue;
+                    }
+
+                    $evaluation = $growtype_quiz_result_crud->evaluate_specific_quiz_answers($quiz_answer['quiz_id'], json_decode($quiz_answer['answers'], true));
 
                     $total_answers['correct'] = array_merge($total_answers['correct'], $evaluation['correct_answers']);
                     $total_answers['wrong'] = array_merge($total_answers['wrong'], $evaluation['wrong_answers']);
@@ -170,8 +174,8 @@ class Growtype_Quiz_Admin_Statistic
                 arsort($correct_answers);
 
                 $_GET['results'] = [
-                    'wrong_answers' => $wrong_answers,
-                    'correct_answers' => $correct_answers
+                    'wrong_answers' => !empty($wrong_answers) ? $wrong_answers : [],
+                    'correct_answers' => !empty($correct_answers) ? $correct_answers : [],
                 ];
             }
         }

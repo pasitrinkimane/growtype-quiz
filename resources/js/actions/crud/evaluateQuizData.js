@@ -1,11 +1,11 @@
-import {saveQuizDataEvent} from "../../events/saveQuizDataEvent";
+import {getQuizData} from "../../helpers/getQuizData";
 import {resultsEvaluatedEvent} from "../../events/resultsEvaluatedEvent";
 
 export function evaluateQuizData() {
     let results = {
-        'answers': saveQuizDataEvent().answers,
-        'correctlyAnswered': saveQuizDataEvent().correctlyAnswered,
-        'totalAnswers': Object.values(saveQuizDataEvent().correctlyAnswered).length,
+        'answers': getQuizData().answers,
+        'correctlyAnswered': getQuizData().correctly_answered,
+        'totalAnswers': Object.values(getQuizData().correctly_answered).length,
         'correctAnswers': 0
     }
 
