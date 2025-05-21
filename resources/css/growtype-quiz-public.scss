@@ -18,6 +18,7 @@
   @import "question-types/radio";
   @import "question-types/success";
   @import "question-types/single";
+  @import "question-types/general";
 
   @import "question-styles/horizontal-intro-select";
   @import "question-styles/horizontal-featured-select";
@@ -204,7 +205,6 @@
       position: relative;
       display: flex;
       justify-content: space-between;
-      margin-top: 30px;
       gap: 15px;
       flex-wrap: wrap;
       @include bp-phone-xl() {
@@ -235,9 +235,10 @@
           margin-right: 10px;
           position: relative;
           float: left;
-          top: 1px;
 
           svg {
+            width: 15px;
+            height: 15px;
             path {
               transition: all 0.5s;
             }
@@ -251,6 +252,11 @@
         .icon-arrow {
           margin-left: 10px;
           position: relative;
+
+          svg {
+            width: 15px;
+            height: 15px;
+          }
         }
       }
 

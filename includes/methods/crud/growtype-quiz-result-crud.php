@@ -166,6 +166,7 @@ class Growtype_Quiz_Result_Crud
         $insert_data = [
             'user_id' => isset($insert_values['user_id']) && !empty($insert_values['user_id']) ? $insert_values['user_id'] : 0,
             'quiz_id' => !empty($insert_values['quiz_id']) ? $insert_values['quiz_id'] : 0,
+            'quiz_slug' => !empty($insert_values['quiz_slug']) ? $insert_values['quiz_slug'] : '',
             'answers' => $insert_values['answers'],
             'duration' => $insert_values['duration'],
             'questions_amount' => $insert_values['questions_amount'],
@@ -217,6 +218,7 @@ class Growtype_Quiz_Result_Crud
     public function get_insert_values_from_quiz_data($quiz_data)
     {
         $quiz_id = isset($quiz_data['quiz_id']) ? $quiz_data['quiz_id'] : null;
+        $quiz_slug = isset($quiz_data['quiz_slug']) ? $quiz_data['quiz_slug'] : null;
 
         $images_organized = [];
         if (isset($quiz_data['files']) && !empty($quiz_data['files'])) {
@@ -263,6 +265,7 @@ class Growtype_Quiz_Result_Crud
         return [
             'user_id' => $user_id,
             'quiz_id' => $quiz_id,
+            'quiz_slug' => $quiz_slug,
             'answers' => $answers,
             'duration' => $duration,
             'questions_amount' => $questions_amount,
@@ -468,10 +471,16 @@ class Growtype_Quiz_Result_Crud
                 }
             }
         } elseif ($quiz_data['quiz_type'] === Growtype_Quiz::TYPE_SCORED_MOST_COMMON_ANSWER) {
-            $values_counted = array_count_values(array_column($answers, 'value'));
+            $flattened_answers = [];
+            foreach ($answers as $values) {
+                foreach ($values as $value) {
+                    $flattened_answers[] = $value;
+                }
+            }
+
+            $values_counted = array_count_values($flattened_answers);
             $max_count = max($values_counted);
             $most_active_value = array_search($max_count, $values_counted);
-
             $evaluated_answers['most_active'] = $most_active_value;
         }
 

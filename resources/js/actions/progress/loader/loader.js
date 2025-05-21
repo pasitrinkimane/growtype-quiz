@@ -2,8 +2,8 @@ import {loaderFinishedEvent} from "../../../events/loaderFinishedEvent";
 import {loaderStartedEvent} from "../../../events/loaderStartedEvent";
 import {hideProgressIndicators} from "../general";
 
-export function loader() {
-    let visibleLoader = $('.growtype-quiz-loader-wrapper:visible');
+export function loader(quizWrapper) {
+    let visibleLoader = quizWrapper.find('.growtype-quiz-loader-wrapper:visible');
 
     if (visibleLoader.length > 0) {
         let count = 0;
@@ -12,7 +12,7 @@ export function loader() {
         /**
          * Hide progress indicators
          */
-        hideProgressIndicators();
+        hideProgressIndicators(quizWrapper);
 
         /**
          * Reset
@@ -66,7 +66,7 @@ export function loader() {
         }
 
         function checkIfInView() {
-            visibleLoader.find('.countervalue').each(function () {
+            visibleLoader.find('.countervalue').each(function (element) {
                 if ($(this).hasClass('start')) {
                     var elementTop = $(this).offset().top;
                     var elementBottom = elementTop + $(this).outerHeight();
@@ -76,7 +76,7 @@ export function loader() {
 
                     if (elementBottom > viewportTop && elementTop < viewportBottom) {
                         $(this).removeClass('start');
-                        $('.countervalue').text();
+                        $(element).text();
                         var myNumbers = $(this).text();
                         if (myNumbers == Math.floor(myNumbers)) {
                             $(this).animate({

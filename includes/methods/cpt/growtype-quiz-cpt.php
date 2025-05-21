@@ -10,6 +10,59 @@ class Growtype_Quiz_Cpt
         add_action('init', array ($this, 'register_taxonomy'), 5);
         add_filter('single_template', array (__CLASS__, 'single_template_loader'));
         add_filter('page_template', array (__CLASS__, 'page_template_loader'));
+
+        add_action('init', array ($this, 'custom_rewrite_rules'));
+        add_filter('query_vars', array ($this, 'custom_query_vars'));
+        add_action('template_redirect', array ($this, 'custom_template_redirect'));
+
+        if (Growtype_Quiz::is_quiz_page()) {
+            add_filter('growtype_quiz_scripts_should_be_loaded', function ($should_be_loaded) {
+                return true;
+            });
+
+            add_filter('body_class', function ($classes) {
+                $classes[] = 'single-quiz';
+
+                return $classes;
+            });
+        }
+    }
+
+    public static function get_custom_urls()
+    {
+        return apply_filters('growtype_quiz_custom_urls', []);
+    }
+
+    function custom_query_vars($vars)
+    {
+        $custom_urls = self::get_custom_urls();
+
+        if (!empty($custom_urls)) {
+            $vars[] = 'custom_page';
+        }
+
+        return $vars;
+    }
+
+    function custom_rewrite_rules()
+    {
+        $custom_urls = self::get_custom_urls();
+
+        if (!empty($custom_urls)) {
+            foreach ($custom_urls as $custom_url) {
+                add_rewrite_rule('^' . Growtype_Quiz::get_growtype_quiz_post_type() . '/' . $custom_url . '/?$', 'index.php?custom_page=1', 'top');
+            }
+        }
+    }
+
+    function custom_template_redirect()
+    {
+        if (get_query_var('custom_page') == 1) {
+            echo growtype_quiz_include_view('quiz.index', [
+                'quiz_data' => growtype_quiz_get_formatted_quiz_data()
+            ]);
+            exit();
+        }
     }
 
     /**
@@ -49,7 +102,7 @@ class Growtype_Quiz_Cpt
     public function register_taxonomy()
     {
         $tax = defined('GROWTYPE_QUIZ_TAXONOMY') ? GROWTYPE_QUIZ_TAXONOMY : 'quiz_cat';
-        $post_type = defined('GROWTYPE_QUIZ_POST_TYPE') ? GROWTYPE_QUIZ_POST_TYPE : 'quiz';
+        $post_type = Growtype_Quiz::get_growtype_quiz_post_type();
 
         $labels = array (
             'name' => __('Category', $tax, 'growtype-quiz'),
@@ -88,6 +141,7 @@ class Growtype_Quiz_Cpt
       id bigint(20) NOT NULL AUTO_INCREMENT,
       user_id bigint(20) DEFAULT NULL,
       quiz_id bigint(20) UNSIGNED NOT NULL,
+      quiz_slug TEXT NOT NULL,
       answers TEXT DEFAULT NULL,
       duration INTEGER,
       questions_amount INTEGER,

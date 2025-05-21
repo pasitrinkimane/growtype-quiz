@@ -12,8 +12,11 @@ export function showLastQuestion(answers, showAlert = true) {
     let lastQuestionKey = Object.keys(answers)[Object.keys(answers).length - 1];
 
     if (lastQuestionKey !== undefined) {
-        showProgressIndicators();
-        $('.growtype-quiz-question[data-key="' + lastQuestionKey + '"]').addClass('is-active').fadeIn(300).promise().done(function () {
+        let question = $('.growtype-quiz-question[data-key="' + lastQuestionKey + '"]');
+        let quizWrapper = question.closest('.growtype-quiz-wrapper');
+
+        showProgressIndicators(quizWrapper);
+        quizWrapper.find('.growtype-quiz-question[data-key="' + lastQuestionKey + '"]').addClass('is-active').fadeIn(300).promise().done(function () {
         });
     }
 }

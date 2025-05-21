@@ -5,21 +5,25 @@ import {updateBgImage} from "../actions/question/updateBgImage";
 
 export class answerTrigger {
     clickInit(answer) {
+        let quizWrapper = answer.closest('.growtype-quiz-wrapper');
+        let quizId = quizWrapper.attr('id');
+
         /**
          * Prevent double click
          */
-        if (window.showNextQuestionWasFired) {
+        if (window.growtype_quiz_global[quizId]['showNextQuestionWasFired']) {
             return;
         }
 
-        let answersLimit = answer.closest('.growtype-quiz-question').attr('data-answers-limit');
-        let answersAmount = answer.closest('.growtype-quiz-question').find('.growtype-quiz-question-answer.is-active').length;
+        let currentQuestion = answer.closest('.growtype-quiz-question')
+        let answersLimit = currentQuestion.attr('data-answers-limit');
+        let answersAmount = currentQuestion.find('.growtype-quiz-question-answer.is-active').length;
+        let answerType = currentQuestion.attr('data-answer-type');
 
         if (answer.attr('data-url').length > 0) {
             window.location = answer.attr('data-url');
         }
 
-        let answerType = answer.closest('.growtype-quiz-question').attr('data-answer-type');
         if (answerType !== 'multiple' || answer.hasClass('clear-other-selections')) {
             answer.closest('.growtype-quiz-question-answers').find('.growtype-quiz-question-answer').removeClass('is-active');
         } else {
@@ -47,7 +51,7 @@ export class answerTrigger {
          */
         if (answer.find('.input-other').length > 0) {
             answer.find('.input-other').show().find('input,textarea').removeClass('is-invalid').focus();
-            $('.growtype-quiz-nav .growtype-quiz-btn-go-next').show();
+            quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next').show();
             event.stopPropagation();
             return;
         }
@@ -57,7 +61,6 @@ export class answerTrigger {
             ||
             answer.hasClass('clear-other-selections') && answer.find('.input-wrapper').length === 0
         ) {
-            let currentQuestion = answer.closest('.growtype-quiz-question')
             collectQuizData(currentQuestion);
             showNextQuestion(currentQuestion);
             return;
@@ -65,7 +68,7 @@ export class answerTrigger {
             /**
              * Validate question
              */
-            validateQuestion($(this));
+            validateQuestion(answer);
         }
     }
 

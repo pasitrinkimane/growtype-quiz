@@ -48,7 +48,7 @@
                                     <div class="e-radio"></div>
                                 </div>
                                 <div class="e-label">
-                                    <span><?php echo $option['label'] ?? $option['value'] ?? '' ?></span>
+                                    <div><?php echo $option['label'] ?? $option['value'] ?? '' ?></div>
                                     <?php if (isset($option['sub_label']) && !empty($option['sub_label'])) { ?>
                                         <p class="e-sublabel"><?php echo $option['sub_label'] ?></p>
                                     <?php } ?>

@@ -5,12 +5,9 @@
  */
 class Growtype_Quiz_Ajax
 {
-    private $result_crud;
 
     function __construct()
     {
-        $this->result_crud = new Growtype_Quiz_Result_Crud();
-
         /**
          * Ajax save quiz details
          */
@@ -36,8 +33,10 @@ class Growtype_Quiz_Ajax
     function growtype_quiz_save_data_handler()
     {
         $submitted_quiz_data['quiz_id'] = isset($_POST['quiz_id']) ? $_POST['quiz_id'] : null;
+        $submitted_quiz_data['quiz_slug'] = isset($_POST['quiz_slug']) ? $_POST['quiz_slug'] : '';
+        $quiz_id_is_required = apply_filters('growtype_quiz_id_is_required', true);
 
-        if (empty($submitted_quiz_data['quiz_id'])) {
+        if ($quiz_id_is_required && empty($submitted_quiz_data['quiz_id'])) {
             return wp_send_json([
                 'success' => false,
                 'message' => __('Missing quiz id', 'growtype-quiz'),
@@ -49,7 +48,9 @@ class Growtype_Quiz_Ajax
          */
         $submitted_quiz_data['answers'] = isset($_POST['answers']) && !empty($_POST['answers']) ? json_decode(stripslashes($_POST['answers']), true) : null;
 
-        if (!growtype_quiz_save_empty_answers($submitted_quiz_data['quiz_id']) && empty($submitted_quiz_data['answers'])) {
+        $save_empty_answers = $quiz_id_is_required && growtype_quiz_save_empty_answers($submitted_quiz_data['quiz_id']);
+
+        if (!$save_empty_answers && empty($submitted_quiz_data['answers'])) {
             return wp_send_json([
                 'success' => false,
                 'message' => __('Missing answers', 'growtype-quiz'),
@@ -60,7 +61,7 @@ class Growtype_Quiz_Ajax
          * Check other details
          */
         $submitted_quiz_data['unique_hash'] = isset($_POST['unique_hash']) ? $_POST['unique_hash'] : null;
-        $submitted_quiz_data['token'] = isset($_POST['token']) ? $_POST['token'] : null;
+        $submitted_quiz_data[Growtype_Quiz::TOKEN_KEY] = isset($_POST[Growtype_Quiz::TOKEN_KEY]) ? $_POST[Growtype_Quiz::TOKEN_KEY] : null;
         $submitted_quiz_data['duration'] = isset($_POST['duration']) ? $_POST['duration'] : null;
         $submitted_quiz_data['files'] = isset($_FILES) ? $_FILES : null;
         $submitted_quiz_data['extra_details'] = isset($_POST['extra_details']) ? json_decode(stripslashes($_POST['extra_details']), true) : [];
@@ -74,27 +75,30 @@ class Growtype_Quiz_Ajax
         $submitted_quiz_data['extra_details'] = array_merge($submitted_quiz_data['extra_details'], $server_details);
         $submitted_quiz_data['ip_address'] = isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? (explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0] ?? '') : '';
 
-        $quiz_data = growtype_quiz_get_quiz_data($submitted_quiz_data['quiz_id']);
+        $quiz_data = $quiz_id_is_required ? growtype_quiz_get_quiz_data($submitted_quiz_data['quiz_id']) : [];
         $update_quiz_data_if_token_exists = $quiz_data['update_quiz_data_if_token_exists'] ?? false;
         $existing_quiz_data = null;
 
         if ($update_quiz_data_if_token_exists) {
-            $token = $submitted_quiz_data['token'];
+            $token = $submitted_quiz_data[Growtype_Quiz::TOKEN_KEY];
 
             $existing_quiz_data = Growtype_Quiz_Result_Crud::get_quiz_single_result_data_by_unique_hash($token);
         }
 
         $success_url = class_exists('ACF') ? get_field('success_url', $submitted_quiz_data['quiz_id']) : '';
-        $success_url = apply_filters('growtype_quiz_success_url', $success_url, $submitted_quiz_data['quiz_id'], $submitted_quiz_data, $existing_quiz_data);
+        $success_url = apply_filters('growtype_quiz_success_url', $success_url, $submitted_quiz_data['quiz_id'] ?? '', $submitted_quiz_data, $existing_quiz_data);
+
+        $result_crud = new Growtype_Quiz_Result_Crud();
 
         /**
          * Update existing quiz data
          */
         if (!empty($existing_quiz_data)) {
-            $insert_values = $this->result_crud->get_insert_values_from_quiz_data($submitted_quiz_data);
+            $insert_values = $result_crud->get_insert_values_from_quiz_data($submitted_quiz_data);
 
             $data_to_update = [
                 'user_id' => !empty($insert_values['user_id']) ? $insert_values['user_id'] : $existing_quiz_data['user_id'],
+                'quiz_slug' => $insert_values['quiz_slug'],
                 'answers' => json_encode(array_merge(json_decode($existing_quiz_data['answers'], true), json_decode($insert_values['answers'], true))),
                 'duration' => (int)$insert_values['duration'] + (int)$existing_quiz_data['duration'],
                 'questions_amount' => (int)$insert_values['questions_amount'] + (int)$existing_quiz_data['questions_amount'],
@@ -122,7 +126,7 @@ class Growtype_Quiz_Ajax
         /**
          * Insert new quiz data
          */
-        $updated_quiz_data = $this->result_crud->save_quiz_results_data($submitted_quiz_data);
+        $updated_quiz_data = $result_crud->save_quiz_results_data($submitted_quiz_data);
 
         if (!empty($updated_quiz_data)) {
             do_action('growtype_quiz_after_save_data', $updated_quiz_data, $submitted_quiz_data);

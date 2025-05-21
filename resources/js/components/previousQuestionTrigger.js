@@ -1,21 +1,21 @@
 import {showPreviousQuestion} from "../actions/question/showPreviousQuestion";
 
-window.quizBackBtnWasClicked = false;
+export function previousQuestionTrigger(quizWrapper) {
+    let quizId = quizWrapper.attr('id');
 
-export function previousQuestionTrigger() {
-    $('.growtype-quiz-btn-go-back').click(function () {
+    quizWrapper.find('.growtype-quiz-btn-go-back').click(function () {
         event.preventDefault();
 
-        if (window.quizBackBtnWasClicked) {
+        if (window.growtype_quiz_global[quizId]['quiz_back_btn_was_clicked']) {
             return false;
         }
 
-        window.quizBackBtnWasClicked = true;
+        window.growtype_quiz_global[quizId]['quiz_back_btn_was_clicked'] = true;
 
-        if (window.growtype_quiz_global.already_visited_questions_keys.length === 0 && $(this).attr('data-back-url')) {
+        if (window.growtype_quiz_global[quizId]['already_visited_questions_keys'].length === 0 && $(this).attr('data-back-url')) {
             return window.location.href = $(this).attr('data-back-url');
         }
 
-        showPreviousQuestion()
+        showPreviousQuestion(quizWrapper)
     });
 }

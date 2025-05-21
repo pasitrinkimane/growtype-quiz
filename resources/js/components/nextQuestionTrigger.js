@@ -3,10 +3,11 @@ import {validateQuestionEvent} from './../events/validateQuestionEvent';
 import {collectQuizData} from "../actions/crud/collectQuizData";
 import {nextQuestionTriggerEvent} from "../events/nextQuestionTriggerEvent";
 
-export function nextQuestionTrigger(quizContainer = $('.growtype-quiz')) {
-    let defaultInitialQuestion = quizContainer.find('.growtype-quiz-question.first-question');
+export function nextQuestionTrigger(quizWrapper) {
+    let quizId = quizWrapper.attr('id');
+    let defaultInitialQuestion = quizWrapper.find('.growtype-quiz-question.first-question');
 
-    quizContainer.find('.growtype-quiz-btn-go-next').click(function () {
+    quizWrapper.find('.growtype-quiz-btn-go-next').click(function () {
         let currentQuestion = $(this).closest('.growtype-quiz').find('.growtype-quiz-question.is-active');
 
         /**
@@ -19,7 +20,7 @@ export function nextQuestionTrigger(quizContainer = $('.growtype-quiz')) {
         /**
          * Prevent execution
          */
-        if (window.showNextQuestionWasFired) {
+        if (window.growtype_quiz_global[quizId]['showNextQuestionWasFired']) {
             return;
         }
 
@@ -34,18 +35,18 @@ export function nextQuestionTrigger(quizContainer = $('.growtype-quiz')) {
                 currentQuestion: currentQuestion,
             }))
 
-            if (!window.growtype_quiz_global.is_valid) {
+            if (!window.growtype_quiz_global[quizId]['is_valid']) {
                 return
             }
         }
 
-        $('.growtype-quiz-nav .btn').attr('disabled', true)
+        quizWrapper.find('.growtype-quiz-nav .btn').attr('disabled', true)
 
         /**
          * Colect answers for existing questions
          */
-        if ($('.growtype-quiz-question.is-always-visible').length > 0) {
-            $('.growtype-quiz-question.is-always-visible').each(function (index, element) {
+        if (quizWrapper.find('.growtype-quiz-question.is-always-visible').length > 0) {
+            quizWrapper.find('.growtype-quiz-question.is-always-visible').each(function (index, element) {
                 collectQuizData($(element));
             });
         }

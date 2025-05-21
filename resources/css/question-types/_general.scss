@@ -1,0 +1,7 @@
+.growtype-quiz-question {
+  &[data-question-type="general"] {
+    &[data-key="height"], &[data-key="current_weight"], &[data-key="target_weight"], &[data-key="age"] {
+      margin-bottom: 40px!important;
+    }
+  }
+}

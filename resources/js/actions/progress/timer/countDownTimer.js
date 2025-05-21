@@ -5,14 +5,15 @@ import {getQuizData} from "../../../helpers/getQuizData";
 /**
  * Calculate time
  */
-export function countDownTimer() {
-    let timer = $('.growtype-quiz-timer');
+export function countDownTimer(quizWrapper) {
+    let quizId = quizWrapper.attr('id');
+    let timer = quizWrapper.find('.growtype-quiz-timer');
 
     if (timer.length === 0) {
         return false;
     }
 
-    window.growtype_quiz_global.countdown = {};
+    window.growtype_quiz_global[quizId]['countdown'] = {};
 
     let durationInSeconds = timer.attr('data-duration');
     let currentTime = new Date();
@@ -21,7 +22,7 @@ export function countDownTimer() {
 
     let countDownDate = currentTime.getTime();
 
-    window.countdown_timer = setInterval(function () {
+    window.growtype_quiz_global[quizId]['countdown_timer'] = setInterval(function () {
         let now = new Date().getTime();
         let distance = countDownDate - now;
         let days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -32,11 +33,11 @@ export function countDownTimer() {
         let secondsFormatted = seconds;
 
         if (distance < 0) {
-            clearInterval(window.countdown_timer);
-            document.dispatchEvent(saveQuizDataEvent(getQuizData()));
+            clearInterval(window.growtype_quiz_global[quizId]['countdown_timer']);
+            document.dispatchEvent(saveQuizDataEvent(getQuizData(quizId)));
             document.dispatchEvent(showSuccessQuestionEvent());
         } else {
-            window.growtype_quiz_global.countdown.duration = Number(durationInSeconds) - Number(((minutes * 60) + seconds));
+            window.growtype_quiz_global[quizId]['countdown']['duration'] = Number(durationInSeconds) - Number(((minutes * 60) + seconds));
 
             /**
              * Format time
@@ -49,9 +50,9 @@ export function countDownTimer() {
                 secondsFormatted = '0' + seconds;
             }
 
-            window.growtype_quiz_global.countdown.current_time = minutesFormatted + ":" + secondsFormatted;
+            window.growtype_quiz_global[quizId]['countdown']['current_time'] = minutesFormatted + ":" + secondsFormatted;
 
-            timer.find('.e-time').text(window.growtype_quiz_global.countdown.current_time);
+            timer.find('.e-time').text(window.growtype_quiz_global[quizId]['countdown']['current_time']);
         }
     }, 1000);
 }

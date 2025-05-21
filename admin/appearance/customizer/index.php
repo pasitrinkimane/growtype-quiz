@@ -13,7 +13,7 @@ add_filter('growtype_customizer_extend_available_pages', function ($pages) {
  * Enabled pages
  */
 add_filter('growtype_page_is_among_enabled_pages', function ($page_enabled, $enabled_pages) {
-    if (in_array('quiz', $enabled_pages) && get_post_type() === 'quiz') {
+    if (in_array(Growtype_Quiz::get_growtype_quiz_post_type(), $enabled_pages) && get_post_type() === Growtype_Quiz::get_growtype_quiz_post_type()) {
         $page_enabled = true;
     }
 

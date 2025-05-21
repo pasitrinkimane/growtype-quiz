@@ -3,16 +3,19 @@ import {open} from "./type/open";
 import {general} from "./type/general";
 import {input} from "./type/input";
 
-document.addEventListener('growtypeQuizValidateQuestion', validateQuestion)
+document.addEventListener('growtypeQuizValidateQuestion', validateQuestionEventHandler)
 
-export function validateQuestion($this) {
+function validateQuestionEventHandler(event) {
+    let currentQuestion = $(event['detail']['currentQuestion']);
+    validateQuestion(currentQuestion)
+}
+
+export function validateQuestion(selectedQuestion) {
+    let quizWrapper = selectedQuestion.closest('.growtype-quiz-wrapper');
+    let quizId = quizWrapper.attr('id');
     let isValid = true;
 
-    if ($this.detail && $this.detail.currentQuestion) {
-        $this = $this.detail.currentQuestion
-    }
-
-    $($this).closest('.growtype-quiz').find('.growtype-quiz-question:visible').each(function (index, element) {
+    quizWrapper.find('.growtype-quiz-question:visible').each(function (index, element) {
         let currentQuestion = $(element);
 
         /**
@@ -44,12 +47,12 @@ export function validateQuestion($this) {
             });
         }
 
-        $($this).closest('.growtype-quiz').find('.growtype-quiz-wrapper').removeClass('is-valid is-half-valid');
+        quizWrapper.removeClass('is-valid is-half-valid');
 
         if ($(element).find('input:not([type="checkbox"])').val() !== undefined && $(element).find('input:not([type="checkbox"])').val().length > 0) {
-            $($this).closest('.growtype-quiz').find('.growtype-quiz-wrapper').addClass(isValid ? 'is-valid' : 'is-half-valid');
+            quizWrapper.addClass(isValid ? 'is-valid' : 'is-half-valid');
         } else {
-            $($this).closest('.growtype-quiz').find('.growtype-quiz-wrapper').addClass(isValid ? 'is-valid' : '');
+            quizWrapper.addClass(isValid ? 'is-valid' : '');
         }
 
         if (!isValid) {
@@ -63,6 +66,6 @@ export function validateQuestion($this) {
         }
     });
 
-    window.growtype_quiz_global.is_valid = isValid;
+    window.growtype_quiz_global[quizId]['is_valid'] = isValid;
 }
 

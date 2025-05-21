@@ -1,7 +1,4 @@
 import {getQuizData} from "./helpers/getQuizData";
-
-$ = jQuery;
-
 import {saveQuizDataEvent} from "./events/saveQuizDataEvent";
 import {showInitialQuestion} from './actions/question/showInitialQuestion.js';
 import {nextQuestionTrigger} from './components/nextQuestionTrigger.js';
@@ -24,26 +21,37 @@ import "./listeners/validation/validateQuestion";
 /**
  * Prevent double click
  */
-window.showNextQuestionWasFired = false;
-
 $(document).ready(function () {
     if (window.growtype_quiz_global) {
-        if ($('.growtype-quiz').attr('data-save-on-load')) {
-            document.dispatchEvent(saveQuizDataEvent(getQuizData()));
-        }
+        $('.growtype-quiz-wrapper').map(function (index, element) {
+            /**
+             * Set params
+             */
+            growtypeQuizSetParams($(element));
+        });
 
-        new answerTrigger().init();
+        $('.growtype-quiz-wrapper').map(function (index, element) {
+            let quizId = $(element).attr('id');
 
-        input();
-        unitSystem();
-        showInitialQuestion();
-        nextQuestionTrigger();
-        modal();
-        previousQuestionTrigger();
-        updateQuestionsCounter();
-        updateProgressBar();
-        updateProgressCounter();
-        duration();
-        countDownTimer();
+            window.growtype_quiz_global[quizId]['showNextQuestionWasFired'] = false;
+
+            if ($(element).find('.growtype-quiz').attr('data-save-on-load')) {
+                document.dispatchEvent(saveQuizDataEvent(getQuizData(quizId)));
+            }
+
+            new answerTrigger().init();
+
+            input($(element));
+            unitSystem($(element));
+            showInitialQuestion($(element));
+            nextQuestionTrigger($(element));
+            modal($(element));
+            previousQuestionTrigger($(element));
+            updateQuestionsCounter($(element));
+            updateProgressBar($(element));
+            updateProgressCounter($(element));
+            duration($(element));
+            countDownTimer($(element));
+        });
     }
 });

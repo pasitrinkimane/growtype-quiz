@@ -4,19 +4,21 @@ import {collectQuizDataEvent} from "../../events/collectQuizDataEvent";
 let existingAnswersParams = new URLSearchParams(window.location.search).get('answers');
 let existingAnswers = {};
 
-let key, value;
-
 if (existingAnswersParams) {
-    [key, value] = existingAnswersParams.split('=');
-}
+    let pairs = existingAnswersParams.split('|');
 
-if (value) {
-    let valuesArray = value.split(',');
-    existingAnswers[key] = valuesArray;
+    pairs.forEach(pair => {
+        let [key, value] = pair.split(':');
+        if (key && value) {
+            existingAnswers[key] = value.split(',');
+        }
+    });
 }
 
 export function collectQuizData(currentQuestion) {
-    let answers = getQuizData().answers;
+    let quizWrapper = currentQuestion.closest('.growtype-quiz-wrapper');
+    let quizId = quizWrapper.attr('id');
+    let answers = getQuizData(quizId)['answers'];
 
     if (Object.keys(existingAnswers).length > 0) {
         for (let existingAnswer in existingAnswers) {
@@ -28,7 +30,7 @@ export function collectQuizData(currentQuestion) {
         }
     }
 
-    let correctlyAnswered = getQuizData().correctly_answered;
+    let correctlyAnswered = getQuizData(quizId)['correctly_answered'];
     let currentQuestionKey = currentQuestion.attr('data-key');
     let currentQuestionType = currentQuestion.attr('data-question-type');
 
@@ -58,7 +60,7 @@ export function collectQuizData(currentQuestion) {
     /**
      * Collect correct answers
      */
-    if ($('.growtype-quiz-wrapper[data-quiz-type="scored"]').length > 0 && currentQuestionType !== 'open') {
+    if (quizWrapper.attr('data-quiz-type') === 'scored' && currentQuestionType !== 'open') {
         let correctAnswer = true;
         currentQuestion.find('.growtype-quiz-question-answer').map(function (index, element) {
             if ($(this).hasClass('is-active') && $(this).attr('data-cor').length === 0) {
@@ -77,7 +79,7 @@ export function collectQuizData(currentQuestion) {
      * Collect inputs data
      */
     if (currentQuestion.find('input:visible,textarea:visible').length > 0) {
-        let formData = window.growtype_quiz_global.files;
+        let formData = window.growtype_quiz_global[quizId]['files'];
         currentQuestion.find('input:visible,textarea:visible').each(function (index, element) {
             if ($(element).attr('type') === 'file') {
                 let formKey = currentQuestionKey + '#_#' + index + '#_#' + $(element).attr('name');
@@ -87,7 +89,7 @@ export function collectQuizData(currentQuestion) {
                     formData.append(formKey, images[x]);
                 }
 
-                window.growtype_quiz_global.files = formData;
+                window.growtype_quiz_global[quizId]['files'] = formData;
             } else {
                 answers[currentQuestionKey].push({
                     name: $(element).attr('name'),
@@ -117,5 +119,5 @@ export function collectQuizData(currentQuestion) {
      */
     sessionStorage.setItem('growtype_quiz_answers', JSON.stringify(answers));
 
-    getQuizData().answers = answers;
+    getQuizData(quizId)['answers'] = answers;
 }

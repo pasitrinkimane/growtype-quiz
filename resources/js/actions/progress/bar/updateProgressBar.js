@@ -4,18 +4,19 @@ let progressbarStepWidth = 0;
 /**
  * Update progress bar
  */
-export function updateProgressBar() {
-    let progressBar = $('.growtype-quiz-progressbar');
-    let questionsAmount = window.quizCountedQuestionsAmount;
-    let questionsCounterNr = window.growtype_quiz_global.current_question_counter_nr;
-    let chapters = $('.growtype-quiz-question.chapter-start').length
+export function updateProgressBar(quizWrapper) {
+    let quizId = quizWrapper.attr('id');
+    let progressBar = quizWrapper.find('.growtype-quiz-progressbar');
+    let questionsAmount = window.growtype_quiz_global[quizId]['quiz_counted_questions_amount'];
+    let questionsCounterNr = window.growtype_quiz_global[quizId]['current_question_counter_nr'];
+    let chapters = quizWrapper.find('.growtype-quiz-question.chapter-start').length;
 
-    if ($('.growtype-quiz-question.first-question').attr('data-question-type') !== 'general') {
+    if (quizWrapper.find('.growtype-quiz-question.first-question').attr('data-question-type') !== 'general') {
         questionsCounterNr = questionsCounterNr - 1;
     }
 
     if (progressBar.length === 0 || questionsCounterNr === 0) {
-        $('.growtype-quiz-progressbar-inner').width(0);
+        quizWrapper.find('.growtype-quiz-progressbar-inner').width(0);
     }
 
     let progressbarWidth = progressBar.width();
@@ -27,16 +28,16 @@ export function updateProgressBar() {
     if (chapters > 0) {
         chapters = chapters + 1;
 
-        $('.growtype-quiz-progressbar .growtype-quiz-progressbar-chapter').remove()
+        quizWrapper.find('.growtype-quiz-progressbar .growtype-quiz-progressbar-chapter').remove()
 
         let mainFunnelQuestionNr = 0;
         let separatorsStepSize = [];
-        $('.growtype-quiz .growtype-quiz-question').each(function (index, element) {
+        quizWrapper.find('.growtype-quiz .growtype-quiz-question').each(function (index, element) {
             if (
                 $(element).attr('data-question-type') !== 'info'
                 &&
                 (
-                    $(element).attr('data-funnel') === window.growtype_quiz_global.initial_funnel ||
+                    $(element).attr('data-funnel') === window.growtype_quiz_global[quizId]['initial_funnel'] ||
                     $(element).hasClass('is-conditionally-cloned')
                 )
             ) {
@@ -69,7 +70,7 @@ export function updateProgressBar() {
         let chapterLength = progressbarWidth / chapters;
 
         for (let i = 1; i < chapters; i++) {
-            $('.growtype-quiz-progressbar').append('<span class="growtype-quiz-progressbar-chapter" style="left:' + (chapterLength * i) + 'px;"></span>')
+            quizWrapper.find('.growtype-quiz-progressbar').append('<span class="growtype-quiz-progressbar-chapter" style="left:' + (chapterLength * i) + 'px;"></span>')
         }
 
         let currentStepsLength = 0;
@@ -93,7 +94,7 @@ export function updateProgressBar() {
         progressbarIndicatorWidth = questionsCounterNr * progressbarStepWidth;
     }
 
-    $('.growtype-quiz-progressbar-inner').width(progressbarIndicatorWidth);
+    quizWrapper.find('.growtype-quiz-progressbar-inner').width(progressbarIndicatorWidth);
 
-    sessionStorage.setItem('growtype_quiz_global', JSON.stringify(window.growtype_quiz_global))
+    sessionStorage.setItem(quizGlobalStorageKey, JSON.stringify(window.growtype_quiz_global))
 }

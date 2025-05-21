@@ -7,7 +7,7 @@ class Growtype_Quiz_Input_Shortcode
 {
     function __construct()
     {
-        if (!is_admin() && !wp_is_json_request()) {
+        if (!wp_is_json_request()) {
             add_shortcode('growtype_quiz_input', array ($this, 'growtype_quiz_input_shortcode'));
         }
     }
@@ -38,7 +38,8 @@ class Growtype_Quiz_Input_Shortcode
             'style' => isset($attr['style']) ? $attr['style'] : 'general', //height,weight
             'class' => isset($attr['class']) ? $attr['class'] : '', //height,weight
             'group_label' => isset($attr['group_label']) ? $attr['group_label'] : '',
-            'unit_system' => isset($attr['unitsystem']) ? $attr['unitsystem'] : Growtype_Quiz_Public::DEFAULT_UNIT_SYSTEM
+            'unit_system' => isset($attr['unitsystem']) ? $attr['unitsystem'] : Growtype_Quiz_Public::DEFAULT_UNIT_SYSTEM,
+            'show_next_btn' => filter_var($attr['show_next_btn'] ?? false, FILTER_VALIDATE_BOOLEAN),
         ];
 
         ob_start();

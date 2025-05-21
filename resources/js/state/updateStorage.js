@@ -1,5 +1,6 @@
 export function updateGlobalStorageKey(key, value) {
-    let existingStorage = JSON.parse(sessionStorage.getItem('growtype_quiz_global'));
+    let existingStorage = JSON.parse(sessionStorage.getItem(quizGlobalStorageKey));
+    existingStorage = existingStorage === null ? {} : existingStorage;
     existingStorage[key] = value;
-    sessionStorage.setItem('growtype_quiz_global', JSON.stringify(existingStorage));
+    sessionStorage.setItem(quizGlobalStorageKey, JSON.stringify(existingStorage));
 }

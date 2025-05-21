@@ -37,5 +37,9 @@ if (isset($input_details['field_class']) && !empty($input_details['field_class']
         <label for="<?php echo $input_details['id'] ?>" class="growtype-quiz-input-label"><?php echo $input_details['label'] ?></label>
     <?php } ?>
 
+    <?php if (isset($input_details['show_next_btn']) && $input_details['show_next_btn']) { ?>
+        <button class="btn btn-next-arrow growtype-quiz-btn-go-next"><img src="<?php echo GROWTYPE_QUIZ_URL_PUBLIC . '/images/arrow.svg' ?>" class="img-fluid"/></button>
+    <?php } ?>
+
     <?php echo do_action('growtype_quiz_input_before_close', $input_details) ?>
 </div>

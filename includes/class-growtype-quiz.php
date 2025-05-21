@@ -36,7 +36,7 @@ class Growtype_Quiz
     const STYLE_GENERAL = 'general';
     const PLUGIN_KEY = 'growtype-quiz';
 
-    const TOKEN_KEY= 'gqtoken';
+    const TOKEN_KEY = 'gqtoken';
 
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
@@ -288,6 +288,30 @@ class Growtype_Quiz
     public function get_version()
     {
         return $this->version;
+    }
+
+    public static function is_quiz_page()
+    {
+        if (!isset($_SERVER['REQUEST_URI'])) {
+            return false;
+        }
+
+        $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+        if (!$request_uri) {
+            return false;
+        }
+
+        $path_segments = explode('/', trim($request_uri, '/'));
+
+        // Ensure at least one segment exists before checking
+        if (!empty($path_segments[0])) {
+            $post_type = $path_segments[0];
+
+            return $post_type === Growtype_Quiz::get_growtype_quiz_post_type();
+        }
+
+        return false;
     }
 
     /**

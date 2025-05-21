@@ -163,8 +163,18 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
             $intro_f_img = !empty(get_post_thumbnail_id($quiz_id)) && isset(wp_get_attachment_image_src(get_post_thumbnail_id($quiz_id), 'single-post-thumbnail')[0]) ? wp_get_attachment_image_src(get_post_thumbnail_id($quiz_id), 'single-post-thumbnail')[0] : '';
         }
 
+        if (isset($extra_data['quiz_slug']) && !empty($extra_data['quiz_slug'])) {
+            $quiz_slug = $extra_data['quiz_slug'];
+        } else {
+            $quiz_slug = parse_url($_SERVER['REQUEST_URI'])['path'] ?? '';
+            $quiz_slug = trim($quiz_slug, '/');
+            $quiz_slug = str_replace(Growtype_Quiz::get_growtype_quiz_post_type() . '/', '', $quiz_slug);
+            $quiz_slug = str_replace('-', '_', $quiz_slug);
+        }
+
         $quiz_data = [
             'quiz_id' => $quiz_id,
+            'quiz_slug' => $quiz_slug,
             'intro_content' => $intro_content,
             'intro_f_img' => $intro_f_img,
             'iframe_hide_header_footer' => $iframe_hide_header_footer,
@@ -181,14 +191,16 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
             'progress_bar' => true,
             'use_question_title_nav' => false,
             'randomize_slides_on_load' => false,
-            'slide_counter_style' => 'steps',
+            'slide_counter_style' => 'basic',
             'save_data_on_load' => false,
             'start_btn_label' => apply_filters('growtype_quiz_start_btn_label', __('Start', 'growtype-quiz')),
             'finish_btn_label' => apply_filters('growtype_quiz_finish_btn_label', __('Finish', 'growtype-quiz')),
-            'next_btn_label' => apply_filters('growtype_quiz_next_btn_label', __('Next question', 'growtype-quiz')),
+            'next_btn_label' => apply_filters('growtype_quiz_next_btn_label', __('Next', 'growtype-quiz')),
             'back_btn_label' => apply_filters('growtype_quiz_back_btn_label', __('Back', 'growtype-quiz')),
             'has_additional_open_question' => false,
             'show_quiz_header' => true,
+            'show_quiz_header_back_btn' => true,
+            'show_quiz_header_back_btn_hide_initially' => false,
             'show_quiz_footer' => true,
             'update_quiz_data_if_token_exists' => apply_filters('growtype_quiz_update_quiz_data_if_token_exists', false, $quiz_id),
             'questions' => [
@@ -302,16 +314,20 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
             $quiz_data['has_default_values'] = get_field('has_default_values', $quiz_id) ? true : false;
         }
 
+        $quiz_data = apply_filters('growtype_quiz_get_quiz_data', $quiz_data, $quiz_id);
+
         /**
          * Update question keys
          */
         foreach ($quiz_data['questions'] as $key => $question) {
-            $question_key = isset($question['has_custom_key']) && $question['has_custom_key'] ? $question['key'] : 'question_' . ($question['question_type'] ?? Growtype_Quiz::TYPE_GENERAL) . '_' . ($key + 1);
+            if (!isset($question['has_custom_key']) && isset($question['key']) && !empty($question['key'])) {
+                $question_key = $question['key'];
+            } else {
+                $question_key = isset($question['has_custom_key']) && $question['has_custom_key'] && !empty($question['key']) ? $question['key'] : 'question_' . ($question['question_type'] ?? Growtype_Quiz::TYPE_GENERAL) . '_' . ($key + 1);
+            }
 
             $quiz_data['questions'][$key]['key'] = $question_key;
         }
-
-        $quiz_data = apply_filters('growtype_quiz_get_quiz_data', $quiz_data, $quiz_id);
 
         /**
          * Set first question answer type

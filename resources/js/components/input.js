@@ -1,10 +1,12 @@
 import {validateQuestion} from "../listeners/validation/validateQuestion";
 
-export function input() {
+export function input(quizWrapper) {
+    let quizId = quizWrapper.attr('id');
+
     /**
      * File
      */
-    $('.growtype-quiz-input-wrapper input[type=file]').change(function (e) {
+    quizWrapper.find('.growtype-quiz-input-wrapper input[type=file]').change(function (e) {
         let maxFileSize = $(this).attr('max-size');
         let maxSizeErrorMessage = $(this).attr('max-size-error-message');
         if (maxFileSize !== undefined) {
@@ -45,11 +47,11 @@ export function input() {
         }
     });
 
-    $('.growtype-quiz-input-wrapper input, .growtype-quiz-input-wrapper textarea').on('keyup', function () {
+    quizWrapper.find('.growtype-quiz-input-wrapper input, .growtype-quiz-input-wrapper textarea').on('keyup', function () {
         validateQuestion($(this));
     });
 
-    $('.growtype-quiz-input-wrapper input[type="checkbox"]').on('click', function () {
+    quizWrapper.find('.growtype-quiz-input-wrapper input[type="checkbox"]').on('click', function () {
         validateQuestion($(this));
     });
 }

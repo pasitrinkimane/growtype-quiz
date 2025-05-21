@@ -7,7 +7,7 @@ class Growtype_Quiz_Loader_Shortcode
 {
     function __construct()
     {
-        if (!is_admin() && !wp_is_json_request()) {
+        if (!wp_is_json_request()) {
             add_shortcode('growtype_quiz_loader', array ($this, 'growtype_quiz_loader_shortcode'));
         }
     }

@@ -5,11 +5,12 @@ import {updateQuizComponents} from "./updateQuizComponents";
 /**
  * Show last slide
  */
-export function showFirstQuestion() {
-    let firstQuestion = $('.growtype-quiz-question.first-question');
+export function showFirstQuestion(quizWrapper) {
+    let quizId = quizWrapper.attr('id');
+    let firstQuestion = quizWrapper.find('.growtype-quiz-question.first-question');
 
     if (firstQuestion.hasClass('is-always-visible')) {
-        firstQuestion = $('.growtype-quiz-question:not(.is-always-visible):first');
+        firstQuestion = quizWrapper.find('.growtype-quiz-question:not(.is-always-visible):first');
     }
 
     updateQuizComponents(firstQuestion);
@@ -18,26 +19,32 @@ export function showFirstQuestion() {
      * Set nav next arrow label
      */
     setTimeout(function () {
-        let nextQuestionTitle = $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-start');
+        let nextQuestionTitle = quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-start');
 
         if (nextQuestionTitle !== undefined && nextQuestionTitle.length > 0) {
-            if ($('.growtype-quiz-nav[data-type="footer"]').attr('data-question-title-nav') === 'true') {
+            if (quizWrapper.find('.growtype-quiz-nav[data-type="footer"]').attr('data-question-title-nav') === 'true') {
                 nextQuestionTitle = firstQuestion.nextAll('.growtype-quiz-question:first').attr('data-question-title');
-                $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label', nextQuestionTitle).text(nextQuestionTitle)
+                quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label', nextQuestionTitle).text(nextQuestionTitle)
             } else {
-                $('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(nextQuestionTitle)
+                quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(nextQuestionTitle)
             }
         }
     }, 500)
 
     if (!firstQuestion.hasClass('is-active')) {
-        $('.growtype-quiz-question').removeClass('is-active').fadeOut().promise().done(function () {
-            window.growtype_quiz_global.current_question_nr = 1;
-            window.growtype_quiz_global.current_question_counter_nr = 1;
-            updateProgressCounter();
+        quizWrapper.find('.growtype-quiz-question').removeClass('is-active').fadeOut().promise().done(function () {
+            let quizWrapper = $(this).closest('.growtype-quiz-wrapper');
+
+            window.growtype_quiz_global[quizId]['current_question_nr'] = 1;
+            window.growtype_quiz_global[quizId]['current_question_counter_nr'] = 1;
+
+            updateProgressCounter(quizWrapper);
+
             firstQuestion.addClass('is-active').fadeIn();
-            showProgressIndicators();
-            $('.growtype-quiz-btn-go-next').show();
+
+            showProgressIndicators(quizWrapper);
+
+            quizWrapper.find('.growtype-quiz-btn-go-next').show();
         });
     }
 }
