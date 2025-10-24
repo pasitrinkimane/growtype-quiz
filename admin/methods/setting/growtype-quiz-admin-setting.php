@@ -106,7 +106,7 @@ class Growtype_Quiz_Admin_Setting
     private function load_settings_tabs()
     {
         require_once GROWTYPE_QUIZ_PATH . 'admin/methods/setting/tabs/growtype-quiz-admin-general-setting.php';
-        $this->loader = new Growtype_Quiz_Admin_General_Setting();
+        new Growtype_Quiz_Admin_General_Setting();
     }
 }
 

@@ -174,8 +174,6 @@ export function showNextQuestion(currentQuestion) {
 
     window.growtype_quiz_global[quizId]['current_question_nr'] = nextQuestion.attr('data-question-nr');
 
-    showProgressIndicators(quizWrapper);
-
     /**
      * Show correct answer
      */
@@ -198,6 +196,9 @@ export function showNextQuestion(currentQuestion) {
     currentQuestion.delay(submitDelay).removeClass('is-active').not('.is-always-visible').fadeOut(300, function () {
         quizWrapper.removeClass('is-valid is-half-valid');
     }).promise().done(function () {
+
+        showProgressIndicators(quizWrapper);
+
         /**
          * Check if success page event was fired and quiz is finished
          */

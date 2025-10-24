@@ -17,11 +17,13 @@
     height: 7px;
     min-width: 300px;
     margin-bottom: 20px;
+    border-radius: 20px;
 
     .growtype-quiz-loader-bar-inner {
-      background: black;
+      background: var(--theme-color);
       height: 7px;
       width: 0;
+      border-radius: 20px;
     }
   }
 

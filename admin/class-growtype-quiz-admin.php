@@ -91,18 +91,18 @@ class Growtype_Quiz_Admin
          * Settings
          */
         require_once GROWTYPE_QUIZ_PATH . 'admin/methods/setting/growtype-quiz-admin-setting.php';
-        $this->loader = new Growtype_Quiz_Admin_Setting();
+        new Growtype_Quiz_Admin_Setting();
 
         /**
          * Result
          */
         require_once GROWTYPE_QUIZ_PATH . 'admin/methods/result/growtype-quiz-admin-result.php';
-        $this->loader = new Growtype_Quiz_Admin_Result();
+        new Growtype_Quiz_Admin_Result();
 
         /**
          * Statistics
          */
         require_once GROWTYPE_QUIZ_PATH . 'admin/methods/statistic/growtype-quiz-admin-statistic.php';
-        $this->loader = new Growtype_Quiz_Admin_Statistic();
+        new Growtype_Quiz_Admin_Statistic();
     }
 }

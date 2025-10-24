@@ -62,14 +62,11 @@
   }
 
   .s-quiz {
-    padding-top: 50px;
+    padding-top: 20px;
     padding-bottom: 50px;
     width: 100%;
     max-width: 1200px;
     margin: auto;
-    @include bp-phone-xl() {
-      padding-top: 0;
-    }
 
     .growtype-quiz-question-intro {
       p {

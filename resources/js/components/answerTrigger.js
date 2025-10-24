@@ -22,6 +22,7 @@ export class answerTrigger {
 
         if (answer.attr('data-url').length > 0) {
             window.location = answer.attr('data-url');
+            return;
         }
 
         if (answerType !== 'multiple' || answer.hasClass('clear-other-selections')) {

@@ -66,15 +66,6 @@ class Growtype_Quiz
      */
     protected $version;
 
-    /**
-     * Define the core functionality of the plugin.
-     *
-     * Set the plugin name and the plugin version that can be used throughout the plugin.
-     * Load the dependencies, define the locale, and set the hooks for the admin area and
-     * the public-facing side of the site.
-     *
-     * @since    1.0.0
-     */
     private $post_type;
 
     public function __construct()
@@ -157,19 +148,19 @@ class Growtype_Quiz
          * Crud
          */
         require_once GROWTYPE_QUIZ_PATH . 'includes/methods/crud/growtype-quiz-result-crud.php';
-        $this->loader = new Growtype_Quiz_Result_Crud();
+        new Growtype_Quiz_Result_Crud();
 
         /**
          * Post
          */
         require_once GROWTYPE_QUIZ_PATH . 'includes/methods/cpt/growtype-quiz-cpt.php';
-        $this->loader = new Growtype_Quiz_Cpt();
+        new Growtype_Quiz_Cpt();
 
         /**
          * Ajax
          */
         require_once GROWTYPE_QUIZ_PATH . 'includes/methods/ajax/class-growtype-quiz-ajax.php';
-        $this->loader = new Growtype_Quiz_Ajax();
+        new Growtype_Quiz_Ajax();
 
         /**
          * The class responsible for defining all actions that occur in the public-facing
@@ -188,10 +179,13 @@ class Growtype_Quiz
          * Shortcode
          */
         require_once GROWTYPE_QUIZ_PATH . 'includes/methods/shortcodes/class-growtype-quiz-input-shortcode.php';
-        $this->loader = new Growtype_Quiz_Input_Shortcode();
+        new Growtype_Quiz_Input_Shortcode();
 
         require_once GROWTYPE_QUIZ_PATH . 'includes/methods/shortcodes/class-growtype-quiz-loader-shortcode.php';
-        $this->loader = new Growtype_Quiz_Loader_Shortcode();
+        new Growtype_Quiz_Loader_Shortcode();
+
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/shortcodes/class-growtype-quiz-results-shortcode.php';
+        new Growtype_Quiz_Results_Shortcode();
 
         /**
          * Load

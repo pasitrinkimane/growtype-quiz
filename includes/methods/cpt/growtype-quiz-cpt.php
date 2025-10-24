@@ -13,6 +13,7 @@ class Growtype_Quiz_Cpt
 
         add_action('init', array ($this, 'custom_rewrite_rules'));
         add_filter('query_vars', array ($this, 'custom_query_vars'));
+
         add_action('template_redirect', array ($this, 'custom_template_redirect'));
 
         if (Growtype_Quiz::is_quiz_page()) {

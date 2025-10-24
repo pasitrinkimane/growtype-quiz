@@ -109,7 +109,7 @@ $id = wp_generate_password('12', false);
                                 <div class="<?php echo $question_classes ?>"
                                      data-key="<?php echo $question['key'] ?>"
                                      data-question-nr="<?php echo $key + 1 ?>"
-                                     data-question-type="<?php echo isset($question['question_type']) ? $question['question_type'] : 'general' ?>"
+                                     data-question-type="<?php echo isset($question['question_type']) && $question['question_type'] !== false ? $question['question_type'] : 'general' ?>"
                                      data-question-style="<?php echo isset($question['question_style']) ? ($question['question_style'] !== 'custom' ? $question['question_style'] : $question['custom_style']) : '' ?>"
                                      data-answer-type="<?php echo isset($question['answer_type']) && !is_array($question['answer_type']) ? $question['answer_type'] : 'single' ?>"
                                      data-answers-limit="<?php echo isset($question['answers_limit']) && !empty($question['answers_limit']) ? $question['answers_limit'] : '' ?>"

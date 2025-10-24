@@ -323,7 +323,7 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
             if (!isset($question['has_custom_key']) && isset($question['key']) && !empty($question['key'])) {
                 $question_key = $question['key'];
             } else {
-                $question_key = isset($question['has_custom_key']) && $question['has_custom_key'] && !empty($question['key']) ? $question['key'] : 'question_' . ($question['question_type'] ?? Growtype_Quiz::TYPE_GENERAL) . '_' . ($key + 1);
+                $question_key = isset($question['has_custom_key']) && $question['has_custom_key'] && !empty($question['key']) ? $question['key'] : 'question_' . (isset($question['question_type']) && $question['question_type'] !== false ? $question['question_type'] : Growtype_Quiz::TYPE_GENERAL) . '_' . ($key + 1);
             }
 
             $quiz_data['questions'][$key]['key'] = $question_key;
@@ -356,7 +356,7 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
             if (!isset($question['question_type'])) {
                 $quiz_data['questions'][$key]['question_type'] = Growtype_Quiz::TYPE_GENERAL;
             }
-            if (!isset($question['question_style'])) {
+            if (!isset($question['question_style']) || $question['question_style'] === false) {
                 $quiz_data['questions'][$key]['question_style'] = Growtype_Quiz::STYLE_GENERAL;
             }
             if (!isset($question['answer_style'])) {

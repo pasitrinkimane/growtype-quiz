@@ -48,6 +48,10 @@ function growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $qu
 {
     $results_data = [];
 
+    if (empty($questions)) {
+        return $results_data;
+    }
+
     foreach ($answers as $answer_key => $answers_values) {
         $index = 1;
         $question = null;
@@ -77,6 +81,7 @@ function growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $qu
         }
 
         $answer_options = isset($question['options_all']) ? $question['options_all'] : [];
+        $answer_options = !empty($answer_options) ? $answer_options : [];
 
         $user_answer_values = [];
         foreach ($answers_values as $answer) {
@@ -124,34 +129,47 @@ function growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $qu
  * @param $quiz_result_data
  * @return array|null
  */
-function growtype_quiz_map_quiz_results_with_acf_quiz_data($quiz_result_data)
+function growtype_quiz_map_quiz_results_with_acf_quiz_data($quiz_results_data)
 {
-    $answers = isset($quiz_result_data['answers']) ? $quiz_result_data['answers'] : null;
+    $quiz_results = [];
 
-    if (empty($answers)) {
-        return null;
+    foreach ($quiz_results_data as $quiz_result_data) {
+        $answers = isset($quiz_result_data['answers']) ? $quiz_result_data['answers'] : null;
+
+        if (empty($answers)) {
+            return null;
+        }
+
+        $answers = json_decode($answers, true);
+
+        $quiz_id = $quiz_result_data['quiz_id'];
+
+        $questions = growtype_quiz_get_questions($quiz_id);
+
+        $quiz_type = get_field('quiz_type', $quiz_id);
+
+        $results_data = growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $quiz_type);
+
+        $quiz_results[$quiz_result_data['id']] = $results_data;
     }
 
-    $answers = json_decode($answers, true);
-
-    $quiz_id = $quiz_result_data['quiz_id'];
-
-    $questions = growtype_quiz_get_questions($quiz_id);
-
-    $quiz_type = get_field('quiz_type', $quiz_id);
-
-    $results_data = growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $quiz_type);
-
-    return $results_data;
+    return $quiz_results;
 }
 
 /**
  * @param $quiz_id
  * @param $answers
  */
-function growtype_quiz_get_extended_user_quiz_results($user_id)
+function growtype_quiz_get_extended_user_quizes_results($user_id = null, $quiz_id = null)
 {
-    $quiz_result_data = growtype_quiz_get_user_results_by_id($user_id);
+    $user_id = !empty($user_id) ? $user_id : get_current_user_id();
+    $quiz_result_data = growtype_quiz_get_user_results($user_id);
+
+    if (!empty($quiz_id)) {
+        $quiz_result_data = array_filter($quiz_result_data, function ($value) use ($quiz_id) {
+            return $value['quiz_id'] === $quiz_id;
+        });
+    }
 
     if (empty($quiz_result_data)) {
         return null;
@@ -177,9 +195,10 @@ if (!function_exists('growtype_quiz_get_results_data')) {
  * @return array|bool|object|null
  * Get quiz data
  */
-if (!function_exists('growtype_quiz_get_user_results_by_id')) {
-    function growtype_quiz_get_user_results_by_id($user_id)
+if (!function_exists('growtype_quiz_get_user_results')) {
+    function growtype_quiz_get_user_results($user_id = null)
     {
+        $user_id = !empty($user_id) ? $user_id : get_current_user_id();
         $growtype_quiz_loader = new Growtype_Quiz_Result_Crud();
 
         return $growtype_quiz_loader->get_quiz_results_by_user_id($user_id);

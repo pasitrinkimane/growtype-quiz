@@ -85,9 +85,6 @@ class Growtype_Quiz_Ajax
             $existing_quiz_data = Growtype_Quiz_Result_Crud::get_quiz_single_result_data_by_unique_hash($token);
         }
 
-        $success_url = class_exists('ACF') ? get_field('success_url', $submitted_quiz_data['quiz_id']) : '';
-        $success_url = apply_filters('growtype_quiz_success_url', $success_url, $submitted_quiz_data['quiz_id'] ?? '', $submitted_quiz_data, $existing_quiz_data);
-
         $result_crud = new Growtype_Quiz_Result_Crud();
 
         /**
@@ -114,6 +111,9 @@ class Growtype_Quiz_Ajax
 
             do_action('growtype_quiz_after_update_data', $existing_quiz_data, $submitted_quiz_data);
 
+            $success_url = class_exists('ACF') ? get_field('success_url', $submitted_quiz_data['quiz_id']) : '';
+            $success_url = apply_filters('growtype_quiz_success_url', $success_url, $submitted_quiz_data['quiz_id'] ?? '', $submitted_quiz_data, $existing_quiz_data);
+
             return wp_send_json([
                 'success' => true,
                 'updated' => true,
@@ -130,6 +130,9 @@ class Growtype_Quiz_Ajax
 
         if (!empty($updated_quiz_data)) {
             do_action('growtype_quiz_after_save_data', $updated_quiz_data, $submitted_quiz_data);
+
+            $success_url = class_exists('ACF') ? get_field('success_url', $submitted_quiz_data['quiz_id']) : '';
+            $success_url = apply_filters('growtype_quiz_success_url', $success_url, $submitted_quiz_data['quiz_id'] ?? '', $submitted_quiz_data, $existing_quiz_data);
 
             return wp_send_json([
                 'success' => true,

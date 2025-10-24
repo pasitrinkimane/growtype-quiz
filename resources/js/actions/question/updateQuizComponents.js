@@ -66,4 +66,20 @@ export function updateQuizComponents(question) {
         quizWrapper.find('.growtype-quiz-nav[data-type="footer"] .growtype-quiz-btn-go-back:not(.show-initially)').hide();
         quizWrapper.find('.growtype-quiz-nav[data-type="footer"] .growtype-quiz-btn-go-next').hide();
     }
+
+    /**
+     * Hide nav
+     */
+    if (quizWrapper.find('.growtype-quiz-nav').length > 0) {
+        let allBtnsAreVisible = false;
+        quizWrapper.find('.growtype-quiz-nav .btn').each(function (index, element) {
+            if ($(element).is(':visible')) {
+                allBtnsAreVisible = true;
+            }
+        });
+
+        if (!allBtnsAreVisible) {
+            quizWrapper.find('.growtype-quiz-nav').hide();
+        }
+    }
 }
