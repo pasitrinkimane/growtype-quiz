@@ -17,10 +17,15 @@ export function updateQuizComponents(question) {
      * Back btn
      */
     if (question.length > 0) {
-        if (parseInt($(question).attr('data-question-nr')) === 1 && quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-back').hasClass('hide-initially')) {
-            quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-back').fadeOut();
+        if (parseInt($(question).attr('data-question-nr')) === 1) {
+            $('.growtype-quiz-wrapper .hide-initially').each(function (index, element) {
+                $(element).hide();
+            });
         } else {
-            quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-back').fadeIn();
+            $('.growtype-quiz-wrapper .hide-initially').each(function (index, element) {
+                $(element).css('display', 'flex');
+                $(element).removeClass('d-none');
+            });
         }
     }
 
@@ -70,16 +75,16 @@ export function updateQuizComponents(question) {
     /**
      * Hide nav
      */
-    if (quizWrapper.find('.growtype-quiz-nav').length > 0) {
-        let allBtnsAreVisible = false;
-        quizWrapper.find('.growtype-quiz-nav .btn').each(function (index, element) {
-            if ($(element).is(':visible')) {
-                allBtnsAreVisible = true;
-            }
-        });
-
-        if (!allBtnsAreVisible) {
-            quizWrapper.find('.growtype-quiz-nav').hide();
-        }
-    }
+    // if (quizWrapper.find('.growtype-quiz-nav').length > 0) {
+    //     let allBtnsAreVisible = false;
+    //     quizWrapper.find('.growtype-quiz-nav .btn').each(function (index, element) {
+    //         if ($(element).is(':visible')) {
+    //             allBtnsAreVisible = true;
+    //         }
+    //     });
+    //
+    //     if (!allBtnsAreVisible) {
+    //         quizWrapper.find('.growtype-quiz-nav').hide();
+    //     }
+    // }
 }

@@ -20,13 +20,23 @@ class Growtype_Quiz_Cpt
             add_filter('growtype_quiz_scripts_should_be_loaded', function ($should_be_loaded) {
                 return true;
             });
+        }
 
-            add_filter('body_class', function ($classes) {
+        add_filter('body_class', function ($classes) {
+            if (Growtype_Quiz::is_quiz_page()) {
                 $classes[] = 'single-quiz';
 
-                return $classes;
-            });
-        }
+                $quiz_theme = growtype_quiz_get_quiz_theme(get_the_ID());
+
+                $classes[] = !empty($quiz_theme) ? 'quiz-theme-' . $quiz_theme : 'quiz-theme-default';
+            }
+
+            if (growtype_quiz_current_page_is_results_page()) {
+                $classes[] = 'quiz-results';
+            }
+
+            return $classes;
+        });
     }
 
     public static function get_custom_urls()

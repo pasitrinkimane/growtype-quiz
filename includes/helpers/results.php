@@ -21,7 +21,7 @@ if (!function_exists('growtype_quiz_get_unique_hash')) {
             set_transient($transient_id, $token, HOUR_IN_SECONDS);
         } else {
             $user_id = !empty($user_id) ? $user_id : get_current_user_id();
-            $token = get_user_meta($user_id, Growtype_Form_Crud::GROWTYPE_QUIZ_UNIQUE_HASH, true);
+            $token = class_exists('Growtype_Form_Crud') ? get_user_meta($user_id, Growtype_Form_Crud::GROWTYPE_QUIZ_UNIQUE_HASH, true) : null;
 
             if (empty($token)) {
                 $token = get_transient($transient_id);
@@ -44,14 +44,28 @@ if (!function_exists('growtype_quiz_results_page_url')) {
     }
 }
 
+/**
+ * Quiz is results page url
+ */
+if (!function_exists('growtype_quiz_current_page_is_results_page')) {
+    function growtype_quiz_current_page_is_results_page()
+    {
+        $current_url = growtype_quiz_results_page_url();
+        $clean_url = strtok($current_url, '?');
+
+        return get_permalink() === $clean_url;
+    }
+}
+
 function growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $quiz_type)
 {
     $results_data = [];
 
     if (empty($questions)) {
-        return $results_data;
+        return [];
     }
 
+    $custom_answers = [];
     foreach ($answers as $answer_key => $answers_values) {
         $index = 1;
         $question = null;
@@ -77,6 +91,7 @@ function growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $qu
         }
 
         if (empty($question)) {
+            $custom_answers[$answer_key] = $answers_values;
             continue;
         }
 
@@ -84,7 +99,7 @@ function growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $qu
         $answer_options = !empty($answer_options) ? $answer_options : [];
 
         $user_answer_values = [];
-        foreach ($answers_values as $answer) {
+        foreach ($answers_values as $answer_question_key => $answer) {
             $user_answer = array_filter($answer_options, function ($option) use ($answer) {
                 return ($option['value'] ?? '') === $answer || $answer === growtype_quiz_format_option_value($option['label']);
             });
@@ -96,14 +111,15 @@ function growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $qu
             }
 
             if (!empty($formatted_answer)) {
-                array_push($user_answer_values, $formatted_answer);
+                $user_answer_values[$answer_question_key] = $formatted_answer;
             }
         }
 
         $results_data[$answer_key] = [
             'answers' => $user_answer_values,
             'question_title' => $question['question_title'] ?? '',
-            'question_intro' => !empty($answer_options) ? $question['intro'] : $answer_key
+            'question_intro' => !empty($answer_options) ? $question['intro'] : $answer_key,
+            'question_key' => $question['key'] ?? '',
         ];
 
         if ($quiz_type === Growtype_Quiz::TYPE_SCORED) {
@@ -122,6 +138,11 @@ function growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $qu
         }
     }
 
+    if (!empty($custom_answers)) {
+        $results_data['custom_answers']['answers'] = $custom_answers;
+        $results_data['custom_answers']['question_intro'] = 'Extra answers';
+    }
+
     return $results_data;
 }
 
@@ -129,7 +150,7 @@ function growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $qu
  * @param $quiz_result_data
  * @return array|null
  */
-function growtype_quiz_map_quiz_results_with_acf_quiz_data($quiz_results_data)
+function growtype_quiz_map_quiz_results_with_quiz_data($quiz_results_data)
 {
     $quiz_results = [];
 
@@ -144,9 +165,11 @@ function growtype_quiz_map_quiz_results_with_acf_quiz_data($quiz_results_data)
 
         $quiz_id = $quiz_result_data['quiz_id'];
 
-        $questions = growtype_quiz_get_questions($quiz_id);
+        $quiz_data = growtype_quiz_get_quiz_data($quiz_id);
 
-        $quiz_type = get_field('quiz_type', $quiz_id);
+        $questions = $quiz_data['questions'] ?? [];
+
+        $quiz_type = $quiz_data['quiz_type'] ?? [];
 
         $results_data = growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $quiz_type);
 
@@ -163,19 +186,25 @@ function growtype_quiz_map_quiz_results_with_acf_quiz_data($quiz_results_data)
 function growtype_quiz_get_extended_user_quizes_results($user_id = null, $quiz_id = null)
 {
     $user_id = !empty($user_id) ? $user_id : get_current_user_id();
-    $quiz_result_data = growtype_quiz_get_user_results($user_id);
 
-    if (!empty($quiz_id)) {
-        $quiz_result_data = array_filter($quiz_result_data, function ($value) use ($quiz_id) {
-            return $value['quiz_id'] === $quiz_id;
-        });
+    if (empty($user_id)) {
+        $quiz_results = growtype_quiz_get_user_single_result_by_hash(growtype_quiz_get_unique_hash());
+        $quiz_result_data = [$quiz_results];
+    } else {
+        $quiz_result_data = growtype_quiz_get_user_results($user_id);
+
+        if (!empty($quiz_id)) {
+            $quiz_result_data = array_filter($quiz_result_data, function ($value) use ($quiz_id) {
+                return $value['quiz_id'] === $quiz_id;
+            });
+        }
+
+        if (empty($quiz_result_data)) {
+            return [];
+        }
     }
 
-    if (empty($quiz_result_data)) {
-        return null;
-    }
-
-    return growtype_quiz_map_quiz_results_with_acf_quiz_data($quiz_result_data);
+    return growtype_quiz_map_quiz_results_with_quiz_data($quiz_result_data);
 }
 
 /**

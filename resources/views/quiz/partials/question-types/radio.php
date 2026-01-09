@@ -44,11 +44,30 @@
                                         <?php } ?>
                                     <?php } ?>
                                 <?php } ?>
+
+                                <?php if (isset($question['option_featured_video_as_main']) && !$question['option_featured_video_as_main'] && !empty($option['featured_video'])) { ?>
+                                    <?php
+                                    $f_video = $question['options_has_featured_video'] && isset($option['featured_video']['url']) ? $option['featured_video']['url'] : '';
+                                    if (!empty($f_video)) { ?>
+                                        <div class="b-video">
+                                            <video
+                                                class="e-video img-fluid"
+                                                style="background: url('<?= esc_url($f_video) ?>') center/cover no-repeat;"
+                                                autoplay
+                                                muted
+                                                loop
+                                                playsinline
+                                            >
+                                                <source src="<?= esc_url($f_video) ?>#t=0.1" type="video/mp4">
+                                            </video>
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
                                 <div class="e-radio-wrapper">
                                     <div class="e-radio"></div>
                                 </div>
                                 <div class="e-label">
-                                    <div><?php echo $option['label'] ?? $option['value'] ?? '' ?></div>
+                                    <div class="e-label-main"><?php echo $option['label'] ?? $option['value'] ?? '' ?></div>
                                     <?php if (isset($option['sub_label']) && !empty($option['sub_label'])) { ?>
                                         <p class="e-sublabel"><?php echo $option['sub_label'] ?></p>
                                     <?php } ?>

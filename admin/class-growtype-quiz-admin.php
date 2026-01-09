@@ -104,5 +104,11 @@ class Growtype_Quiz_Admin
          */
         require_once GROWTYPE_QUIZ_PATH . 'admin/methods/statistic/growtype-quiz-admin-statistic.php';
         new Growtype_Quiz_Admin_Statistic();
+
+        /**
+         * Quiz
+         */
+        require_once GROWTYPE_QUIZ_PATH . 'admin/methods/quiz/growtype-quiz-admin-quiz.php';
+        new Growtype_Quiz_Admin_Quiz();
     }
 }

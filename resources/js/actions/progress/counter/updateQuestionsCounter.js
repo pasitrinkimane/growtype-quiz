@@ -21,7 +21,7 @@ export function updateQuestionsCounter(quizWrapper, nextQuestion = null) {
     }
 
     window.growtype_quiz_global[quizId]['quiz_questions_amount'] = quizWrapper.find('.growtype-quiz-question[data-funnel="a"]:not(.growtype-quiz-question[data-question-type="success"]):not(.is-always-visible):not(.exclude-questions-amount)').length;
-    window.growtype_quiz_global[quizId]['quiz_counted_questions_amount'] = quizWrapper.find('.growtype-quiz-question[data-funnel="a"]:not(.growtype-quiz-question[data-question-type="success"]):not(.growtype-quiz-question[data-question-type="info"]):not([class*="skipped"]):not(.is-always-visible)').length + window.growtype_quiz_global[quizId]['additional_questions_amount'];
+    window.growtype_quiz_global[quizId]['quiz_counted_questions_amount'] = quizWrapper.find('.growtype-quiz-question[data-funnel="a"]:not(.growtype-quiz-question[data-question-type="success"]):not(.exclude-questions-amount):not([class*="skipped"]):not(.is-always-visible)').length + window.growtype_quiz_global[quizId]['additional_questions_amount'];
 
     if (window.growtype_quiz_global[quizId]['already_visited_questions_funnels']) {
         window.growtype_quiz_global[quizId]['already_visited_questions_funnels'].map(function (element) {

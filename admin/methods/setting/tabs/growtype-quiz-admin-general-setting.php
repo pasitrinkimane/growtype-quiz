@@ -85,7 +85,7 @@ class Growtype_Quiz_Admin_General_Setting
 
         add_settings_field(
             'growtype_quiz_theme',
-            'Quiz Style',
+            'Default Quiz Theme',
             array ($this, 'growtype_quiz_theme_callback'),
             'growtype-quiz-settings',
             'growtype_quiz_settings_general'

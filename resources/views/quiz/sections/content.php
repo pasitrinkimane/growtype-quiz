@@ -43,12 +43,12 @@ $id = wp_generate_password('12', false);
                     <?php do_action('growtype_quiz_inner_after_open') ?>
 
                     <?php if (isset($quiz_data['show_quiz_header']) && $quiz_data['show_quiz_header']) { ?>
-                        <div class="growtype-quiz-header">
+                        <div class="growtype-quiz-header <?= $quiz_data['quiz_header_hide_initially'] ? 'd-none hide-initially' : 'show-initially' ?>">
                             <?php do_action('growtype_quiz_header_after_open') ?>
                             <div class="growtype-quiz-nav" data-type="header">
                                 <div class="growtype-quiz-nav-inner">
                                     <?php if (isset($quiz_data['show_quiz_header_back_btn']) && $quiz_data['show_quiz_header_back_btn']) { ?>
-                                        <div class="growtype-quiz-btn-go-back <?= $quiz_data['show_quiz_header_back_btn_hide_initially'] ? 'hide-initially' : 'show initially' ?>" data-back-url="<?php echo growtype_quiz_get_back_url() ?>">
+                                        <div class="growtype-quiz-btn-go-back <?= $quiz_data['quiz_header_back_btn_hide_initially'] ? 'hide-initially' : 'show-initially' ?>" data-back-url="<?php echo growtype_quiz_get_back_url() ?>">
                                             <svg class="icon-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M1 7C0.447715 7 4.82823e-08 7.44772 0 8C-4.82823e-08 8.55228 0.447715 9 1 9L1 7ZM15.7071 8.70711C16.0976 8.31658 16.0976 7.68342 15.7071 7.29289L9.34315 0.928933C8.95262 0.538409 8.31946 0.538409 7.92893 0.928933C7.53841 1.31946 7.53841 1.95262 7.92893 2.34315L13.5858 8L7.92893 13.6569C7.53841 14.0474 7.53841 14.6805 7.92893 15.0711C8.31946 15.4616 8.95262 15.4616 9.34315 15.0711L15.7071 8.70711ZM1 9L15 9L15 7L1 7L1 9Z" fill="black"/>
                                             </svg>
@@ -61,7 +61,7 @@ $id = wp_generate_password('12', false);
                                 <?php echo growtype_quiz_include_view('quiz.partials.components.question-nr', ['quiz_data' => $quiz_data]); ?>
                             <?php } ?>
                             <?php if (isset($quiz_data['progress_bar']) && $quiz_data['progress_bar']) { ?>
-                                <div class="growtype-quiz-progressbar">
+                                <div class="growtype-quiz-progressbar <?= $quiz_data['quiz_header_progress_bar_hide_initially'] ? 'hide-initially' : 'show-initially' ?>">
                                     <div class="growtype-quiz-progressbar-inner"></div>
                                 </div>
                             <?php } ?>

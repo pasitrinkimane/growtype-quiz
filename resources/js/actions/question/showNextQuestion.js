@@ -12,7 +12,8 @@ import {loader} from "../progress/loader/loader";
 import {showQuestionEvent} from "../../events/showQuestionEvent";
 import {textareaCharactersCounter} from "../../components/textareaCharactersCounter";
 import {input} from "../../components/input";
-import {getQuizData} from "../../helpers/getQuizData";
+import {getQuizData} from "../../helpers/data";
+import {quizStepShouldBeSkipped} from "../../helpers/progress";
 
 /**
  * Show next question
@@ -168,7 +169,7 @@ export function showNextQuestion(currentQuestion) {
 
     window.quizLastQuestion = currentQuestion;
 
-    if ($(currentQuestion).attr('data-question-type') !== 'info') {
+    if (quizStepShouldBeSkipped(currentQuestion)) {
         window.growtype_quiz_global[quizId]['current_question_counter_nr']++;
     }
 

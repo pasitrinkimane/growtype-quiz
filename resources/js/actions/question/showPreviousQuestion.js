@@ -1,9 +1,12 @@
-import {updateProgressCounter} from "../../actions/progress/counter/updateProgressCounter.js";
-import {updateProgressBar} from "../../actions/progress/bar/updateProgressBar";
-import {updateQuestionsCounter} from "../progress/counter/updateQuestionsCounter";
-import {getQuizData} from "../../helpers/getQuizData";
-import {updateQuizComponents} from "./updateQuizComponents";
-import {showQuestionEvent} from "../../events/showQuestionEvent";
+import { updateProgressCounter } from "../../actions/progress/counter/updateProgressCounter.js";
+import { updateProgressBar } from "../../actions/progress/bar/updateProgressBar";
+import { updateQuestionsCounter } from "../progress/counter/updateQuestionsCounter";
+import { getQuizData } from "../../helpers/data";
+import { updateQuizComponents } from "./updateQuizComponents";
+import { showQuestionEvent } from "../../events/showQuestionEvent";
+import { quizStepShouldBeSkipped } from "../../helpers/progress";
+
+import { storage } from "../../helpers/storage";
 
 /**
  * Show next slide
@@ -39,17 +42,17 @@ export function showPreviousQuestion(quizWrapper) {
     window.growtype_quiz_global[quizId]['already_visited_questions_funnels'].splice(-1)
 
     Object.entries(getQuizData(quizId)['answers']).map(function (answer, key) {
-        if (answer[0].includes(lastVisitedQuestionKey)) {
+        if (typeof answer[0] === 'string' && answer[0].includes(lastVisitedQuestionKey)) {
             delete getQuizData(quizId)['answers'][answer[0]]
         }
     });
 
-    sessionStorage.setItem('growtype_quiz_answers', JSON.stringify(getQuizData(quizId)['answers']));
+    storage.set('growtype_quiz_answers', JSON.stringify(getQuizData(quizId)['answers']), 'session');
 
     window.quizLastQuestion = currentQuestion;
     window.growtype_quiz_global[quizId]['current_question_nr'] = previousQuestion.attr('data-question-nr');
 
-    if (previousQuestion.attr('data-question-type') !== 'info') {
+    if (quizStepShouldBeSkipped(previousQuestion)) {
         window.growtype_quiz_global[quizId]['current_question_counter_nr']--;
     }
 

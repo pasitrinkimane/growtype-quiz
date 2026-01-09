@@ -3,8 +3,8 @@
 /**
  *
  */
-if (!function_exists('growtype_quiz_get_questions')) {
-    function growtype_quiz_get_questions($quiz_id)
+if (!function_exists('growtype_quiz_get_acf_questions')) {
+    function growtype_quiz_get_acf_questions($quiz_id)
     {
         return get_field('questions', $quiz_id);
     }
@@ -26,7 +26,7 @@ if (!function_exists('growtype_quiz_get_back_url')) {
 if (!function_exists('growtype_quiz_get_question_by_title')) {
     function growtype_quiz_get_question_by_title($question_title, $quiz_id)
     {
-        $questions = growtype_quiz_get_questions($quiz_id);
+        $questions = growtype_quiz_get_acf_questions($quiz_id);
 
         foreach ($questions as $question) {
             if ($question['question_title'] === $question_title) {
@@ -157,15 +157,19 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
         $intro_f_img = '';
         $iframe_hide_header_footer = get_option('growtype_quiz_iframe_hide_header_footer') && isset($_SERVER['HTTP_SEC_FETCH_DEST']) && $_SERVER['HTTP_SEC_FETCH_DEST'] == 'iframe';
 
+        $quiz_slug = isset($extra_data['quiz_slug']) && !empty($extra_data['quiz_slug']) ? $extra_data['quiz_slug'] : null;
+
         if (!empty($quiz_id)) {
-            $intro_content = get_post($quiz_id);
-            $intro_content = !empty($intro_content) ? apply_filters('the_content', $intro_content->post_content) : '';
+            $post = get_post($quiz_id);
+            $intro_content = !empty($post) ? apply_filters('the_content', $post->post_content) : '';
             $intro_f_img = !empty(get_post_thumbnail_id($quiz_id)) && isset(wp_get_attachment_image_src(get_post_thumbnail_id($quiz_id), 'single-post-thumbnail')[0]) ? wp_get_attachment_image_src(get_post_thumbnail_id($quiz_id), 'single-post-thumbnail')[0] : '';
+
+            if (empty($quiz_slug) && !empty($post)) {
+                $quiz_slug = $post->post_name;
+            }
         }
 
-        if (isset($extra_data['quiz_slug']) && !empty($extra_data['quiz_slug'])) {
-            $quiz_slug = $extra_data['quiz_slug'];
-        } else {
+        if (empty($quiz_slug)) {
             $quiz_slug = parse_url($_SERVER['REQUEST_URI'])['path'] ?? '';
             $quiz_slug = trim($quiz_slug, '/');
             $quiz_slug = str_replace(Growtype_Quiz::get_growtype_quiz_post_type() . '/', '', $quiz_slug);
@@ -200,7 +204,10 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
             'has_additional_open_question' => false,
             'show_quiz_header' => true,
             'show_quiz_header_back_btn' => true,
-            'show_quiz_header_back_btn_hide_initially' => false,
+            'quiz_header_hide_initially' => false,
+            'quiz_header_back_btn_hide_initially' => false,
+            'quiz_header_progress_bar_hide_initially' => false,
+            'quiz_header_slide_counter_hide_initially' => false,
             'show_quiz_footer' => true,
             'update_quiz_data_if_token_exists' => apply_filters('growtype_quiz_update_quiz_data_if_token_exists', false, $quiz_id),
             'questions' => [
@@ -415,5 +422,20 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
         $quiz_data['questions_available_amount'] = isset($quiz_data['questions_available']) && !empty($quiz_data['questions_available']) ? count($quiz_data['questions_available']) : '';
 
         return $quiz_data;
+    }
+}
+
+function growtype_quiz_get_quiz_theme($quiz_id)
+{
+    return get_post_meta($quiz_id, '_quiz_theme', true);
+}
+
+/**
+ * Quiz is results page url
+ */
+if (!function_exists('growtype_quiz_current_page_is_quiz_page')) {
+    function growtype_quiz_current_page_is_quiz_page()
+    {
+        return get_post_type() === GROWTYPE_QUIZ_POST_TYPE;
     }
 }

@@ -27,7 +27,8 @@ export function disabledValueIsIncluded(quizWrapper, disabledIf) {
     if (window.growtype_quiz_data[quizId]['answers'][key] !== undefined) {
         let includes = false;
         values.map(function (value) {
-            if (window.growtype_quiz_data[quizId]['answers'][key].includes(value)) {
+            let answerValue = window.growtype_quiz_data[quizId]['answers'][key];
+            if ((Array.isArray(answerValue) || typeof answerValue === 'string') && answerValue.includes(value)) {
                 includes = true;
             }
         })

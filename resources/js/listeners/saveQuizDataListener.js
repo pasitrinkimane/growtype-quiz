@@ -1,5 +1,7 @@
-import {showLastQuestion} from "../actions/question/showLastQuestion";
-import {prepareSubmitFormData} from "../actions/question/prepareSubmitFormData";
+import { showLastQuestion } from "../actions/question/showLastQuestion";
+import { prepareSubmitFormData } from "../actions/question/prepareSubmitFormData";
+
+import { storage } from "../helpers/storage";
 
 /**
  * Save quiz data
@@ -18,7 +20,7 @@ function saveQuizDataListener(data) {
     const extraDetails = data.detail.extra_details && Object.entries(data.detail.extra_details).length > 0 ? data.detail.extra_details : null;
     const showLastQuestionOnError = false;
 
-    let formData = prepareSubmitFormData(answers, extraDetails)
+    let formData = prepareSubmitFormData(quizId, answers, extraDetails);
 
     /**
      * Save extra data to answers
@@ -38,7 +40,7 @@ function saveQuizDataListener(data) {
                 /**
                  * Save data to local storage
                  */
-                localStorage.setItem("growtype_quiz_unique_hash", data.unique_hash);
+                storage.set("growtype_quiz_unique_hash", data.unique_hash);
 
                 /**
                  * Set unique hash if input exists
@@ -50,7 +52,7 @@ function saveQuizDataListener(data) {
                 /**
                  * Save data to local storage
                  */
-                localStorage.setItem("growtype_quiz_answers", JSON.stringify(answers));
+                storage.set("growtype_quiz_answers", JSON.stringify(answers));
 
                 /**
                  * Redirect url
@@ -62,16 +64,18 @@ function saveQuizDataListener(data) {
                  */
                 setTimeout(function () {
                     if (quizWrapper.find('.growtype-quiz-loader-wrapper:visible').length > 0) {
-                        if (redirectUrl !== null && redirectUrl.length > 0) {
-                            if (quizWrapper.find('.growtype-quiz-loader-wrapper').attr('data-redirect-url').length === 0) {
-                                quizWrapper.find('.growtype-quiz-loader-wrapper').attr('data-redirect-url', redirectUrl);
+                        if (redirectUrl && redirectUrl.length > 0) {
+                            const loaderWrapper = quizWrapper.find('.growtype-quiz-loader-wrapper');
+
+                            if (!loaderWrapper.attr('data-redirect-url') || loaderWrapper.attr('data-redirect-url').length === 0) {
+                                loaderWrapper.attr('data-redirect-url', redirectUrl);
                             }
 
-                            quizWrapper.find('.growtype-quiz-loader-wrapper .btn-continue').attr('href', redirectUrl);
+                            loaderWrapper.find('.btn-continue').attr('href', redirectUrl);
                         }
                     } else {
-                        if (redirectUrl !== null && redirectUrl.length > 0) {
-                            window.location.replace(data.redirect_url);
+                        if (redirectUrl && redirectUrl.length > 0) {
+                            window.location.replace(redirectUrl);
                         }
                     }
                 }, 500)

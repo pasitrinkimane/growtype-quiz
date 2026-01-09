@@ -66,7 +66,7 @@ class Growtype_Quiz_Loader
     {
         $showed = isset($_COOKIE['acf_required_admin_notice_showed']) ? $_COOKIE['acf_required_admin_notice_showed'] : false;
 
-        if (is_admin() && !class_exists('ACF') && !$showed) {
+        if (is_admin() && !class_exists('ACF') && !$showed && current_user_can('manage_options')) {
             add_action('admin_notices', array ($this, 'acf_required_admin_notice'));
             setcookie('acf_required_admin_notice_showed', true, strtotime('+1 day'));
         }

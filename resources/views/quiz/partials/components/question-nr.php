@@ -1,4 +1,4 @@
-<div class="growtype-quiz-question-nr" data-counter-style="<?php echo $quiz_data['slide_counter_style'] ?>">
+<div class="growtype-quiz-question-nr <?= $quiz_data['quiz_header_slide_counter_hide_initially'] ? 'hide-initially' : 'show-initially' ?>" data-counter-style="<?php echo $quiz_data['slide_counter_style'] ?>">
     <?php if ($quiz_data['slide_counter_style'] === 'steps') { ?>
         <span class="growtype-quiz-question-nr-current-slide"></span>
         <span class="growtype-quiz-question-nr-separator"><?php echo __('from', 'growtype-quiz') ?></span>

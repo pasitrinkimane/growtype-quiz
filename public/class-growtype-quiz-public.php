@@ -106,12 +106,13 @@ class Growtype_Quiz_Public
              */
             $localize_data = array (
                 'ajax_url' => admin_url('admin-ajax.php'),
+                'nonce' => wp_create_nonce('growtype_quiz_ajax_nonce'), // SECURITY: Added nonce for CSRF protection
                 'unique_hash' => $unique_hash,
                 'unit_system' => Growtype_Quiz_Public::DEFAULT_UNIT_SYSTEM,
             );
 
             if (isset($_GET[Growtype_Quiz::TOKEN_KEY]) && !empty($_GET[Growtype_Quiz::TOKEN_KEY])) {
-                $localize_data[Growtype_Quiz::TOKEN_KEY] = $_GET[Growtype_Quiz::TOKEN_KEY];
+                $localize_data[Growtype_Quiz::TOKEN_KEY] = sanitize_text_field($_GET[Growtype_Quiz::TOKEN_KEY]);
             }
 
             wp_localize_script(Growtype_Quiz::PLUGIN_KEY, 'growtype_quiz_local',

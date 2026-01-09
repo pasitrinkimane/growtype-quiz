@@ -1,5 +1,5 @@
-import {getQuizData} from "../../helpers/getQuizData";
-import {collectQuizDataEvent} from "../../events/collectQuizDataEvent";
+import { getQuizData } from "../../helpers/data";
+import { collectQuizDataEvent } from "../../events/collectQuizDataEvent";
 
 let existingAnswersParams = new URLSearchParams(window.location.search).get('answers');
 let existingAnswers = {};
@@ -14,6 +14,8 @@ if (existingAnswersParams) {
         }
     });
 }
+
+import { storage } from "../../helpers/storage";
 
 export function collectQuizData(currentQuestion) {
     let quizWrapper = currentQuestion.closest('.growtype-quiz-wrapper');
@@ -107,6 +109,28 @@ export function collectQuizData(currentQuestion) {
     }
 
     /**
+     * Custom values
+     */
+    currentQuestion.find('.growtype-quiz-custom-value.can-collect').each(function () {
+        const value = $(this).attr('data-value');
+        const key = $(this).attr('data-key');
+
+        if (key) {
+            // Ensure it's an object for key/value data
+            if (Array.isArray(answers[currentQuestionKey])) {
+                answers[currentQuestionKey] = {};
+            }
+            answers[currentQuestionKey][key] = value;
+        } else {
+            // Ensure it's an array for value-only data
+            if (!Array.isArray(answers[currentQuestionKey])) {
+                answers[currentQuestionKey] = [];
+            }
+            answers[currentQuestionKey].push(value);
+        }
+    });
+
+    /**
      * Collect extra details
      */
     document.dispatchEvent(collectQuizDataEvent({
@@ -117,7 +141,7 @@ export function collectQuizData(currentQuestion) {
     /**
      * Save answers to session
      */
-    sessionStorage.setItem('growtype_quiz_answers', JSON.stringify(answers));
+    storage.set('growtype_quiz_answers', JSON.stringify(answers), 'session');
 
     getQuizData(quizId)['answers'] = answers;
 }

@@ -1,3 +1,5 @@
+import { quizStepShouldBeSkipped } from "../../../helpers/progress";
+
 let progressbarIndicatorWidth = 0;
 let progressbarStepWidth = 0;
 
@@ -34,7 +36,7 @@ export function updateProgressBar(quizWrapper) {
         let separatorsStepSize = [];
         quizWrapper.find('.growtype-quiz .growtype-quiz-question').each(function (index, element) {
             if (
-                $(element).attr('data-question-type') !== 'info'
+                quizStepShouldBeSkipped(element)
                 &&
                 (
                     $(element).attr('data-funnel') === window.growtype_quiz_global[quizId]['initial_funnel'] ||
@@ -86,7 +88,7 @@ export function updateProgressBar(quizWrapper) {
 
                 currentStepsLength += progressbarStepWidth;
             }
-        })
+        });
 
         progressbarIndicatorWidth = currentStepsLength;
     } else {
@@ -96,5 +98,11 @@ export function updateProgressBar(quizWrapper) {
 
     quizWrapper.find('.growtype-quiz-progressbar-inner').width(progressbarIndicatorWidth);
 
-    sessionStorage.setItem(quizGlobalStorageKey, JSON.stringify(window.growtype_quiz_global))
+    try {
+        if (window.sessionStorage) {
+            sessionStorage.setItem(quizGlobalStorageKey, JSON.stringify(window.growtype_quiz_global))
+        }
+    } catch (e) {
+        console.warn("Could not save growtype_quiz_global to sessionStorage");
+    }
 }

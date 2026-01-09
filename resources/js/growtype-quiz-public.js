@@ -1,4 +1,4 @@
-import {getQuizData} from "./helpers/getQuizData";
+import {getQuizData} from "./helpers/data";
 import {saveQuizDataEvent} from "./events/saveQuizDataEvent";
 import {showInitialQuestion} from './actions/question/showInitialQuestion.js';
 import {nextQuestionTrigger} from './components/nextQuestionTrigger.js';

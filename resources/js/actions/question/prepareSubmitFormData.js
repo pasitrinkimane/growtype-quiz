@@ -1,6 +1,7 @@
-export function prepareSubmitFormData(answers, extraDetails = null) {
-    const quizWrapper = $('.growtype-quiz-wrapper');
-    const quizId = quizWrapper.attr('id');
+import { storage } from "../../helpers/storage";
+
+export function prepareSubmitFormData(quizId, answers, extraDetails = null) {
+    const quizWrapper = $('#' + quizId);
     const quizPostId = quizWrapper.attr('data-quiz-post-id');
     const quizSlug = quizWrapper.attr('data-quiz-slug');
     const duration = window.growtype_quiz_global[quizId]?.duration ?? null;
@@ -20,11 +21,17 @@ export function prepareSubmitFormData(answers, extraDetails = null) {
     formData.append("quiz_id", quizPostId);
     formData.append("quiz_slug", quizSlug);
     formData.append("duration", duration);
-    formData.append("unique_hash", window.growtype_quiz_local?.unique_hash ?? '');
 
-    let existingToken = window.growtype_quiz_local?.token || localStorage.growtype_quiz_unique_hash || null;
+    let uniqueHash = (window.growtype_quiz_local && window.growtype_quiz_local.unique_hash) || storage.get("growtype_quiz_unique_hash");
+    formData.append("unique_hash", uniqueHash);
+
+    if (window.growtype_quiz_local && window.growtype_quiz_local.nonce) {
+        formData.append("nonce", window.growtype_quiz_local.nonce);
+    }
+
+    let existingToken = (window.growtype_quiz_local && window.growtype_quiz_local.gqtoken) || storage.get("growtype_quiz_unique_hash") || null;
     if (existingToken) {
-        formData.append("token", existingToken);
+        formData.append("gqtoken", existingToken);
     }
 
     // Append files safely

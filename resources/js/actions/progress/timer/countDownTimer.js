@@ -1,6 +1,6 @@
 import {showSuccessQuestionEvent} from "../../../events/showSuccessQuestionEvent";
 import {saveQuizDataEvent} from "../../../events/saveQuizDataEvent";
-import {getQuizData} from "../../../helpers/getQuizData";
+import {getQuizData} from "../../../helpers/data";
 
 /**
  * Calculate time

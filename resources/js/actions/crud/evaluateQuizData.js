@@ -1,4 +1,4 @@
-import {getQuizData} from "../../helpers/getQuizData";
+import {getQuizData} from "../../helpers/data";
 import {resultsEvaluatedEvent} from "../../events/resultsEvaluatedEvent";
 
 export function evaluateQuizData(quizWrapper) {

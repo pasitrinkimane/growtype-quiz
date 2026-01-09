@@ -1,5 +1,5 @@
-import {updateQuizComponents} from "./updateQuizComponents";
-import {showQuestionEvent} from "../../events/showQuestionEvent";
+import { updateQuizComponents } from "./updateQuizComponents";
+import { showQuestionEvent } from "../../events/showQuestionEvent";
 
 /**
  * Show last slide
@@ -10,6 +10,11 @@ export function showInitialQuestion(quizWrapper) {
     }
 
     let quizId = quizWrapper.attr('id');
+
+    // Ensure the global object for this quiz exists
+    window.growtype_quiz_global = window.growtype_quiz_global || {};
+    window.growtype_quiz_global[quizId] = window.growtype_quiz_global[quizId] || {};
+
     let questionNr = quizWrapper.find('.growtype-quiz').find('.growtype-quiz-question').not(".is-always-visible").first().attr('data-question-nr');
 
     if (questionNr === undefined) {
@@ -21,7 +26,14 @@ export function showInitialQuestion(quizWrapper) {
         questionNr = quizWrapper.find('.growtype-quiz').attr('data-show-question-nr-in-url') && questionNr !== 'undefined' ? parseInt(questionNr) : 1;
         questionNr = !isNaN(questionNr) ? questionNr : 1;
 
-        window.growtype_quiz_global[quizId]['current_question_counter_nr'] = questionNr;
+        let excludedFromCountingQuestionsAmount = $('.exclude-questions-amount').length ?? 0;
+        let current_question_counter_nr = questionNr;
+
+        if (questionNr > 1) {
+            current_question_counter_nr = questionNr - excludedFromCountingQuestionsAmount;
+        }
+
+        window.growtype_quiz_global[quizId]['current_question_counter_nr'] = current_question_counter_nr;
     }
 
     let question = quizWrapper.find('.growtype-quiz-question[data-question-nr="' + questionNr + '"]');
