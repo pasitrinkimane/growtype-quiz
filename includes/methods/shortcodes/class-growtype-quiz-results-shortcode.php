@@ -107,7 +107,11 @@ class Growtype_Quiz_Results_Shortcode
                                 echo '<li><strong>' . esc_html($answer_key) . ':</strong>';
                                 echo '<ul style="margin: 6px 0 6px 16px;">';
                                 foreach ($answer as $sub_key => $sub_value) {
-                                    echo '<li>' . wp_kses_post($sub_value) . '</li>';
+                                    // Handle nested arrays by converting to JSON or string representation
+                                    if (is_array($sub_value)) {
+                                        $sub_value = json_encode($sub_value);
+                                    }
+                                    echo '<li>' . wp_kses_post((string)$sub_value) . '</li>';
                                 }
                                 echo '</ul></li>';
 
