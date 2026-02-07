@@ -427,7 +427,9 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
 
 function growtype_quiz_get_quiz_theme($quiz_id)
 {
-    return get_post_meta($quiz_id, '_quiz_theme', true);
+    $theme = get_post_meta($quiz_id, '_quiz_theme', true);
+
+    return apply_filters('growtype_quiz_get_quiz_theme', $theme, $quiz_id);
 }
 
 /**
