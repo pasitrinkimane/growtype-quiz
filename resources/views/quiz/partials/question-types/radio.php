@@ -15,6 +15,7 @@
                     }
 
                     $classes = implode(' ', $classes);
+
                     ?>
                     <div class="growtype-quiz-question-answer-wrapper">
                         <div class="<?php echo $classes ?>"

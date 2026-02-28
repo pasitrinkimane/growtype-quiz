@@ -3,6 +3,32 @@
 /**
  *
  */
+if (!function_exists('growtype_quiz_get_registry')) {
+    function growtype_quiz_get_registry()
+    {
+        return apply_filters('growtype_quiz_registry', []);
+    }
+}
+
+if (!function_exists('growtype_quiz_get_current_slug')) {
+    function growtype_quiz_get_current_slug()
+    {
+        $quiz_slug = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '';
+        $quiz_slug = trim($quiz_slug, '/');
+        
+        $post_type = Growtype_Quiz::get_growtype_quiz_post_type();
+        
+        // Remove post type prefix if present (e.g., 'quiz/girlfriend' -> 'girlfriend')
+        if (strpos($quiz_slug, $post_type . '/') === 0) {
+            $quiz_slug = substr($quiz_slug, strlen($post_type . '/'));
+        }
+        
+        $quiz_slug = str_replace('-', '_', $quiz_slug);
+        
+        return $quiz_slug;
+    }
+}
+
 if (!function_exists('growtype_quiz_get_acf_questions')) {
     function growtype_quiz_get_acf_questions($quiz_id)
     {
@@ -170,10 +196,7 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
         }
 
         if (empty($quiz_slug)) {
-            $quiz_slug = parse_url($_SERVER['REQUEST_URI'])['path'] ?? '';
-            $quiz_slug = trim($quiz_slug, '/');
-            $quiz_slug = str_replace(Growtype_Quiz::get_growtype_quiz_post_type() . '/', '', $quiz_slug);
-            $quiz_slug = str_replace('-', '_', $quiz_slug);
+            $quiz_slug = growtype_quiz_get_current_slug();
         }
 
         $quiz_data = [
@@ -428,6 +451,31 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
 function growtype_quiz_get_quiz_theme($quiz_id)
 {
     $theme = get_post_meta($quiz_id, '_quiz_theme', true);
+
+    $slug = '';
+    if (!empty($quiz_id) && get_post_type($quiz_id) === Growtype_Quiz::get_growtype_quiz_post_type()) {
+        $post = get_post($quiz_id);
+        $slug = !empty($post) ? $post->post_name : '';
+    }
+
+    if (empty($slug)) {
+        $slug = growtype_quiz_get_current_slug();
+    }
+
+    $normalized_slug = str_replace('-', '_', $slug);
+    $registry = growtype_quiz_get_registry();
+
+    // Check by slug first
+    if (isset($registry[$normalized_slug]['theme'])) {
+        return $registry[$normalized_slug]['theme'];
+    }
+
+    // Check by ID if slug didn't match
+    foreach ($registry as $item) {
+        if (isset($item['quiz_id']) && (int)$item['quiz_id'] === (int)$quiz_id && isset($item['theme'])) {
+            return $item['theme'];
+        }
+    }
 
     return apply_filters('growtype_quiz_get_quiz_theme', $theme, $quiz_id);
 }

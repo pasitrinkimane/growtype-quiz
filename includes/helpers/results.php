@@ -61,8 +61,52 @@ function growtype_quiz_map_quiz_answers_with_questions($answers, $questions, $qu
 {
     $results_data = [];
 
+    /**
+     * Custom quiz (no questions defined) — build results structure directly from raw answers
+     */
     if (empty($questions)) {
-        return [];
+        $custom_answer_keys = ['spicy_photos', 'voice_messages', 'special_videos'];
+
+        foreach ($answers as $key => $value) {
+            if (in_array($key, $custom_answer_keys)) {
+                $results_data['custom_answers']['answers'][$key] = $value;
+                continue;
+            }
+
+            // Associative arrays (e.g. character_traits with libido/kink/nudity)
+            if (is_array($value) && !array_is_list($value)) {
+                $results_data[$key] = [
+                    'answers' => $value,
+                    'question_title' => ucwords(str_replace('_', ' ', $key)),
+                    'question_intro' => ucwords(str_replace('_', ' ', $key)),
+                    'question_key' => $key,
+                ];
+                continue;
+            }
+
+            // Indexed arrays — wrap each value as a labeled answer
+            $formatted_answers = [];
+            if (is_array($value)) {
+                foreach ($value as $v) {
+                    $formatted_answers[] = ['label' => $v, 'value' => $v];
+                }
+            } else {
+                $formatted_answers[] = ['label' => $value, 'value' => $value];
+            }
+
+            $results_data[$key] = [
+                'answers' => $formatted_answers,
+                'question_title' => ucwords(str_replace('_', ' ', $key)),
+                'question_intro' => ucwords(str_replace('_', ' ', $key)),
+                'question_key' => $key,
+            ];
+        }
+
+        if (!empty($results_data['custom_answers'])) {
+            $results_data['custom_answers']['question_intro'] = 'Extra answers';
+        }
+
+        return $results_data;
     }
 
     $custom_answers = [];
@@ -165,7 +209,7 @@ function growtype_quiz_map_quiz_results_with_quiz_data($quiz_results_data)
 
         $quiz_id = $quiz_result_data['quiz_id'];
 
-        $quiz_data = growtype_quiz_get_quiz_data($quiz_id);
+        $quiz_data = !empty($quiz_id) ? growtype_quiz_get_quiz_data($quiz_id) : null;
 
         $questions = $quiz_data['questions'] ?? [];
 
