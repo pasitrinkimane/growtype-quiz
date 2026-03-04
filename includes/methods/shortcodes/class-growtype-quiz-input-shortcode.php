@@ -40,6 +40,7 @@ class Growtype_Quiz_Input_Shortcode
             'group_label' => isset($attr['group_label']) ? $attr['group_label'] : '',
             'unit_system' => isset($attr['unitsystem']) ? $attr['unitsystem'] : Growtype_Quiz_Public::DEFAULT_UNIT_SYSTEM,
             'show_next_btn' => filter_var($attr['show_next_btn'] ?? false, FILTER_VALIDATE_BOOLEAN),
+            'value' => isset($attr['value']) ? $attr['value'] : '',
         ];
 
         ob_start();

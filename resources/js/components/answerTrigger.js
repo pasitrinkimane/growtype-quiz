@@ -1,7 +1,7 @@
-import {showNextQuestion} from "../actions/question/showNextQuestion";
-import {collectQuizData} from "../actions/crud/collectQuizData";
-import {validateQuestion} from "../listeners/validation/validateQuestion";
-import {updateBgImage} from "../actions/question/updateBgImage";
+import { showNextQuestion } from "../actions/question/showNextQuestion";
+import { collectQuizData } from "../actions/crud/collectQuizData";
+import { validateQuestion } from "../listeners/validation/validateQuestion";
+import { updateBgImage } from "../actions/question/updateBgImage";
 
 export class answerTrigger {
     clickInit(answer) {
@@ -74,7 +74,7 @@ export class answerTrigger {
     }
 
     init(trigger = $('.growtype-quiz-question-answers .growtype-quiz-question-answer')) {
-        trigger.click(function () {
+        trigger.off('click').on('click', function (event) {
             new answerTrigger().clickInit($(this));
 
             if ($(this).attr('data-option-featured-img-main') === 'true') {
