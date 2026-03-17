@@ -52,7 +52,8 @@ class Growtype_Quiz_Admin_Result_List_Table extends WP_List_Table
         $args = array (
             'offset' => ($paged - 1) * $items_per_page,
             'limit' => $items_per_page,
-            'search' => $search_value
+            'search' => $search_value,
+            'user_id' => isset($_REQUEST['user_id']) ? $_REQUEST['user_id'] : ''
         );
 
         if (isset($_REQUEST['orderby'])) {
@@ -65,7 +66,7 @@ class Growtype_Quiz_Admin_Result_List_Table extends WP_List_Table
 
         $items = Growtype_Quiz_Result_Crud::get_quizes_results($args);
 
-        $total_items = Growtype_Quiz_Result_Crud::get_results_count();
+        $total_items = Growtype_Quiz_Result_Crud::get_results_count($args);
 
         $this->items = $items;
 
@@ -100,7 +101,7 @@ class Growtype_Quiz_Admin_Result_List_Table extends WP_List_Table
             'duration' => __('Duration', 'growtype-quiz'),
             'questions_amount' => __('Questions amount', 'growtype-quiz'),
             'correct_answers_amount' => __('Correct answers amount', 'growtype-quiz'),
-            'wrong_answers_amount' => __('Correct answers amount', 'growtype-quiz'),
+            'wrong_answers_amount' => __('Wrong answers amount', 'growtype-quiz'),
             'evaluated' => __('Evaluated', 'growtype-quiz'),
             'extra_details' => __('Extra details', 'growtype-quiz'),
             'unique_hash' => __('Unique hash', 'growtype-quiz'),

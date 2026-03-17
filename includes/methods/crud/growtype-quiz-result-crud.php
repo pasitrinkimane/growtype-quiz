@@ -82,7 +82,8 @@ class Growtype_Quiz_Result_Crud
             'search' => '',
             'limit' => '20',
             'orderby' => 'created_at',
-            'offset' => '0'
+            'offset' => '0',
+            'user_id' => ''
         ), $args));
 
         if ($limit === -1) {
@@ -91,11 +92,19 @@ class Growtype_Quiz_Result_Crud
 
         $table = self::table_name();
 
-        if (!empty($args['search'])) {
-            $query = "SELECT * from {$table} WHERE id Like '%{$search}%' OR user_id Like '%{$search}%' OR quiz_id Like '%{$search}%' OR answers Like '%{$search}%' ORDER BY {$orderby} {$order} LIMIT {$limit} OFFSET {$offset}";
-        } else {
-            $query = "SELECT * from {$table} ORDER BY {$orderby} {$order} LIMIT {$limit} OFFSET {$offset}";
+        $where = [];
+
+        if (!empty($search)) {
+            $where[] = $wpdb->prepare("(id Like '%%%s%%' OR user_id Like '%%%s%%' OR quiz_id Like '%%%s%%' OR answers Like '%%%s%%')", $search, $search, $search, $search);
         }
+
+        if (!empty($user_id)) {
+            $where[] = $wpdb->prepare("user_id = %d", $user_id);
+        }
+
+        $where_sql = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+
+        $query = "SELECT * from {$table} {$where_sql} ORDER BY {$orderby} {$order} LIMIT {$limit} OFFSET {$offset}";
 
         return $wpdb->get_results($query, ARRAY_A);
     }
@@ -103,11 +112,25 @@ class Growtype_Quiz_Result_Crud
     /**
      * @return array|bool|object|null
      */
-    public static function get_results_count()
+    public static function get_results_count($args = [])
     {
-        return count(self::get_quizes_results([
-            'limit' => -1
-        ]));
+        $args['limit'] = -1;
+        $args['offset'] = 0;
+
+        return count(self::get_quizes_results($args));
+    }
+
+    /**
+     * @param $user_id
+     * @return int
+     */
+    public static function get_user_results_count($user_id)
+    {
+        global $wpdb;
+
+        $table = self::table_name();
+
+        return (int)$wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$table} WHERE user_id = %d", $user_id));
     }
 
     /**
