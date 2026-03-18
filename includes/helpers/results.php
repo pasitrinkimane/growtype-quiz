@@ -9,7 +9,17 @@ if (!function_exists('growtype_quiz_get_unique_hash')) {
         $http_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         $http_x_forwarded_for = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : '';
         $remote_addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '';
-        $token = isset($_GET[Growtype_Quiz::TOKEN_KEY]) && !empty($_GET[Growtype_Quiz::TOKEN_KEY]) ? $_GET[Growtype_Quiz::TOKEN_KEY] : null;
+        $token = isset($_REQUEST[Growtype_Quiz::TOKEN_KEY]) && !empty($_REQUEST[Growtype_Quiz::TOKEN_KEY]) ? $_REQUEST[Growtype_Quiz::TOKEN_KEY] : null;
+
+        if (empty($token) && isset($_REQUEST['redirect_after'])) {
+            $query = parse_url($_REQUEST['redirect_after'], PHP_URL_QUERY);
+            if ($query) {
+                parse_str($query, $params);
+                if (!empty($params[Growtype_Quiz::TOKEN_KEY])) {
+                    $token = $params[Growtype_Quiz::TOKEN_KEY];
+                }
+            }
+        }
 
         $transient_id = $http_x_forwarded_for . $remote_addr . $http_user_agent;
         $transient_id = str_replace(' ', '_', $transient_id);
@@ -238,11 +248,11 @@ function growtype_quiz_get_extended_user_quizes_results($user_id = null, $quiz_i
     } else {
         $quiz_result_data = growtype_quiz_get_user_results($user_id);
 
-        if (!empty($quiz_id)) {
+        if (!empty($quiz_id) && is_array($quiz_result_data)) {
             $quiz_result_data = array_filter($quiz_result_data, function ($value) use ($quiz_id) {
                 return $value['quiz_id'] === $quiz_id;
             });
-        } elseif (!empty($quiz_hash)) {
+        } elseif (!empty($quiz_hash) && is_array($quiz_result_data)) {
             $quiz_result_data = array_filter($quiz_result_data, function ($value) use ($quiz_hash) {
                 return $value['unique_hash'] === $quiz_hash;
             });
