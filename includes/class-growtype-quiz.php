@@ -346,7 +346,7 @@ class Growtype_Quiz
     {
         $custom_post_type_name = get_option('growtype_quiz_custom_post_type_label_name');
 
-        return !empty($custom_post_type_name) ? $custom_post_type_name : __('Quizes', 'growtype-quiz');
+        return !empty($custom_post_type_name) ? $custom_post_type_name : __('GA - Quiz', 'growtype-quiz');
     }
 
     /**
