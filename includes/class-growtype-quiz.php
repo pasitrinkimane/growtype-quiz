@@ -126,24 +126,43 @@ class Growtype_Quiz
      */
     private function load_dependencies()
     {
+        $this->load_core();
+        $this->load_admin_classes();
+        $this->load_public_classes();
+        $this->load_helpers();
+        $this->load_methods();
 
-        /**
-         * The class responsible for orchestrating the actions and filters of the
-         * core plugin.
-         */
+        $this->loader = new Growtype_Quiz_Loader();
+    }
+
+    private function load_core()
+    {
         require_once GROWTYPE_QUIZ_PATH . 'includes/class-growtype-quiz-loader.php';
-
-        /**
-         * The class responsible for defining internationalization functionality
-         * of the plugin.
-         */
         require_once GROWTYPE_QUIZ_PATH . 'includes/class-growtype-quiz-i18n.php';
+    }
 
-        /**
-         * The class responsible for defining all actions that occur in the admin area.
-         */
+    private function load_admin_classes()
+    {
         require_once GROWTYPE_QUIZ_PATH . 'admin/class-growtype-quiz-admin.php';
+    }
 
+    private function load_public_classes()
+    {
+        require_once GROWTYPE_QUIZ_PATH . 'public/class-growtype-quiz-public.php';
+    }
+
+    private function load_helpers()
+    {
+        require_once GROWTYPE_QUIZ_PATH . 'includes/helpers/general.php';
+        require_once GROWTYPE_QUIZ_PATH . 'includes/helpers/quiz.php';
+        require_once GROWTYPE_QUIZ_PATH . 'includes/helpers/results.php';
+    }
+
+    /**
+     * Load and instantiate all feature modules.
+     */
+    private function load_methods()
+    {
         /**
          * Crud
          */
@@ -163,20 +182,14 @@ class Growtype_Quiz
         new Growtype_Quiz_Ajax();
 
         /**
-         * The class responsible for defining all actions that occur in the public-facing
-         * side of the site.
+         * Quiz Definition base class & Registry
          */
-        require_once GROWTYPE_QUIZ_PATH . 'public/class-growtype-quiz-public.php';
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/quiz/class-growtype-quiz-definition.php';
+        
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/quiz/class-growtype-quiz-registry.php';
 
         /**
-         * The helper functions
-         */
-        require_once GROWTYPE_QUIZ_PATH . 'includes/helpers/general.php';
-        require_once GROWTYPE_QUIZ_PATH . 'includes/helpers/quiz.php';
-        require_once GROWTYPE_QUIZ_PATH . 'includes/helpers/results.php';
-
-        /**
-         * Shortcode
+         * Shortcodes
          */
         require_once GROWTYPE_QUIZ_PATH . 'includes/methods/shortcodes/class-growtype-quiz-input-shortcode.php';
         new Growtype_Quiz_Input_Shortcode();
@@ -186,11 +199,6 @@ class Growtype_Quiz
 
         require_once GROWTYPE_QUIZ_PATH . 'includes/methods/shortcodes/class-growtype-quiz-results-shortcode.php';
         new Growtype_Quiz_Results_Shortcode();
-
-        /**
-         * Load
-         */
-        $this->loader = new Growtype_Quiz_Loader();
     }
 
     /**
