@@ -73,18 +73,14 @@ export function updateQuizComponents(question) {
     }
 
     /**
-     * Hide nav
+     * Toggle class on nav if back btn is shown
      */
-    // if (quizWrapper.find('.growtype-quiz-nav').length > 0) {
-    //     let allBtnsAreVisible = false;
-    //     quizWrapper.find('.growtype-quiz-nav .btn').each(function (index, element) {
-    //         if ($(element).is(':visible')) {
-    //             allBtnsAreVisible = true;
-    //         }
-    //     });
-    //
-    //     if (!allBtnsAreVisible) {
-    //         quizWrapper.find('.growtype-quiz-nav').hide();
-    //     }
-    // }
+    quizWrapper.find('.growtype-quiz-nav').each(function () {
+        let backBtn = $(this).find('.growtype-quiz-btn-go-back');
+        if (backBtn.length > 0 && backBtn.css('display') !== 'none') {
+            $(this).addClass('has-back-btn');
+        } else {
+            $(this).removeClass('has-back-btn');
+        }
+    });
 }

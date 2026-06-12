@@ -1,19 +1,19 @@
-import {updateProgressCounter} from "../../actions/progress/counter/updateProgressCounter.js";
-import {updateQuestionsCounter} from "../../actions/progress/counter/updateQuestionsCounter.js";
-import {updateProgressBar} from "../../actions/progress/bar/updateProgressBar";
-import {saveQuizDataEvent} from "../../events/saveQuizDataEvent";
-import {disabledValueIsIncluded, showProgressIndicators} from "../../actions/progress/general";
-import {updateQuizComponents} from "./updateQuizComponents";
-import {showSuccessQuestionEvent} from "../../events/showSuccessQuestionEvent";
-import {showNextQuestionEvent} from "../../events/showNextQuestionEvent";
-import {validateQuestion} from "../../listeners/validation/validateQuestion";
-import {answerTrigger} from "../../components/answerTrigger";
-import {loader} from "../progress/loader/loader";
-import {showQuestionEvent} from "../../events/showQuestionEvent";
-import {textareaCharactersCounter} from "../../components/textareaCharactersCounter";
-import {input} from "../../components/input";
-import {getQuizData} from "../../helpers/data";
-import {quizStepShouldBeSkipped} from "../../helpers/progress";
+import { updateProgressCounter } from "../../actions/progress/counter/updateProgressCounter.js";
+import { updateQuestionsCounter } from "../../actions/progress/counter/updateQuestionsCounter.js";
+import { updateProgressBar } from "../../actions/progress/bar/updateProgressBar";
+import { saveQuizDataEvent } from "../../events/saveQuizDataEvent";
+import { disabledValueIsIncluded, showProgressIndicators } from "../../actions/progress/general";
+import { updateQuizComponents } from "./updateQuizComponents";
+import { showSuccessQuestionEvent } from "../../events/showSuccessQuestionEvent";
+import { showNextQuestionEvent } from "../../events/showNextQuestionEvent";
+import { validateQuestion } from "../../listeners/validation/validateQuestion";
+import { answerTrigger } from "../../components/answerTrigger";
+import { loader } from "../progress/loader/loader";
+import { showQuestionEvent } from "../../events/showQuestionEvent";
+import { textareaCharactersCounter } from "../../components/textareaCharactersCounter";
+import { input } from "../../components/input";
+import { getQuizData } from "../../helpers/data";
+import { quizStepShouldBeSkipped } from "../../helpers/progress";
 
 /**
  * Show next question
@@ -54,7 +54,9 @@ export function showNextQuestion(currentQuestion) {
     let nextFunnel = currentQuestion.find('.growtype-quiz-question-answer.is-active').attr('data-funnel');
     let submitDelay = 0;
 
-    window.growtype_quiz_global[quizId]['current_funnel'] = nextFunnel;
+    if (nextFunnel) {
+        window.growtype_quiz_global[quizId]['current_funnel'] = nextFunnel;
+    }
 
     /**
      * If questions has multiple answers and funnels are enabled, adjust next question to follow answers funnels
@@ -132,8 +134,10 @@ export function showNextQuestion(currentQuestion) {
         window.growtype_quiz_global[quizId]['additional_questions_amount'] = additionalQuestions;
     }
 
-    if (nextFunnel === undefined) {
-        nextFunnel = window.growtype_quiz_global[quizId]['initial_funnel'];
+    if (!nextFunnel) {
+        // Use the current question's own funnel as the default next funnel
+        // This is more reliable than stored current_funnel (which can be stale from sessionStorage)
+        nextFunnel = currentQuestion.attr('data-funnel') || window.growtype_quiz_global[quizId]['initial_funnel'];
     }
 
     let nextQuestion = currentQuestion.nextAll('.growtype-quiz-question[data-funnel="' + nextFunnel + '"]:not([class*="skipped"]):first');
@@ -252,10 +256,6 @@ export function showNextQuestion(currentQuestion) {
             });
         }
 
-        updateQuizComponents(nextQuestion);
-
-        loader(quizWrapper);
-
         /**
          * Show question general event
          */
@@ -298,5 +298,9 @@ export function showNextQuestion(currentQuestion) {
         }
 
         window.growtype_quiz_global[quizId]['showNextQuestionWasFired'] = false;
+
+        updateQuizComponents(nextQuestion);
+
+        loader(quizWrapper);
     });
 }

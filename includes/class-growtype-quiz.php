@@ -38,6 +38,9 @@ class Growtype_Quiz
 
     const TOKEN_KEY = 'gqtoken';
 
+    /** Default results page slug — used as fallback when no results page is configured in settings. */
+    const RESULTS_PAGE_SLUG = '/gqresults/';
+
     /**
      * The loader that's responsible for maintaining and registering all hooks that power
      * the plugin.
@@ -185,8 +188,14 @@ class Growtype_Quiz
          * Quiz Definition base class & Registry
          */
         require_once GROWTYPE_QUIZ_PATH . 'includes/methods/quiz/class-growtype-quiz-definition.php';
-        
+
         require_once GROWTYPE_QUIZ_PATH . 'includes/methods/quiz/class-growtype-quiz-registry.php';
+
+        /**
+         * Result
+         */
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/result/class-growtype-quiz-result.php';
+        Growtype_Quiz_Result::boot();
 
         /**
          * Shortcodes

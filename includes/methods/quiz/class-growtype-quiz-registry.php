@@ -74,7 +74,8 @@ class Growtype_Quiz_Registry
 
         self::$definitions[$slug] = array_merge(
             $instance->to_registry_config(),
-            ['slug' => $slug]
+            ['slug'      => $slug,
+             '__instance' => $instance]  // cache so dispatch never re-instantiates
         );
 
         self::boot();
@@ -189,16 +190,16 @@ class Growtype_Quiz_Registry
             return $quiz_data;
         }
 
-        // ── Class-based dispatch ──────────────────────────────────
-        if (!empty($entry['__class']) && class_exists($entry['__class'])) {
+        // ── Class-based dispatch ─────────────────────────────────────────────────────────
+        if (!empty($entry['__instance'])) {
             /** @var Growtype_Quiz_Definition $def */
-            $def   = new $entry['__class']();
+            $def   = $entry['__instance'];
             $extra = $def->to_quiz_data();
             return array_merge($quiz_data, $extra);
         }
 
         // ── Legacy function-based dispatch ────────────────────────
-        if (!empty($entry['data_provider']) && function_exists($entry['data_provider'])) {
+        if (!empty($entry['data_provider']) && is_callable($entry['data_provider'])) {
             $extra = call_user_func($entry['data_provider']);
             if (is_array($extra)) {
                 return array_merge($quiz_data, $extra);
@@ -211,15 +212,15 @@ class Growtype_Quiz_Registry
     /** @internal */
     public static function dispatch_on_success(int $quiz_id, array $submitted): void
     {
-        $entry = self::resolve_by_post($quiz_id);
+        $entry = self::resolve_by_post($quiz_id) ?? self::resolve_by_slug_fallback($submitted);
 
         if (!$entry) {
             return;
         }
 
-        // ── Class-based ───────────────────────────────────────────
-        if (!empty($entry['__class']) && class_exists($entry['__class'])) {
-            (new $entry['__class']())->on_success($quiz_id, $submitted);
+        // ── Class-based ────────────────────────────────────────────────────────────────────
+        if (!empty($entry['__instance'])) {
+            $entry['__instance']->on_success($quiz_id, $submitted);
             return;
         }
 
@@ -232,15 +233,15 @@ class Growtype_Quiz_Registry
     /** @internal */
     public static function dispatch_success_url(string $url, int $quiz_id, array $submitted): string
     {
-        $entry = self::resolve_by_post($quiz_id);
+        $entry = self::resolve_by_post($quiz_id) ?? self::resolve_by_slug_fallback($submitted);
 
         if (!$entry) {
             return $url;
         }
 
-        // ── Class-based ───────────────────────────────────────────
-        if (!empty($entry['__class']) && class_exists($entry['__class'])) {
-            $result = (new $entry['__class']())->success_url();
+        // ── Class-based ────────────────────────────────────────────────────────────────────
+        if (!empty($entry['__instance'])) {
+            $result = $entry['__instance']->success_url();
             return $result ?? $url;
         }
 
@@ -336,6 +337,22 @@ class Growtype_Quiz_Registry
         return self::resolve($slug, $quiz_id);
     }
 
+    /**
+     * Fallback: resolve a definition from the submitted quiz_slug.
+     * Used when the quiz has no real WP post (virtual / ID=0).
+     *
+     * @param array $submitted  The submitted data array (must contain 'quiz_slug').
+     */
+    private static function resolve_by_slug_fallback(array $submitted): ?array
+    {
+        if (empty($submitted['quiz_slug'])) {
+            return null;
+        }
+
+        $slug = str_replace('-', '_', $submitted['quiz_slug']);
+        return self::get($slug);
+    }
+
     private static function validate_slug(string $slug): void
     {
         if ($slug === '') {
@@ -367,12 +384,20 @@ class Growtype_Quiz_Registry
             if ($type === null || $value === null) {
                 continue;
             }
-            $out[$key] = match ($type) {
-                'int'    => (int) $value,
-                'string' => (string) $value,
-                'array'  => (array) $value,
-                default  => $value,
-            };
+            switch ($type) {
+                case 'int':
+                    $out[$key] = (int) $value;
+                    break;
+                case 'string':
+                    $out[$key] = (string) $value;
+                    break;
+                case 'array':
+                    $out[$key] = (array) $value;
+                    break;
+                default:
+                    $out[$key] = $value;
+                    break;
+            }
         }
         return $out;
     }

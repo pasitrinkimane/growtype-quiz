@@ -254,8 +254,10 @@ class Growtype_Quiz_Admin_General_Setting
     {
         $pages = get_pages();
         $selected = get_option('growtype_quiz_results_page');
+        $default_url = home_url(Growtype_Quiz::RESULTS_PAGE_SLUG);
         ?>
         <select name='growtype_quiz_results_page'>
+            <option value='' <?php selected(empty($selected)); ?>>— Default: <?php echo esc_html($default_url); ?> —</option>
             <?php foreach ($pages as $page) { ?>
                 <option value='<?php echo $page->ID ?>' <?php selected($page->ID === (int)$selected); ?>><?php echo $page->post_title ?> - <?php echo $page->ID ?></option>
             <?php } ?>

@@ -50,7 +50,15 @@ if (!function_exists('growtype_quiz_results_page_url')) {
     function growtype_quiz_results_page_url($unique_hash = '')
     {
         $results_page = get_option('growtype_quiz_results_page');
-        return !empty($results_page) ? get_permalink($results_page) . '?' . Growtype_Quiz::TOKEN_KEY . '=' . $unique_hash : '';
+
+        if (!empty($results_page)) {
+            $base_url = get_permalink($results_page);
+        } else {
+            // Default fallback URL — Growtype_Quiz::RESULTS_PAGE_SLUG
+            $base_url = home_url(Growtype_Quiz::RESULTS_PAGE_SLUG);
+        }
+
+        return $base_url . '?' . Growtype_Quiz::TOKEN_KEY . '=' . $unique_hash;
     }
 }
 

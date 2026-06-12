@@ -120,8 +120,8 @@ class Growtype_Quiz_Ajax
 
             do_action('growtype_quiz_after_update_data', $existing_quiz_data, $submitted_quiz_data);
 
-            $success_url = class_exists('ACF') ? get_field('success_url', $submitted_quiz_data['quiz_id']) : '';
-            $success_url = apply_filters('growtype_quiz_success_url', $success_url, $submitted_quiz_data['quiz_id'] ?? '', $submitted_quiz_data, $existing_quiz_data);
+            $success_url = (string)(class_exists('ACF') ? get_field('success_url', $submitted_quiz_data['quiz_id']) : '');
+            $success_url = apply_filters('growtype_quiz_success_url', $success_url, (int)($submitted_quiz_data['quiz_id'] ?? 0), $submitted_quiz_data, $existing_quiz_data);
 
             return wp_send_json([
                 'success' => true,
@@ -138,10 +138,10 @@ class Growtype_Quiz_Ajax
         $updated_quiz_data = $result_crud->save_quiz_results_data($submitted_quiz_data);
 
         if (!empty($updated_quiz_data)) {
-            do_action('growtype_quiz_after_save_data', $updated_quiz_data, $submitted_quiz_data);
+            do_action('growtype_quiz_after_save_data', (int)($updated_quiz_data['quiz_id'] ?? 0), $submitted_quiz_data);
 
-            $success_url = class_exists('ACF') ? get_field('success_url', $submitted_quiz_data['quiz_id']) : '';
-            $success_url = apply_filters('growtype_quiz_success_url', $success_url, $submitted_quiz_data['quiz_id'] ?? '', $submitted_quiz_data, $existing_quiz_data);
+            $success_url = (string)(class_exists('ACF') ? get_field('success_url', $submitted_quiz_data['quiz_id']) : '');
+            $success_url = apply_filters('growtype_quiz_success_url', $success_url, (int)($submitted_quiz_data['quiz_id'] ?? 0), $submitted_quiz_data, $existing_quiz_data);
 
             return wp_send_json([
                 'success' => true,

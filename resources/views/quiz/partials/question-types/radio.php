@@ -94,6 +94,12 @@
                     </div>
                 <?php } ?>
             </div>
+            
+            <?php if (!empty($question['after_options'])) { ?>
+                <div class="growtype-quiz-after-options">
+                    <?php echo $question['after_options'] ?>
+                </div>
+            <?php } ?>
         </div>
     <?php } ?>
 

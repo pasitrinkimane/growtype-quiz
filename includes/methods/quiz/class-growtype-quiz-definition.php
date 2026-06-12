@@ -50,6 +50,9 @@ abstract class Growtype_Quiz_Definition
     /** Label for the start/continue button. */
     public function start_btn_label(): string { return 'Get Started'; }
 
+    /** Label for the next button. */
+    public function next_btn_label(): string { return 'Next'; }
+
     /** Slide counter style: 'basic' | 'progress'. */
     public function slide_counter_style(): string { return 'basic'; }
 
@@ -58,6 +61,27 @@ abstract class Growtype_Quiz_Definition
 
     /** Whether to show the back arrow in the quiz header globally. */
     public function show_back_btn(): bool { return true; }
+
+    /** Custom CSS class added to the quiz wrapper. */
+    public function quiz_wrapper_class(): string { return ''; }
+
+    /** Whether to show the back arrow in the quiz footer at all. */
+    public function show_footer_back_btn(): bool { return true; }
+
+    /** Whether to show the back arrow in the quiz footer on step 1. */
+    public function show_footer_back_btn_initially(): bool { return false; }
+
+    /** Whether to show the quiz header wrapper globally. */
+    public function show_quiz_header(): bool { return true; }
+
+    /** Whether to show the quiz footer wrapper globally. */
+    public function show_quiz_footer(): bool { return true; }
+
+    /** Whether to show the progress bar in the quiz header globally. */
+    public function progress_bar(): bool { return false; }
+
+    /** Whether to save quiz answers via AJAX on completion (required for redirect). */
+    public function save_answers(): bool { return true; }
 
     /**
      * Optional redirect URL after successful quiz submit.
@@ -89,22 +113,67 @@ abstract class Growtype_Quiz_Definition
         string $style    = 'default',
         int    $duration = 90
     ): array {
-        if (function_exists('growtype_child_growtype_quiz_get_loader')) {
-            return growtype_child_growtype_quiz_get_loader([
-                'loader_content'  => $content,
-                'loader_style'    => $style,
-                'loader_duration' => $duration,
-            ]);
-        }
+        $shortcode_style = ($style === 'default') ? 'circle' : $style;
+        $intro_content = '<h2>Almost there...</h2>'
+            . do_shortcode(sprintf(
+                '[growtype_quiz_loader duration="%s" style="%s" content="%s" redirect="true" default_redirect_url=""]',
+                esc_attr($duration),
+                esc_attr($shortcode_style),
+                esc_attr($content)
+            ));
 
-        // Minimal fallback if helper is not available
         return [
-            'key'           => 'final',
-            'question_type' => 'success',
-            'has_intro'     => true,
-            'intro'         => '<h2>Almost there…</h2><p>' . esc_html($content) . '</p>',
+            'key'            => 'final',
+            'question_type'  => 'success',
+            'has_intro'      => true,
+            'intro'          => $intro_content,
             'question_style' => 'horizontal',
         ];
+    }
+
+    // ── Hooks (constructor + per-quiz script/AJAX registration) ──────────────────
+
+    /**
+     * Hook quiz-specific scripts and AJAX endpoints.
+     * Each registered quiz class is instantiated once by the registry;
+     * _maybe_enqueue_scripts() bails early for non-matching quiz pages.
+     */
+    public function __construct()
+    {
+        add_action('wp_enqueue_scripts', [$this, '_maybe_enqueue_scripts']);
+        $this->register_ajax();
+    }
+
+    /**
+     * Override in a subclass to register AJAX endpoints for this quiz.
+     * Called once at class instantiation time.
+     */
+    protected function register_ajax(): void
+    {
+        // No-op by default.
+    }
+
+    /**
+     * Internal dispatcher — runs the slug guard so subclasses don't have to.
+     *
+     * @internal
+     */
+    final public function _maybe_enqueue_scripts(): void
+    {
+        if (!Growtype_Quiz::is_quiz_page() || growtype_quiz_get_current_slug() !== $this->slug()) {
+            return;
+        }
+
+        $this->enqueue_scripts();
+    }
+
+    /**
+     * Override in a subclass to enqueue scripts/styles for this quiz only.
+     * Called automatically when the current page matches this quiz's slug.
+     */
+    protected function enqueue_scripts(): void
+    {
+        // No-op by default.
     }
 
     // ── Framework internals (do not override) ─────────────────────────────────
@@ -118,11 +187,19 @@ abstract class Growtype_Quiz_Definition
     final public function to_quiz_data(): array
     {
         $data = [
-            'slide_counter_style'       => $this->slide_counter_style(),
-            'start_btn_label'           => $this->start_btn_label(),
-            'show_question_nr_in_url'   => $this->show_question_nr_in_url(),
-            'show_quiz_header_back_btn' => $this->show_back_btn(),
-            'questions'                 => $this->questions(),
+            'slide_counter_style'            => $this->slide_counter_style(),
+            'start_btn_label'                => $this->start_btn_label(),
+            'next_btn_label'                 => $this->next_btn_label(),
+            'show_question_nr_in_url'        => $this->show_question_nr_in_url(),
+            'show_quiz_header'               => $this->show_quiz_header(),
+            'show_quiz_header_back_btn'      => $this->show_back_btn(),
+            'show_quiz_footer'               => $this->show_quiz_footer(),
+            'show_footer_back_btn'           => $this->show_footer_back_btn(),
+            'show_footer_back_btn_initially' => $this->show_footer_back_btn_initially(),
+            'progress_bar'                   => $this->progress_bar(),
+            'quiz_wrapper_class'             => $this->quiz_wrapper_class(),
+            'save_answers'                   => $this->save_answers(),
+            'questions'                      => $this->questions(),
         ];
 
         if ($this->label() !== '') {
