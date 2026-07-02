@@ -26,8 +26,8 @@
  */
 
 // If this file is called directly, abort.
-if (!defined('WPINC')) {
-    die;
+if (!defined("WPINC")) {
+    die();
 }
 
 /**
@@ -40,32 +40,32 @@ define('GROWTYPE_QUIZ_VERSION', '1.2.9.8.3.1');
 /**
  * Plugin text domain
  */
-define('GROWTYPE_QUIZ_TEXT_DOMAIN', 'growtype-quiz');
+define("GROWTYPE_QUIZ_TEXT_DOMAIN", "growtype-quiz");
 
 /**
  * Plugin post type.
  */
-define('GROWTYPE_QUIZ_POST_TYPE', 'quiz');
+define("GROWTYPE_QUIZ_POST_TYPE", "quiz");
 
 /**
  * Plugin dir path
  */
-define('GROWTYPE_QUIZ_PATH', plugin_dir_path(__FILE__));
+define("GROWTYPE_QUIZ_PATH", plugin_dir_path(__FILE__));
 
 /**
  * Plugin url
  */
-define('GROWTYPE_QUIZ_URL', plugin_dir_url(__FILE__));
+define("GROWTYPE_QUIZ_URL", plugin_dir_url(__FILE__));
 
 /**
  * Plugin url public
  */
-define('GROWTYPE_QUIZ_URL_PUBLIC', plugin_dir_url(__FILE__) . 'public/');
+define("GROWTYPE_QUIZ_URL_PUBLIC", plugin_dir_url(__FILE__) . "public/");
 
 /**
  * Plugin taxonomy.
  */
-define('GROWTYPE_QUIZ_TAXONOMY', 'quiz_cat');
+define("GROWTYPE_QUIZ_TAXONOMY", "quiz_cat");
 
 /**
  * The code that runs during plugin activation.
@@ -73,7 +73,8 @@ define('GROWTYPE_QUIZ_TAXONOMY', 'quiz_cat');
  */
 function activate_growtype_quiz()
 {
-    require_once plugin_dir_path(__FILE__) . 'includes/class-growtype-quiz-activator.php';
+    require_once plugin_dir_path(__FILE__) .
+        "includes/class-growtype-quiz-activator.php";
     Growtype_Quiz_Activator::activate();
 
     /**
@@ -88,18 +89,19 @@ function activate_growtype_quiz()
  */
 function deactivate_growtype_quiz()
 {
-    require_once plugin_dir_path(__FILE__) . 'includes/class-growtype-quiz-deactivator.php';
+    require_once plugin_dir_path(__FILE__) .
+        "includes/class-growtype-quiz-deactivator.php";
     Growtype_Quiz_Deactivator::deactivate();
 }
 
-register_activation_hook(__FILE__, 'activate_growtype_quiz');
-register_deactivation_hook(__FILE__, 'deactivate_growtype_quiz');
+register_activation_hook(__FILE__, "activate_growtype_quiz");
+register_deactivation_hook(__FILE__, "deactivate_growtype_quiz");
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path(__FILE__) . 'includes/class-growtype-quiz.php';
+require plugin_dir_path(__FILE__) . "includes/class-growtype-quiz.php";
 
 /**
  * Begins execution of the plugin.

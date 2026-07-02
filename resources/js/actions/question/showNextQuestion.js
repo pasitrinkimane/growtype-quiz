@@ -240,8 +240,9 @@ export function showNextQuestion(currentQuestion) {
          * Update components
          */
         if (nextQuestion.length > 0) {
+            updateQuestionsCounter(quizWrapper, nextQuestion);
+
             nextQuestion.addClass('is-active').fadeIn(300).promise().done(function () {
-                updateQuestionsCounter(quizWrapper, nextQuestion);
                 updateProgressCounter(quizWrapper);
                 updateProgressBar(quizWrapper);
 

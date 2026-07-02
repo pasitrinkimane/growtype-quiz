@@ -80,4 +80,9 @@ export function updateQuestionsCounter(quizWrapper, nextQuestion = null) {
     if (quizWrapper.find('.growtype-quiz-question.is-active:visible').hasClass('is-visible') && !quizWrapper.find('.growtype-quiz-question.is-active:visible').prev().hasClass('is-always-visible')) {
         window.growtype_quiz_global[quizId]['quiz_questions_amount']--;
     }
+
+    /**
+     * Set question attribute to highest dom element
+     */
+    $('body').attr('data-current-question', window.growtype_quiz_global[quizId]['current_question_nr']);
 }

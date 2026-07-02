@@ -3,6 +3,8 @@
 @import "common/global";
 
 @import "components/modal";
+@import "components/single-feedback";
+
 
 .growtype-quiz-wrapper {
 
@@ -16,6 +18,7 @@
 
   @import "question-types/open";
   @import "question-types/radio";
+  @import "question-types/rating";
   @import "question-types/success";
   @import "question-types/single";
   @import "question-types/general";

@@ -150,6 +150,8 @@ $id = wp_generate_password('12', false);
                                                 <?php echo growtype_quiz_include_view('quiz.partials.question-types.open', ['question' => $question, 'quiz_data' => $quiz_data]) ?>
                                             <?php } elseif (isset($question['question_type']) && $question['question_type'] === 'info') { ?>
                                                 <?php echo growtype_quiz_include_view('quiz.partials.question-types.info', ['question' => $question, 'quiz_data' => $quiz_data]) ?>
+                                            <?php } elseif (isset($question['question_type']) && $question['question_type'] === 'rating') { ?>
+                                                <?php echo growtype_quiz_include_view('quiz.partials.question-types.rating', ['question' => $question, 'quiz_data' => $quiz_data]) ?>
                                             <?php } else { ?>
                                                 <?php echo growtype_quiz_include_view('quiz.partials.question-types.radio', ['question' => $question, 'quiz_data' => $quiz_data]) ?>
                                             <?php } ?>

@@ -66,25 +66,43 @@ if (!function_exists('growtype_quiz_include_view')) {
     function growtype_quiz_include_view($file_path, $variables = array (), $only_template_path = false)
     {
         $stylesheet_dir = strpos(get_stylesheet_directory(), 'resources') !== false ? get_stylesheet_directory() : get_stylesheet_directory() . '/resources';
+
+        /**
+         * Ordered list of views root directories to search.
+         * The base child-theme path is always the last entry so it acts as the final fallback.
+         * Domains/plugins should use array_unshift() to prepend their path with highest priority.
+         *
+         * @param string[] $dirs  Absolute paths to views root directories (no trailing slash).
+         */
+        $views_dirs = apply_filters('growtype_quiz_views_dirs', [$stylesheet_dir]);
+
         $fallback_view = GROWTYPE_QUIZ_PATH . 'resources/views/' . str_replace('.', '/', $file_path) . '.php';
         $fallback_blade_view = GROWTYPE_QUIZ_PATH . 'resources/views/' . str_replace('.', '/', $file_path) . '.blade.php';
-        $child_blade_view = $stylesheet_dir . '/views/' . GROWTYPE_QUIZ_TEXT_DOMAIN . '/' . str_replace('.', '/', $file_path) . '.blade.php';
-        $child_view = $stylesheet_dir . '/views/' . GROWTYPE_QUIZ_TEXT_DOMAIN . '/' . str_replace('.', '/', $file_path) . '.php';
 
         $template_path = $fallback_view;
+        $relative      = str_replace('.', '/', $file_path);
 
-        if (file_exists($child_blade_view) && function_exists('App\template')) {
-            if (!$only_template_path) {
-                return App\template($child_blade_view, $variables);
-            } else {
-                $template_path = $child_blade_view;
+        foreach ($views_dirs as $dir) {
+            $blade = rtrim($dir, '/') . '/views/' . GROWTYPE_QUIZ_TEXT_DOMAIN . '/' . $relative . '.blade.php';
+            $php   = rtrim($dir, '/') . '/views/' . GROWTYPE_QUIZ_TEXT_DOMAIN . '/' . $relative . '.php';
+
+            if (file_exists($blade) && function_exists('App\template')) {
+                if (!$only_template_path) {
+                    return App\template($blade, $variables);
+                }
+                $template_path = $blade;
+                break;
+            } elseif (file_exists($php)) {
+                $template_path = $php;
+                break;
             }
-        } elseif (file_exists($child_view)) {
-            $template_path = $child_view;
-        } elseif (file_exists($fallback_blade_view) && function_exists('App\template')) {
-            if (!$only_template_path) {
-                return App\template($fallback_blade_view, $variables);
-            } else {
+        }
+
+        if ($template_path === $fallback_view) {
+            if (file_exists($fallback_blade_view) && function_exists('App\template')) {
+                if (!$only_template_path) {
+                    return App\template($fallback_blade_view, $variables);
+                }
                 $template_path = $fallback_blade_view;
             }
         }

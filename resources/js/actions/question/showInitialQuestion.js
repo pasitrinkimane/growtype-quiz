@@ -26,11 +26,25 @@ export function showInitialQuestion(quizWrapper) {
         questionNr = quizWrapper.find('.growtype-quiz').attr('data-show-question-nr-in-url') && questionNr !== 'undefined' ? parseInt(questionNr) : 1;
         questionNr = !isNaN(questionNr) ? questionNr : 1;
 
-        let excludedFromCountingQuestionsAmount = $('.exclude-questions-amount').length ?? 0;
+        // Count excluded (info) questions strictly before this position.
+        // This matches what showNextQuestion produces: counter++ fires when
+        // *leaving* a non-excluded question, so arriving at question N the
+        // counter equals N minus the number of excluded questions before it.
+        const excludedBefore = quizWrapper.find('.growtype-quiz-question.exclude-questions-amount').filter(function () {
+            return parseInt($(this).attr('data-question-nr')) < questionNr;
+        }).length;
+
+        // If the current question is itself an excluded info slide, it also
+        // doesn't count — subtract one more so the counter stays at the same
+        // value it had when leaving the previous real question.
+        const currentIsExcluded = quizWrapper.find(
+            '.growtype-quiz-question.exclude-questions-amount[data-question-nr="' + questionNr + '"]'
+        ).length > 0 ? 1 : 0;
+
         let current_question_counter_nr = questionNr;
 
         if (questionNr > 1) {
-            current_question_counter_nr = questionNr - excludedFromCountingQuestionsAmount;
+            current_question_counter_nr = Math.max(1, questionNr - excludedBefore - currentIsExcluded);
         }
 
         window.growtype_quiz_global[quizId]['current_question_counter_nr'] = current_question_counter_nr;

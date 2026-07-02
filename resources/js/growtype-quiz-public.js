@@ -1,17 +1,18 @@
-import {getQuizData} from "./helpers/data";
-import {saveQuizDataEvent} from "./events/saveQuizDataEvent";
-import {showInitialQuestion} from './actions/question/showInitialQuestion.js';
-import {nextQuestionTrigger} from './components/nextQuestionTrigger.js';
-import {previousQuestionTrigger} from './components/previousQuestionTrigger.js';
-import {answerTrigger} from './components/answerTrigger.js';
-import {input} from './components/input.js';
-import {unitSystem} from './components/unitSystem.js';
-import {modal} from './components/modal.js';
-import {updateProgressBar} from "./actions/progress/bar/updateProgressBar";
-import {updateQuestionsCounter} from "./actions/progress/counter/updateQuestionsCounter";
-import {updateProgressCounter} from "./actions/progress/counter/updateProgressCounter";
-import {countDownTimer} from "./actions/progress/timer/countDownTimer";
-import {duration} from "./actions/progress/timer/duration";
+import { getQuizData } from "./helpers/data";
+import { saveQuizDataEvent } from "./events/saveQuizDataEvent";
+import { showInitialQuestion } from './actions/question/showInitialQuestion.js';
+import { nextQuestionTrigger } from './components/nextQuestionTrigger.js';
+import { previousQuestionTrigger } from './components/previousQuestionTrigger.js';
+import { answerTrigger } from './components/answerTrigger.js';
+import { singleFeedback } from './components/singleFeedback.js';
+import { input } from './components/input.js';
+import { unitSystem } from './components/unitSystem.js';
+import { modal } from './components/modal.js';
+import { updateProgressBar } from "./actions/progress/bar/updateProgressBar";
+import { updateQuestionsCounter } from "./actions/progress/counter/updateQuestionsCounter";
+import { updateProgressCounter } from "./actions/progress/counter/updateProgressCounter";
+import { countDownTimer } from "./actions/progress/timer/countDownTimer";
+import { duration } from "./actions/progress/timer/duration";
 
 import "./listeners/saveQuizDataListener";
 import "./listeners/showSuccessQuestionListener";
@@ -40,6 +41,8 @@ $(document).ready(function () {
             }
 
             new answerTrigger().init();
+
+            singleFeedback();
 
             input($(element));
             unitSystem($(element));

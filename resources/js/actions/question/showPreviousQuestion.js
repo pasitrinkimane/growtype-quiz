@@ -18,6 +18,16 @@ export function showPreviousQuestion(quizWrapper) {
     let lastVisitedQuestionFunnel = window.growtype_quiz_global[quizId]['already_visited_questions_funnels'].slice(-1)[0];
     let previousQuestion = currentQuestion.prevAll(".growtype-quiz-question[data-key='" + lastVisitedQuestionKey + "'][data-funnel='" + lastVisitedQuestionFunnel + "']:first");
 
+    /**
+     * When the page was loaded directly via ?question=N (no JS navigation
+     * history), already_visited_questions_keys is empty so the key-based
+     * lookup above returns nothing. Fall back to the nearest previous
+     * question element in the DOM so Back still works on reload.
+     */
+    if (previousQuestion.length === 0 && currentQuestion.length > 0) {
+        previousQuestion = currentQuestion.prevAll('.growtype-quiz-question:first');
+    }
+
     if (previousQuestion.attr('data-answer-type') === 'multiple' && previousQuestion.attr('data-has-funnel') === 'true') {
         window.growtype_quiz_global[quizId]['additional_questions_amount'] = 0;
         quizWrapper.find('.growtype-quiz-question.is-conditionally-cloned').remove();
