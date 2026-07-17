@@ -118,6 +118,18 @@ class Growtype_Quiz_Result
             return;
         }
 
+        // Set document title for this virtual page
+        add_filter(
+            "pre_get_document_title",
+            function () {
+                return apply_filters(
+                    "growtype_quiz_results_page_title",
+                    __("Quiz Results", "growtype-quiz"),
+                );
+            },
+            PHP_INT_MAX,
+        );
+
         header("X-Robots-Tag: noindex, nofollow", true);
         status_header(200);
 

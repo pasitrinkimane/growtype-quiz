@@ -5,9 +5,7 @@
 @import "components/modal";
 @import "components/single-feedback";
 
-
 .growtype-quiz-wrapper {
-
   @import "components/progress-bar";
   @import "components/timer";
   @import "components/input";
@@ -22,10 +20,12 @@
   @import "question-types/success";
   @import "question-types/single";
   @import "question-types/general";
+  @import "question-types/final";
 
   @import "question-styles/horizontal-intro-select";
   @import "question-styles/horizontal-featured-select";
   @import "question-styles/general";
+  @import "question-styles/answers";
 
   .s-intro {
     width: 100%;
@@ -284,24 +284,27 @@
   }
 }
 
-.growtype-quiz-wrapper .growtype-quiz-nav[data-first-question-answer-type="single_instant"] .growtype-quiz-nav-inner .btn {
+.growtype-quiz-wrapper
+  .growtype-quiz-nav[data-first-question-answer-type="single_instant"]
+  .growtype-quiz-nav-inner
+  .btn {
   display: none;
 }
 
 @keyframes growtype-quiz-wrong-answer {
   0% {
-    transform: translateX(0)
+    transform: translateX(0);
   }
   25% {
-    transform: translateX(5px)
+    transform: translateX(5px);
   }
   50% {
-    transform: translateX(-5px)
+    transform: translateX(-5px);
   }
   75% {
-    transform: translateX(5px)
+    transform: translateX(5px);
   }
   100% {
-    transform: translateX(0)
+    transform: translateX(0);
   }
 }

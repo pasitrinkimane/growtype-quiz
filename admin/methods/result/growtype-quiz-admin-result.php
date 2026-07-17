@@ -54,7 +54,7 @@ class Growtype_Quiz_Admin_Result
 
         add_screen_option($option, $args);
 
-        require_once GROWTYPE_QUIZ_PATH . 'admin/methods/result/table/growtype-quiz-admin-result-list-table.php';
+        require_once GROWTYPE_QUIZ_PATH . 'admin/methods/result/partials/table/growtype-quiz-admin-result-list-table.php';
         $this->items_obj = new Growtype_Quiz_Admin_Result_List_Table();
     }
 
@@ -63,6 +63,13 @@ class Growtype_Quiz_Admin_Result
      */
     function growtype_quiz_result_callback()
     {
+        // Show edit form if action is 'edit'
+        if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'edit' && !empty($_REQUEST['item'])) {
+            require_once GROWTYPE_QUIZ_PATH . 'admin/methods/result/edit/growtype-quiz-admin-result-edit.php';
+            Growtype_Quiz_Admin_Result_Edit::render(absint($_REQUEST['item']));
+            return;
+        }
+
         $message = $this->get_message();
 
         ?>
@@ -100,12 +107,10 @@ class Growtype_Quiz_Admin_Result
      */
     function process_actions()
     {
-        require_once GROWTYPE_QUIZ_PATH . 'admin/methods/result/table/growtype-quiz-admin-result-list-table-record.php';
+        require_once GROWTYPE_QUIZ_PATH . 'admin/methods/result/partials/table/growtype-quiz-admin-result-list-table-record.php';
 
         $growtype_quiz_admin_result_list_table_record = new Growtype_Quiz_Admin_Result_List_Table_Record();
 
         $growtype_quiz_admin_result_list_table_record->process_delete_action();
     }
 }
-
-

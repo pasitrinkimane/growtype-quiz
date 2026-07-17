@@ -95,7 +95,7 @@ class Growtype_Quiz_Result_Crud
         $where = [];
 
         if (!empty($search)) {
-            $where[] = $wpdb->prepare("(id Like '%%%s%%' OR user_id Like '%%%s%%' OR quiz_id Like '%%%s%%' OR answers Like '%%%s%%')", $search, $search, $search, $search);
+            $where[] = $wpdb->prepare("(id Like '%%%s%%' OR user_id Like '%%%s%%' OR quiz_id Like '%%%s%%' OR unique_hash Like '%%%s%%' OR answers Like '%%%s%%')", $search, $search, $search, $search, $search);
         }
 
         if (!empty($user_id)) {
@@ -360,9 +360,7 @@ class Growtype_Quiz_Result_Crud
 
         $table_name = self::table_name();
 
-        $wpdb->update($table_name, $fields, ['id' => $id]);
-
-        return true;
+        return $wpdb->update($table_name, $fields, ['id' => $id]);
     }
 
     /**
