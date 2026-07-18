@@ -19,10 +19,11 @@ export function showFirstQuestion(quizWrapper) {
      * Set nav next arrow label
      */
     setTimeout(function () {
-        let nextQuestionTitle = quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-start');
+        let customNextLabel = firstQuestion.attr('data-next-btn-label');
+        let nextQuestionTitle = customNextLabel && customNextLabel.length > 0 ? customNextLabel : quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-start');
 
         if (nextQuestionTitle !== undefined && nextQuestionTitle.length > 0) {
-            if (quizWrapper.find('.growtype-quiz-nav[data-type="footer"]').attr('data-question-title-nav') === 'true') {
+            if (quizWrapper.find('.growtype-quiz-nav[data-type="footer"]').attr('data-question-title-nav') === 'true' && (!customNextLabel || customNextLabel.length === 0)) {
                 nextQuestionTitle = firstQuestion.nextAll('.growtype-quiz-question:first').attr('data-question-title');
                 quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label', nextQuestionTitle).text(nextQuestionTitle)
             } else {

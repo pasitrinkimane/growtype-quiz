@@ -214,9 +214,12 @@ export function showNextQuestion(currentQuestion) {
         /**
          * Update next btn label
          */
+        let customNextLabel = nextQuestion.attr('data-next-btn-label');
         let finishLabel = quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-finish');
 
-        if (finishLabel && finishLabel.length > 0 && (nextQuestion.next('.growtype-quiz-question') === undefined || nextQuestion.attr('data-question-type') === 'success')) {
+        if (customNextLabel && customNextLabel.length > 0) {
+            quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(customNextLabel);
+        } else if (finishLabel && finishLabel.length > 0 && (nextQuestion.next('.growtype-quiz-question') === undefined || nextQuestion.attr('data-question-type') === 'success')) {
             quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(finishLabel);
         } else if (parseInt(window.growtype_quiz_global[quizId]['current_question_counter_nr']) <= window.growtype_quiz_global[quizId]['quiz_questions_amount'] - 1) {
             let nextLabel = quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label');
@@ -233,7 +236,7 @@ export function showNextQuestion(currentQuestion) {
                 }
             }
 
-            quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label', nextLabel).text(nextLabel);
+            quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(nextLabel);
         }
 
         /**

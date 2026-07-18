@@ -63,13 +63,22 @@ export function showInitialQuestion(quizWrapper) {
     /**
      * Set nav next arrow label
      */
-    if (quizWrapper.find('.growtype-quiz-nav[data-type="footer"]').attr('data-question-title-nav') === 'true') {
-        setTimeout(function () {
+    let customNextLabel = question.attr('data-next-btn-label');
+    if (customNextLabel && customNextLabel.length > 0) {
+        quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(customNextLabel);
+    } else {
+        let nextLabel = quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label');
+        if (question.hasClass('first-question')) {
+            nextLabel = quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-start');
+        } else if (quizWrapper.find('.growtype-quiz-nav[data-type="footer"]').attr('data-question-title-nav') === 'true') {
             let nextQuestionTitle = question.nextAll('.growtype-quiz-question:first').attr('data-question-title');
             if (nextQuestionTitle) {
-                quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(nextQuestionTitle);
+                nextLabel = nextQuestionTitle;
             }
-        }, 100);
+        }
+        if (nextLabel) {
+            quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').text(nextLabel);
+        }
     }
 
     /**

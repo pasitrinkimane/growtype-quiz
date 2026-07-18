@@ -47,8 +47,15 @@ export function singleFeedback() {
                 </div>
             `);
 
-      // ── Inject after answers wrapper ──────────────────────
-      $question.find(".growtype-quiz-question-answers-wrapper").after($panel);
+      // ── Inject panel ───────────────────────────────────────
+      // On mobile, place the panel after the selected answer;
+      // otherwise inject below the entire answers wrapper.
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        $answer.after($panel);
+      } else {
+        $question.find(".growtype-quiz-question-answers-wrapper").after($panel);
+      }
 
       // ── Animate in (next frame so transition fires) ───────
       requestAnimationFrame(() => $panel.addClass("is-visible"));

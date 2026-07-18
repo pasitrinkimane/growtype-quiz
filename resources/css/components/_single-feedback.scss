@@ -1,6 +1,7 @@
 // ── Inline feedback panel (single_feedback question type) ─────────────
 .gq-feedback-panel {
-  margin-top: 14px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   border: 1px solid rgba(91, 159, 200, 0.28);
   border-radius: var(--ps-radius-sm, 12px);
   background: rgba(91, 159, 200, 0.07);
@@ -36,6 +37,10 @@
     align-items: flex-start;
     gap: 12px;
     padding: 16px 18px 14px;
+    @include bp-phone-xl() {
+      gap: 5px;
+      padding: 15px;
+    }
   }
 
   .gq-feedback-panel-inner p {
@@ -47,6 +52,11 @@
     margin-top: 2px;
     color: var(--ps-color-primary, #5b9fc8);
     line-height: 1;
+    @include bp-phone-xl(){
+      position: absolute;
+      right: 5px;
+      top: 5px;
+    }
   }
 
   .gq-feedback-text {

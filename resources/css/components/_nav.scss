@@ -1,0 +1,22 @@
+.single-quiz[data-current-question-type="general"][data-current-answer-type="single_feedback"],
+.single-quiz[data-current-question-type="general"][data-current-answer-type="single_feedback"],
+.single-quiz[data-current-question-type="general"][data-current-answer-type="multiple"],
+.single-quiz[data-current-question-type="info"][data-current-answer-type="single"] {
+  .growtype-quiz-wrapper .s-quiz {
+    @include bp-phone-xl() {
+      padding-bottom: 100px;
+    }
+  }
+
+  .growtype-quiz-nav[data-type="footer"] {
+    @include bp-phone-xl() {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 15px;
+      padding-bottom: 25px;
+    }
+  }
+}

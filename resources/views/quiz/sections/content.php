@@ -128,6 +128,7 @@ $id = wp_generate_password('12', false);
                                      data-hide-next-button="<?php echo isset($question['hide_next_button']) && $question['hide_next_button'] ? 'true' : 'false' ?>"
                                      data-hide-progressbar="<?php echo isset($question['hide_progress_bar']) && $question['hide_progress_bar'] ? 'true' : 'false' ?>"
                                      data-disabled-if="<?php echo isset($question['disabled_if']) ? $question['disabled_if'] : '' ?>"
+                                     data-next-btn-label="<?php echo isset($question['next_btn_label']) ? esc_attr($question['next_btn_label']) : '' ?>"
                                 >
                                     <div class="growtype-quiz-question-inner">
                                         <?php if (!empty($question['featured_image'])) { ?>

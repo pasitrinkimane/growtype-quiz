@@ -93,9 +93,12 @@ function initQuestion(currentQuestion, previousQuestion) {
 
     quizWrapper.find('.growtype-quiz-btn-go-next').show().attr('disabled', false);
 
+    let customNextLabel = previousQuestion.attr('data-next-btn-label');
     let nextLabel = quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label');
 
-    if (previousQuestion.hasClass('first-question')) {
+    if (customNextLabel && customNextLabel.length > 0) {
+        nextLabel = customNextLabel;
+    } else if (previousQuestion.hasClass('first-question')) {
         nextLabel = quizWrapper.find('.growtype-quiz-nav .growtype-quiz-btn-go-next .e-label').attr('data-label-start');
     }
 
