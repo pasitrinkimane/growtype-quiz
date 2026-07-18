@@ -208,6 +208,13 @@ class Growtype_Quiz
 
         require_once GROWTYPE_QUIZ_PATH . 'includes/methods/shortcodes/class-growtype-quiz-results-shortcode.php';
         new Growtype_Quiz_Results_Shortcode();
+
+        /**
+         * Landing page interceptor (subdomain-based)
+         */
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/landing/class-growtype-quiz-landing-base.php';
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/landing/class-growtype-quiz-landing.php';
+        new Growtype_Quiz_Landing();
     }
 
     /**

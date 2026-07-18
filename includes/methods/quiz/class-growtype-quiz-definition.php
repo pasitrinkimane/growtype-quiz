@@ -90,6 +90,14 @@ abstract class Growtype_Quiz_Definition
     public function success_url(): ?string { return null; }
 
     /**
+     * Return the fully-qualified class name of the landing page renderer,
+     * or null if this quiz has no landing page.
+     *
+     * The returned class must extend Growtype_Quiz_Landing_Base.
+     */
+    public function landing_class(): ?string { return null; }
+
+    /**
      * Called after a successful quiz submit.
      * Override to add custom logic (e.g. send email, create post, etc.)
      *
