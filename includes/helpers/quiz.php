@@ -347,6 +347,28 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
         $quiz_data = apply_filters('growtype_quiz_get_quiz_data', $quiz_data, $quiz_id);
 
         /**
+         * If the URL contains pre-answered questions (e.g. ?answers=prep_type:new+job+interview),
+         * remove those questions from the array so they aren't re-rendered.
+         */
+        if (!empty($_GET['answers']) && !empty($quiz_data['questions'])) {
+            $answered_keys = [];
+            $pairs = explode('|', $_GET['answers']);
+            foreach ($pairs as $pair) {
+                $parts = explode(':', $pair);
+                if (!empty($parts[0]) && !empty($parts[1])) {
+                    $answered_keys[] = $parts[0];
+                }
+            }
+
+            if (!empty($answered_keys)) {
+                $quiz_data['questions'] = array_values(array_filter(
+                    $quiz_data['questions'],
+                    fn($q) => empty($q['key']) || !in_array($q['key'], $answered_keys, true)
+                ));
+            }
+        }
+
+        /**
          * Update question keys
          */
         foreach ($quiz_data['questions'] as $key => $question) {
