@@ -5,6 +5,22 @@ class Growtype_Quiz_Landing
     public function __construct()
     {
         add_action('template_redirect', [$this, 'maybe_render_landing'], 5);
+        add_filter('body_class', [$this, 'add_landing_body_class']);
+    }
+
+    public function add_landing_body_class(array $classes): array
+    {
+        $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
+
+        if (str_starts_with($host, 'quiz.')) {
+            $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+            $path = parse_url($request_uri, PHP_URL_PATH);
+            if (trim($path, '/') === '') {
+                $classes[] = 'page-quiz-landing';
+            }
+        }
+
+        return $classes;
     }
 
     public function maybe_render_landing(): void
