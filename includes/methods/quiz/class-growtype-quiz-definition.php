@@ -80,6 +80,9 @@ abstract class Growtype_Quiz_Definition
     /** Whether to show the progress bar in the quiz header globally. */
     public function progress_bar(): bool { return false; }
 
+    /** Whether to show the slide counter in the quiz. */
+    public function slide_counter(): bool { return true; }
+
     /** Whether to save quiz answers via AJAX on completion (required for redirect). */
     public function save_answers(): bool { return true; }
 
@@ -205,6 +208,7 @@ abstract class Growtype_Quiz_Definition
             'show_footer_back_btn'           => $this->show_footer_back_btn(),
             'show_footer_back_btn_initially' => $this->show_footer_back_btn_initially(),
             'progress_bar'                   => $this->progress_bar(),
+            'slide_counter'                  => $this->slide_counter(),
             'quiz_wrapper_class'             => $this->quiz_wrapper_class(),
             'save_answers'                   => $this->save_answers(),
             'questions'                      => $this->questions(),
