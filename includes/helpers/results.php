@@ -91,7 +91,7 @@ if (!function_exists("growtype_quiz_resolve_success_url")) {
     function growtype_quiz_resolve_success_url(
         array $submitted_quiz_data,
         string $unique_hash,
-        array $previous_quiz_data = [],
+        array $previous_quiz_data = []
     ): string {
         $success_url = (string) (class_exists("ACF")
             ? get_field("success_url", $submitted_quiz_data["quiz_id"])
@@ -139,7 +139,7 @@ if (!function_exists("growtype_quiz_current_page_is_results_page")) {
 function growtype_quiz_map_quiz_answers_with_questions(
     $answers,
     $questions,
-    $quiz_type,
+    $quiz_type
 ) {
     $results_data = [];
 
@@ -233,7 +233,7 @@ function growtype_quiz_map_quiz_answers_with_questions(
         $user_answer_values = [];
         foreach ($answers_values as $answer_question_key => $answer) {
             $user_answer = array_filter($answer_options, function (
-                $option,
+                $option
             ) use ($answer) {
                 return ($option["value"] ?? "") === $answer ||
                     $answer ===
@@ -266,7 +266,7 @@ function growtype_quiz_map_quiz_answers_with_questions(
             $correct_answers = [];
             foreach ($answers_values as $answer) {
                 $correct_answer = array_filter($answer_options, function (
-                    $option,
+                    $option
                 ) use ($answer) {
                     return $option["correct"] && $option["value"] === $answer;
                 });
@@ -346,7 +346,7 @@ function growtype_quiz_map_quiz_results_with_quiz_data($quiz_results_data)
  */
 function growtype_quiz_get_extended_user_quizes_results(
     $user_id = null,
-    $quiz_id = null,
+    $quiz_id = null
 ) {
     $user_id = !empty($user_id) ? $user_id : get_current_user_id();
     $quiz_hash = growtype_quiz_get_unique_hash();
@@ -361,13 +361,13 @@ function growtype_quiz_get_extended_user_quizes_results(
 
         if (!empty($quiz_id) && is_array($quiz_result_data)) {
             $quiz_result_data = array_filter($quiz_result_data, function (
-                $value,
+                $value
             ) use ($quiz_id) {
                 return $value["quiz_id"] === $quiz_id;
             });
         } elseif (!empty($quiz_hash) && is_array($quiz_result_data)) {
             $quiz_result_data = array_filter($quiz_result_data, function (
-                $value,
+                $value
             ) use ($quiz_hash) {
                 return $value["unique_hash"] === $quiz_hash;
             });
@@ -389,7 +389,7 @@ if (!function_exists("growtype_quiz_get_results_data")) {
     function growtype_quiz_get_results_data(
         $quiz_id,
         $limit = 30,
-        $based_on = "performance",
+        $based_on = "performance"
     ) {
         $growtype_quiz_loader = new Growtype_Quiz_Result_Crud();
 
@@ -441,7 +441,7 @@ if (!function_exists("growtype_quiz_get_user_single_result_by_hash")) {
 if (!function_exists("growtype_quiz_get_results_open_question_answers")) {
     function growtype_quiz_get_results_open_question_answers(
         $quiz_id,
-        $open_question_key = "question_open",
+        $open_question_key = "question_open"
     ) {
         $quiz_results_data = growtype_quiz_get_results_data($quiz_id, 50);
         $open_questions = [];
