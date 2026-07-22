@@ -419,7 +419,10 @@ if (!function_exists('growtype_quiz_get_formatted_quiz_data')) {
             }
 
             if (isset($question['options_all']) && !empty($question['options_all'])) {
-                foreach ($question['options_all'] as $option_key => $option) {
+                // Filter out malformed options (e.g. string fragments instead of arrays)
+                $quiz_data['questions'][$key]['options_all'] = array_values(array_filter($question['options_all'], 'is_array'));
+
+                foreach ($quiz_data['questions'][$key]['options_all'] as $option_key => $option) {
                     if (!isset($option['next_funnel'])) {
                         // Default: stay in the question's own funnel (not force back to 'a')
                         $quiz_data['questions'][$key]['options_all'][$option_key]['next_funnel'] = isset($question['funnel']) ? $question['funnel'] : 'a';

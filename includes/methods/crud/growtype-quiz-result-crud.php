@@ -458,6 +458,10 @@ class Growtype_Quiz_Result_Crud
                     $answer_is_wrong = false;
 
                     foreach ($question['options_all'] as $option) {
+                        // Skip malformed options (e.g. string fragments instead of arrays)
+                        if (!is_array($option)) {
+                            continue;
+                        }
                         if ($option['correct']) {
                             $option_value = !empty($option['value']) ? $option['value'] : growtype_quiz_format_option_value($option['label']);
                             $detailed_results[$user_answer_key]['correct_answer'] = $option['label'];
@@ -470,6 +474,10 @@ class Growtype_Quiz_Result_Crud
                                      * Find user answer
                                      */
                                     foreach ($question['options_all'] as $option) {
+                                        // Skip malformed options in inner loop too
+                                        if (!is_array($option)) {
+                                            continue;
+                                        }
                                         if ($option['value'] === $user_answer_single) {
                                             $detailed_results[$user_answer_key]['user_answer'] = $option['label'];
                                         }
