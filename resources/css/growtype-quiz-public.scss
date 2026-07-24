@@ -7,6 +7,9 @@
 
 @import "components/nav";
 
+@import "pages/single-quiz";
+@import "pages/results";
+
 .growtype-quiz-wrapper {
   @import "components/progress-bar";
   @import "components/timer";
@@ -241,6 +244,7 @@
           svg {
             width: 15px;
             height: 15px;
+
             path {
               transition: all 0.5s;
             }
@@ -287,9 +291,9 @@
 }
 
 .growtype-quiz-wrapper
-  .growtype-quiz-nav[data-first-question-answer-type="single_instant"]
-  .growtype-quiz-nav-inner
-  .btn {
+.growtype-quiz-nav[data-first-question-answer-type="single_instant"]
+.growtype-quiz-nav-inner
+.btn {
   display: none;
 }
 

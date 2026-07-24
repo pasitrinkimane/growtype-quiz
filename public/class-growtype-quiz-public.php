@@ -216,6 +216,14 @@ class Growtype_Quiz_Public
             }
         }
 
+        // Also load on the quiz results page
+        if (!$scripts_should_be_loaded && !is_admin()) {
+            if (function_exists('growtype_quiz_current_page_is_results_page')
+                && growtype_quiz_current_page_is_results_page()) {
+                $scripts_should_be_loaded = true;
+            }
+        }
+
         return $scripts_should_be_loaded;
     }
 }
