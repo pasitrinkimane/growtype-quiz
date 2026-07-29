@@ -10,14 +10,8 @@ class Growtype_Quiz_Landing
 
     public function add_landing_body_class(array $classes): array
     {
-        $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
-
-        if (str_starts_with($host, 'quiz.')) {
-            $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-            $path = parse_url($request_uri, PHP_URL_PATH);
-            if (trim($path, '/') === '') {
-                $classes[] = 'page-quiz-landing';
-            }
+        if (Growtype_Quiz_Landing_Base::is_quiz_landing()) {
+            $classes[] = 'page-quiz-landing';
         }
 
         return $classes;
@@ -25,16 +19,7 @@ class Growtype_Quiz_Landing
 
     public function maybe_render_landing(): void
     {
-        $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
-
-        if (!str_starts_with($host, 'quiz.')) {
-            return;
-        }
-
-        // Only intercept the root path of the subdomain (e.g. quiz.presaid.test/)
-        $request_uri = $_SERVER['REQUEST_URI'] ?? '';
-        $path = parse_url($request_uri, PHP_URL_PATH);
-        if (trim($path, '/') !== '') {
+        if (!Growtype_Quiz_Landing_Base::is_quiz_landing()) {
             return;
         }
 
