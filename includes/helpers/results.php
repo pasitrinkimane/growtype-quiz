@@ -374,7 +374,17 @@ function growtype_quiz_get_extended_user_quizes_results(
         }
 
         if (empty($quiz_result_data)) {
-            return [];
+            // The logged-in user has no results for this hash — fall back to
+            // looking the hash up directly so the results page still renders
+            // (covers: shared links, quiz completed before registration, etc.)
+            if (!empty($quiz_hash)) {
+                $fallback = growtype_quiz_get_user_single_result_by_hash($quiz_hash);
+                $quiz_result_data = !empty($fallback) ? [$fallback] : [];
+            }
+
+            if (empty($quiz_result_data)) {
+                return [];
+            }
         }
     }
 

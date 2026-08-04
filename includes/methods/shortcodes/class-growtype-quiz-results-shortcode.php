@@ -102,7 +102,11 @@ class Growtype_Quiz_Results_Shortcode
                                     isset($answer["value"]))
                             ) {
                                 $label = $answer["label"] ?? $answer["value"];
-                                $label = strip_tags($label);
+                                // Flatten nested array labels (e.g. ['label' => 'Confident', 'value' => 'confident'])
+                                if (is_array($label)) {
+                                    $label = $label['label'] ?? ($label['value'] ?? json_encode($label));
+                                }
+                                $label = strip_tags((string) $label);
 
                                 echo "<li>" .
                                     wp_kses($label, [
