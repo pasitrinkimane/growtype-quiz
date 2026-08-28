@@ -1,5 +1,6 @@
 import { getQuizData } from "../../helpers/data";
 import { collectQuizDataEvent } from "../../events/collectQuizDataEvent";
+import { getAttrValue } from "../../helpers/attributes";
 
 let existingAnswersParams = new URLSearchParams(window.location.search).get('answers');
 let existingAnswers = {};
@@ -65,7 +66,7 @@ export function collectQuizData(currentQuestion) {
     if (quizWrapper.attr('data-quiz-type') === 'scored' && currentQuestionType !== 'open') {
         let correctAnswer = true;
         currentQuestion.find('.growtype-quiz-question-answer').map(function (index, element) {
-            if ($(this).hasClass('is-active') && $(this).attr('data-cor').length === 0) {
+            if ($(this).hasClass('is-active') && getAttrValue($(this), 'data-cor').length === 0) {
                 correctAnswer = false;
             }
         });

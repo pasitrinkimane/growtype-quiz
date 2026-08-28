@@ -1,4 +1,5 @@
 import { disabledValueIsIncluded } from "../general";
+import { getAttrValue } from "../../../helpers/attributes";
 
 export function updateQuestionsCounter(quizWrapper, nextQuestion = null) {
     let quizId = quizWrapper.attr('id');
@@ -68,8 +69,10 @@ export function updateQuestionsCounter(quizWrapper, nextQuestion = null) {
      */
     if (window.growtype_quiz_data[quizId] && Object.entries(window.growtype_quiz_data[quizId]['answers']).length > 0) {
         quizWrapper.find('.growtype-quiz-question').each(function (index, element) {
-            if ($(element).attr('data-disabled-if').length > 0) {
-                if (disabledValueIsIncluded(quizWrapper, $(element).attr('data-disabled-if'))) {
+            const disabledIf = getAttrValue($(element), 'data-disabled-if');
+
+            if (disabledIf.length > 0) {
+                if (disabledValueIsIncluded(quizWrapper, disabledIf)) {
                     window.growtype_quiz_global[quizId]['quiz_questions_amount']--;
                     window.growtype_quiz_global[quizId]['quiz_counted_questions_amount']--;
                 }

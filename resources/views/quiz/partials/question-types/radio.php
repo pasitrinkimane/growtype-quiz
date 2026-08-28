@@ -15,6 +15,11 @@
                     }
 
                     $classes = implode(' ', $classes);
+                    $label_html = $option['label'] ?? $option['value'] ?? '';
+
+                    if (is_string($label_html)) {
+                        $label_html = preg_replace('/(<\/span>)([^\s<])/u', '$1 $2', $label_html);
+                    }
 
                     ?>
                     <div class="growtype-quiz-question-answer-wrapper">
@@ -68,7 +73,7 @@
                                     <div class="e-radio"></div>
                                 </div>
                                 <div class="e-label">
-                                    <div class="e-label-main"><?php echo $option['label'] ?? $option['value'] ?? '' ?></div>
+                                    <div class="e-label-main"><?php echo $label_html ?></div>
                                     <?php if (isset($option['sub_label']) && !empty($option['sub_label'])) { ?>
                                         <p class="e-sublabel"><?php echo $option['sub_label'] ?></p>
                                     <?php } ?>

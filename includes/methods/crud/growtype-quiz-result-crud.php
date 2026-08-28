@@ -6,6 +6,7 @@ class Growtype_Quiz_Result_Crud
     {
         add_action('wp_login', array ($this, 'update_results_after_login'), 10, 2);
         add_action('user_register', array ($this, 'update_results_after_user_register'), 10, 2);
+        add_action('delete_user', array (__CLASS__, 'delete_results_for_user'), 10, 1);
 
         /**
          * Clear local storage after login
@@ -68,6 +69,19 @@ class Growtype_Quiz_Result_Crud
         $table = self::table_name();
 
         return $wpdb->delete($table, array ('id' => $id));
+    }
+
+    public static function delete_results_for_user($user_id): void
+    {
+        global $wpdb;
+
+        $user_id = (int) $user_id;
+        if ($user_id <= 0) {
+            return;
+        }
+
+        $wpdb->delete(self::table_name(), ['user_id' => $user_id], ['%d']);
+        delete_transient('growtype_quiz_user_id_' . $user_id . '_logged_in');
     }
 
     /**

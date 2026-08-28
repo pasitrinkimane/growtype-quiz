@@ -2,16 +2,27 @@ import { showNextQuestion } from "../actions/question/showNextQuestion";
 import { collectQuizData } from "../actions/crud/collectQuizData";
 import { validateQuestion } from "../listeners/validation/validateQuestion";
 import { updateBgImage } from "../actions/question/updateBgImage";
+import { getAttrValue } from "../helpers/attributes";
 
 export class answerTrigger {
     clickInit(answer) {
         let quizWrapper = answer.closest('.growtype-quiz-wrapper');
         let quizId = quizWrapper.attr('id');
+        let quizState = window.growtype_quiz_global && window.growtype_quiz_global[quizId];
 
         /**
          * Prevent double click
          */
-        if (window.growtype_quiz_global[quizId]['showNextQuestionWasFired']) {
+        if (!quizState) {
+            console.error('[growtype-quiz][answerTrigger] Missing quiz state for answer click.', {
+                quizId: quizId,
+                answerValue: getAttrValue(answer, 'data-value'),
+                questionKey: getAttrValue(answer.closest('.growtype-quiz-question'), 'data-key')
+            });
+            return;
+        }
+
+        if (quizState['showNextQuestionWasFired']) {
             return;
         }
 
@@ -19,9 +30,10 @@ export class answerTrigger {
         let answersLimit = currentQuestion.attr('data-answers-limit');
         let answersAmount = currentQuestion.find('.growtype-quiz-question-answer.is-active').length;
         let answerType = currentQuestion.attr('data-answer-type');
+        let answerUrl = getAttrValue(answer, 'data-url');
 
-        if (answer.attr('data-url').length > 0) {
-            window.location = answer.attr('data-url');
+        if (answerUrl.length > 0) {
+            window.location = answerUrl;
             return;
         }
 
