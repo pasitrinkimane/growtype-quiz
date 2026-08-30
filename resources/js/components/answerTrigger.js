@@ -49,7 +49,11 @@ export class answerTrigger {
         answer.closest('.growtype-quiz-question-answers').find('.input-other').hide();
 
         if (!answer.hasClass('is-active')) {
-            if (answersLimit > 0 && parseInt(answersAmount) === parseInt(answersLimit)) {
+            if (
+                answersLimit > 0
+                && parseInt(answersAmount) === parseInt(answersLimit)
+                && !answer.hasClass('clear-other-selections')
+            ) {
                 return;
             }
             answer.addClass('is-active');
