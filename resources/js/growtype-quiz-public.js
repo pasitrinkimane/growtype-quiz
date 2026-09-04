@@ -8,6 +8,7 @@ import { singleFeedback } from './components/singleFeedback.js';
 import { input } from './components/input.js';
 import { unitSystem } from './components/unitSystem.js';
 import { modal } from './components/modal.js';
+import { questionnaireModal } from './components/questionnaireModal.js';
 import { updateProgressBar } from "./actions/progress/bar/updateProgressBar";
 import { updateQuestionsCounter } from "./actions/progress/counter/updateQuestionsCounter";
 import { updateProgressCounter } from "./actions/progress/counter/updateProgressCounter";
@@ -19,42 +20,66 @@ import "./listeners/showSuccessQuestionListener";
 import "./listeners/loaderFinishedListener";
 import "./listeners/validation/validateQuestion";
 
+function setQuizParams(element) {
+    growtypeQuizSetParams($(element));
+}
+
+function activateQuiz(element) {
+    let quizWrapper = $(element);
+    let quizId = quizWrapper.attr('id');
+
+    window.growtype_quiz_global[quizId]['showNextQuestionWasFired'] = false;
+
+    if (quizWrapper.find('.growtype-quiz').attr('data-save-on-load')) {
+        document.dispatchEvent(saveQuizDataEvent(getQuizData(quizId)));
+    }
+
+    new answerTrigger().init();
+
+    singleFeedback();
+
+    input(quizWrapper);
+    unitSystem(quizWrapper);
+    showInitialQuestion(quizWrapper);
+    nextQuestionTrigger(quizWrapper);
+    modal(quizWrapper);
+    previousQuestionTrigger(quizWrapper);
+    updateQuestionsCounter(quizWrapper);
+    updateProgressBar(quizWrapper);
+    updateProgressCounter(quizWrapper);
+    duration(quizWrapper);
+    countDownTimer(quizWrapper);
+}
+
 /**
  * Prevent double click
  */
 $(document).ready(function () {
+    questionnaireModal();
+
     if (window.growtype_quiz_global) {
         $('.growtype-quiz-wrapper').map(function (index, element) {
-            /**
-             * Set params
-             */
-            growtypeQuizSetParams($(element));
+            setQuizParams(element);
         });
 
         $('.growtype-quiz-wrapper').map(function (index, element) {
-            let quizId = $(element).attr('id');
+            activateQuiz(element);
+        });
 
-            window.growtype_quiz_global[quizId]['showNextQuestionWasFired'] = false;
+        document.addEventListener('growtypeQuizReinitialize', (event) => {
+            const modalSlug = event.detail && event.detail.modalSlug;
+            const modalElement = document.querySelector('[data-growtype-quiz-modal="' + modalSlug + '"]');
+            const quizWrapper = modalElement && modalElement.querySelector('.growtype-quiz-wrapper');
 
-            if ($(element).find('.growtype-quiz').attr('data-save-on-load')) {
-                document.dispatchEvent(saveQuizDataEvent(getQuizData(quizId)));
+            if (!quizWrapper) {
+                return;
             }
 
-            new answerTrigger().init();
+            delete window.growtype_quiz_global[quizWrapper.id];
+            delete window.growtype_quiz_data[quizWrapper.id];
 
-            singleFeedback();
-
-            input($(element));
-            unitSystem($(element));
-            showInitialQuestion($(element));
-            nextQuestionTrigger($(element));
-            modal($(element));
-            previousQuestionTrigger($(element));
-            updateQuestionsCounter($(element));
-            updateProgressBar($(element));
-            updateProgressCounter($(element));
-            duration($(element));
-            countDownTimer($(element));
+            setQuizParams(quizWrapper);
+            activateQuiz(quizWrapper);
         });
     }
 });

@@ -68,13 +68,13 @@ class Growtype_Quiz_Public
             /**
              * Main
              */
-            wp_enqueue_style($this->growtype_quiz, GROWTYPE_QUIZ_URL_PUBLIC . 'css/growtype-quiz-public.css', array (), $this->version, 'all');
+            wp_enqueue_style($this->growtype_quiz, $this->asset_url('/css/growtype-quiz-public.css'), array (), $this->version, 'all');
 
             /**
              * Themes
              */
             if (get_option('growtype_quiz_theme') === 'theme-1') {
-                wp_enqueue_style($this->growtype_quiz . '/theme-1', GROWTYPE_QUIZ_URL_PUBLIC . 'css/growtype-quiz-public-theme-1.css', array (), $this->version, 'all');
+                wp_enqueue_style($this->growtype_quiz . '/theme-1', $this->asset_url('/css/growtype-quiz-public-theme-1.css'), array (), $this->version, 'all');
             }
         }
     }
@@ -97,7 +97,7 @@ class Growtype_Quiz_Public
             /**
              * Main
              */
-            wp_enqueue_script($this->growtype_quiz, GROWTYPE_QUIZ_URL_PUBLIC . 'js/growtype-quiz-public.js', array ('jquery'), $this->version, true);
+            wp_enqueue_script($this->growtype_quiz, $this->asset_url('/js/growtype-quiz-public.js'), array ('jquery'), $this->version, true);
 
             $unique_hash = wp_generate_password(44, false);
 
@@ -225,5 +225,24 @@ class Growtype_Quiz_Public
         }
 
         return $scripts_should_be_loaded;
+    }
+
+    /** Resolve a compiled asset through Laravel Mix, with a safe plain-path fallback. */
+    private function asset_url(string $path): string
+    {
+        static $manifest = null;
+
+        if ($manifest === null) {
+            $manifest_path = GROWTYPE_QUIZ_PATH . 'public/mix-manifest.json';
+            $decoded = is_readable($manifest_path)
+                ? json_decode((string) file_get_contents($manifest_path), true)
+                : [];
+            $manifest = is_array($decoded) ? $decoded : [];
+        }
+
+        $normalized_path = '/' . ltrim($path, '/');
+        $versioned_path = $manifest[$normalized_path] ?? $normalized_path;
+
+        return GROWTYPE_QUIZ_URL_PUBLIC . ltrim((string) $versioned_path, '/');
     }
 }

@@ -79,6 +79,7 @@ class Growtype_Quiz_Registry
         );
 
         self::boot();
+        do_action('growtype_quiz_definition_registered', $instance);
     }
 
     /**

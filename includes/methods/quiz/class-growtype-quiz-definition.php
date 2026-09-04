@@ -87,6 +87,20 @@ abstract class Growtype_Quiz_Definition
     public function save_answers(): bool { return true; }
 
     /**
+     * Optional modal configuration for this quiz.
+     *
+     * Return null for a regular quiz, or the arguments accepted by
+     * Growtype_Quiz_Modal::register() to render this definition as a modal.
+     */
+    public function modal_config(): ?array { return null; }
+
+    /**
+     * Optional modal-specific CSS rendered with this quiz's modal.
+     * Keep selectors scoped to the modal's dialog_class.
+     */
+    public function modal_styles(): string { return ''; }
+
+    /**
      * Optional redirect URL after successful quiz submit.
      * Return null to use the plugin default.
      */

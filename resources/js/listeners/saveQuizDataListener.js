@@ -59,6 +59,18 @@ function saveQuizDataListener(data) {
                  */
                 let redirectUrl = data.redirect_url !== null && data.redirect_url.length > 0 ? data.redirect_url : data.results_url;
 
+                document.dispatchEvent(new CustomEvent('growtypeQuizSaved', {
+                    detail: {
+                        id: quizId,
+                        answers: answers || {},
+                        response: data
+                    }
+                }));
+
+                if (quizWrapper.find('.growtype-quiz').attr('data-redirect-on-complete') === 'false') {
+                    return;
+                }
+
                 /**
                  * Update loader
                  */
@@ -104,4 +116,3 @@ function saveQuizDataListener(data) {
         }
     })
 }
-

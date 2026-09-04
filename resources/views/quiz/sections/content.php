@@ -34,6 +34,7 @@ $id = wp_generate_password('12', false);
         <div class="container">
             <div class="growtype-quiz"
                  data-save-answers="<?php echo isset($quiz_data['save_answers']) && $quiz_data['save_answers'] ? true : false ?>"
+                 data-redirect-on-complete="<?php echo !isset($quiz_data['redirect_on_complete']) || $quiz_data['redirect_on_complete'] ? 'true' : 'false' ?>"
                  data-save-on-load="<?php echo isset($quiz_data['save_data_on_load']) && $quiz_data['save_data_on_load'] ? true : false ?>"
                  data-correct-answers-trigger="<?php echo isset($quiz_data['correct_answer_trigger']) && $quiz_data['correct_answer_trigger'] ? true : false ?>"
                  data-show-question-nr-in-url="<?php echo isset($quiz_data['show_question_nr_in_url']) && $quiz_data['show_question_nr_in_url'] ? true : false ?>"
@@ -129,6 +130,7 @@ $id = wp_generate_password('12', false);
                                      data-hide-progressbar="<?php echo isset($question['hide_progress_bar']) && $question['hide_progress_bar'] ? 'true' : 'false' ?>"
                                      data-disabled-if="<?php echo isset($question['disabled_if']) ? $question['disabled_if'] : '' ?>"
                                      data-next-btn-label="<?php echo isset($question['next_btn_label']) ? esc_attr($question['next_btn_label']) : '' ?>"
+                                     data-modal-close-after="<?php echo isset($question['modal_close_after']) ? max(0, (int) $question['modal_close_after']) : '' ?>"
                                 >
                                     <div class="growtype-quiz-question-inner">
                                         <?php if (!empty($question['featured_image'])) { ?>

@@ -25,6 +25,7 @@
                     <div class="growtype-quiz-question-answer-wrapper">
                         <div class="<?php echo $classes ?>"
                              data-value="<?php echo $option['value'] ?>"
+                             data-modal-action="<?php echo esc_attr($option['modal_action'] ?? '') ?>"
                              data-extra-value="<?php echo isset($option['extra_value']) ? $option['extra_value'] : '' ?>"
                              data-cor="<?php echo isset($quiz_data['show_correct_answer']) && $quiz_data['show_correct_answer'] ? $option['correct'] : '' ?>"
                              data-default-belongs-to="<?php echo isset($option['default_belongs_to']) ? $option['default_belongs_to'] : '' ?>"

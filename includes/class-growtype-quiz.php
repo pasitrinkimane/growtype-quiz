@@ -191,6 +191,9 @@ class Growtype_Quiz
 
         require_once GROWTYPE_QUIZ_PATH . 'includes/methods/quiz/class-growtype-quiz-registry.php';
 
+        require_once GROWTYPE_QUIZ_PATH . 'includes/methods/quiz/class-growtype-quiz-modal.php';
+        Growtype_Quiz_Modal::boot();
+
         /**
          * Result
          */
